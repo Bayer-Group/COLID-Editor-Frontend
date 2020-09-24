@@ -1,0 +1,43 @@
+$mat-toolbar-height: 54px;
+
+.mat-toolbar {
+    min-height: #{$mat-toolbar-height};
+    height: #{$mat-toolbar-height};
+}
+
+.mat-toolbar-row {
+    min-height: #{$mat-toolbar-height};
+    height: #{$mat-toolbar-height};
+}
+
+.mat-flat-button {
+    line-height: 32px;
+}
+
+.mat-menu-header {
+    margin-bottom: 10px;
+    color: rgba(0, 0, 0, 0.87);
+}
+
+.mat-menu-header-icon {
+    height: 40px;
+    width: 40px;
+    font-size: 40px;
+}
+
+img {
+    margin-right: 10px;
+    margin-bottom: 4px;
+}
+
+.app-title {
+    font-size: x-large;
+}
+
+.filler {
+    flex: 1 1 auto;
+ }
+
+.gap {
+    margin-left: 20px;
+}

@@ -1,0 +1,35 @@
+.border-t {
+  border-top: 1px solid rgba(0, 0, 0, .125);
+  border-left: 1px solid rgba(0, 0, 0, .125);
+  border-right: 1px solid rgba(0, 0, 0, .125);
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+}
+
+.border-b {
+  border-bottom: 1px solid rgba(0, 0, 0, .125);
+  border-left: 1px solid rgba(0, 0, 0, .125);
+  border-right: 1px solid rgba(0, 0, 0, .125);
+  border-bottom-right-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+}
+
+.linking-searchbar-container {
+  height: calc(100vh - 400px);
+  display: flex;
+  flex-direction: column;
+}
+
+.linking-searchbar-header {
+  height: auto;
+}
+
+.linking-searchbar-list {
+  height: auto;
+  overflow-y: auto;
+  text-align: left !important;
+}
+
+.badge {
+  font-size: 0.7rem !important;
+}

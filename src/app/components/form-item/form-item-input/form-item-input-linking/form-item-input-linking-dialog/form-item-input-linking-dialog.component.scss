@@ -1,0 +1,7 @@
+.modal-header {
+  color: black !important;
+}
+
+:host ::ng-deep .search-results {
+  height: calc(100vh - 498px) !important;
+}

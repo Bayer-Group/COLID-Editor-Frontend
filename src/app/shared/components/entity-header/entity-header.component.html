@@ -1,0 +1,11 @@
+<div style="display: flex; flex-direction: row; justify-content: space-between;">
+
+  <ds-icon class="entity-header-icon" iconType="S3" [tooltipDisabled]="false" [delay]="300" [icon]="iconKey"></ds-icon>
+
+  <h1 class="entity-header-text">
+    {{label}}
+  </h1>
+  <div class="py-2 entity-content">
+    <ng-content></ng-content>
+  </div>
+</div>

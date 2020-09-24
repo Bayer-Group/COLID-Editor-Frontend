@@ -1,0 +1,16 @@
+::ng-deep .mat-expansion-panel {
+    $border-radius: 4px;
+
+    .mat-accordion & {
+        &:not(.mat-expanded),
+        &:not(.mat-expansion-panel-spacing) {
+            border-radius: 0;
+        }
+    }
+}
+
+::ng-deep .mat-accordion {
+    .mat-expansion-panel-spacing {
+        margin: 16px 0 !important;
+    }
+}

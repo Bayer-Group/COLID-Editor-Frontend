@@ -1,0 +1,94 @@
+<ng-container *ngIf="!isLoading; else loading">
+
+
+  <div *ngIf="displayType === 'taxonomy'">
+    <app-entity-display-item-taxonomy [metadataProperty]="metadataProperty" [values]="entityProperty">
+    </app-entity-display-item-taxonomy>
+  </div>
+
+  <ng-container *ngIf="displayType === 'distribution'">
+    <mat-expansion-panel *ngFor="let value of entityProperty; let i = index" [expanded]="expanded">
+      <mat-expansion-panel-header>
+        <mat-panel-title style="align-items: baseline;">
+          <ds-icon class="mr-1" iconType="S3" [tooltipDisabled]="false" [icon]="value.properties[constants.Metadata.EntityType][0]">
+          </ds-icon>
+          <app-entity-display-item-taxonomy [range]="constants.OWL.Class" [values]="value.properties[constants.Metadata.EntityType]">
+          </app-entity-display-item-taxonomy>:
+          <span class="ml-1" [innerHTML]="getEndpointLabel(value)"></span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <app-entity-display [entity]="value" [metadata]="nestedMetdata(value)"></app-entity-display>
+      <div class="col">
+        <div class="d-flex badge badge-success align-items-center" style="width: fit-content;"
+          *ngIf="mainDistributionEndpoint">
+          The base URI resolves to this endpoint.
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </ng-container>
+
+  <ng-container *ngIf="displayType === 'linking'">
+    <mat-expansion-panel *ngFor="let value of entityProperty; let i = index" [expanded]="expanded">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <ds-icon class="mr-1" iconType="S3" [tooltipDisabled]="false" [icon]="value.resourceType">
+          </ds-icon>
+          {{metadataProperty.properties[constants.Metadata.Name]}}:
+          <span class="ml-1" [innerHTML]="value.name"></span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="row d-flex" *ngIf="!isLoading; else loading">
+        <div class="col-md-3 text-muted font-weight-normal">
+          Definition:
+        </div>
+        <div class="col-md-9 my-1" style="overflow-y: hidden" innerHTML="{{value.definition}}">
+        </div>
+        <div class="col-md-3 text-muted font-weight-normal">
+          PID URI:
+        </div>
+        <div class="col-md-9" [class.font-weight-bold]="!displayForm">
+          <a class="wordbreak" [href]="value.pidUri" target="_blank" rel="noopener">{{value.pidUri}}</a>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </ng-container>
+
+
+  <div class="col" *ngIf="displayType !== 'taxonomy' && displayType !== 'distribution' && displayType !== 'linking'">
+    <span class="row" *ngFor="let value of entityProperty; let i = index">
+      <ng-container [ngSwitch]="displayType">
+        <ng-container *ngSwitchCase="'datetime'">
+          <span>{{value | date:'yyyy-MM-dd HH:mm'}}</span>
+        </ng-container>
+        <ng-container *ngSwitchCase="'url'">
+          <a class="wordbreak" [href]="value" target="_blank" rel="noopener">{{value}}</a>
+        </ng-container>
+        <ng-container *ngSwitchCase="'version'">
+          <app-entity-display-item-versioning (versionClick)="versionClicked($event)" [versions]="entityVersions"
+            [version]="value"></app-entity-display-item-versioning>
+        </ng-container>
+        <ng-container *ngSwitchCase="'externalUrl'">
+          <a class="wordbreak" [href]="'//' + value" target="_blank" rel="noopener">{{value}}</a>
+        </ng-container>
+        <ng-container *ngSwitchCase="'identifier'">
+          <a class="wordbreak" [href]="value?.id" target="_blank" rel="noopener">{{value?.id}}</a>
+        </ng-container>
+        <ng-container *ngSwitchCase="'email'">
+          <a class="wordbreak mr-2" [href]="'mailto:' + value">{{value}}</a>
+        </ng-container>
+        <ng-container *ngSwitchCase="'html'">
+          <div class="ql-editor-parent w-100">
+            <quill-view-html [content]="value" theme="default"></quill-view-html>
+          </div>
+        </ng-container>
+        <ng-container *ngSwitchDefault>
+          <span innerHtml="{{value}}"></span>
+        </ng-container>
+      </ng-container>
+    </span>
+  </div>
+</ng-container>
+
+<ng-template #loading>
+  <app-colid-spinner [diameter]="20" [strokeWidth]="2"></app-colid-spinner>
+</ng-template>

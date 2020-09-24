@@ -1,0 +1,86 @@
+img {
+  margin-right: 10px;
+}
+
+.btn-circle.btn-xl {
+  width: 70px;
+  height: 70px;
+  padding: 10px 16px;
+  border-radius: 35px;
+  font-size: 24px;
+  line-height: 1.33;
+}
+
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  padding: 6px 0px;
+  border-radius: 15px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.42857;
+}
+
+.rounded {
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+}
+
+.styled-select {
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  height: 28px;
+  padding: 5px;
+  width: auto;
+}
+
+.black {
+  color: #fff;
+  background-color: #000;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+fa-icon ~ fa-icon {
+  margin-left: 0.6em;
+}
+
+.mat-icon {
+  height: 30px;
+  width: 30px;
+  font-size: 30px;
+}
+.nav-icon {
+  cursor: pointer;
+  font-size: 1.15rem;
+  color: white !important;
+}
+
+.content {
+  flex-shrink: 1;
+  flex-grow: 1;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+}
+
+::ng-deep .ql-editor-parent ::ng-deep {
+  * {
+    font-family: inherit;
+    font-size: inherit;
+  }
+
+  .ql-editor {
+    padding: unset !important;
+  }
+}
+
+::ng-deep .wordbreak {
+  word-break: break-all !important;
+}

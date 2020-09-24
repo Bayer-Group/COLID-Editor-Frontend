@@ -1,0 +1,7 @@
+fa-icon{
+    cursor: pointer !important;
+}
+
+.list-group-item:not(.active){
+    cursor: pointer !important;
+}

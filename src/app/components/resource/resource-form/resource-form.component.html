@@ -1,0 +1,40 @@
+<div class="container" *ngIf="resourceResult && metaData && (consumerGroup$ | async); else loading">
+  <div>
+    <app-form [metaData]="metaData" [linkingMetadata]="linkingMetadata" [errors]="formErrors"
+      [entity]="{ id: resourceResult.id, properties: resourceResult.properties }" [isNew]="isNew"
+      [placeholder]="placeholder" [adminPrivilege]="authService.hasAdminPrivilege"
+      [hasPublishedVersion]="hasPublishedVersion" [pidUriTemplatesFetched]="pidUriTemplatesFetched$"
+      [pidUriTemplateNames]="pidUriTemplateNames" [mainDistribution]="mainDistribution"
+      (handleFormChanged)="handleFormChanged($event)">
+    </app-form>
+    <div class="col-12">
+      <div class="row justify-content-end">
+        <button mat-raised-button class="ml-2" *ngIf="!isNew" [routerLink]="['/resource']"
+          [queryParams]="{ pidUri: resourceResult.pidUri }">
+          <mat-icon fontSet="material-icons-outlined">cancel</mat-icon>
+          Cancel
+        </button>
+        <button mat-raised-button class="ml-2" (click)="revert()" *ngIf="resourceResult.publishedVersion">
+          <mat-icon fontSet="material-icons-outlined">undo</mat-icon>
+          Revert to published
+        </button>
+        <button mat-raised-button class="ml-2" id="saveButton" color="draft" (click)="save()">
+          <mat-icon fontSet="material-icons-outlined">save</mat-icon>
+          Save
+        </button>
+        <button mat-raised-button class="ml-2" id="publishButton" color="published" (click)="saveAndPublish()">
+          <mat-icon fontSet="material-icons-outlined">cloud_upload</mat-icon>
+          Publish
+        </button>
+      </div>
+    </div>
+  </div>
+  <br />
+</div>
+<ng-template #loading>
+  <div class="row justify-content-center mt-4">
+    <div class="col-auto">
+      <app-colid-spinner></app-colid-spinner>
+    </div>
+  </div>
+</ng-template>

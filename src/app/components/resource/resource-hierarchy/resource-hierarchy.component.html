@@ -1,0 +1,27 @@
+<div class="container" *ngIf="resourceType; else loading">
+  <div class="row p-2 justify-content-center">
+      <h1 class="mat-display-1">Choose the type of your resource.</h1>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <app-resource-hierarchy-item [item]="resourceType" [activeItem]="activeItem" (selectType)="handleSelectType($event)"
+        [hidden]="false" marginPixel="20"></app-resource-hierarchy-item>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-md-3 offset-md-9 align-self-end">
+      <button mat-raised-button	color="primary" id="createNewResource" (click)="createResource()"
+        [disabled]="activeItem === null || !activeItem?.instantiable">
+        <mat-icon fontSet="material-icons-outlined">add</mat-icon>
+        Create Resource
+      </button>
+    </div>
+  </div>
+</div>
+<ng-template #loading>
+  <div class="row justify-content-center mt-4">
+    <div class="col-auto">
+      <app-colid-spinner></app-colid-spinner>
+    </div>
+  </div>
+</ng-template>

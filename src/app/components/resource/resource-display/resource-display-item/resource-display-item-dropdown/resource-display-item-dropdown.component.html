@@ -1,0 +1,21 @@
+<ng-container *ngIf="fetched; else loading">
+  <div [class.d-flex]="badges">
+    <ng-container *ngIf="entities">
+      <div *ngFor="let entity of entities">
+        <span *ngIf="!badges"><strong>{{entity.name}}</strong></span>
+        <span *ngIf="badges" class="badge badge-info mr-1" style="font-size: 0.7rem;">{{entity.name}}</span>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!entities">
+      <div *ngFor="let entity of dropdownList">
+          <span *ngIf="!badges"><strong>{{entity}}</strong></span>
+          <span *ngIf="badges" class="badge badge-info mr-1" style="font-size: 0.7rem;">{{entity}}</span>
+      </div>
+    </ng-container>
+  </div>
+</ng-container>
+
+
+<ng-template #loading>
+  <fa-icon icon="spinner" [spin]="true"></fa-icon>
+</ng-template>

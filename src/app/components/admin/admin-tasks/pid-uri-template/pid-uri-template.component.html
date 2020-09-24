@@ -1,0 +1,21 @@
+<div class="row justify-content-between p-2">
+    <div class="col-auto">
+        <h1>PID URI Templates</h1>
+    </div>
+    <div class="col-auto">
+        <button mat-raised-button color="primary" (click)="reload()" [disabled]="!(pidUriTemplates$ | async)">
+            <mat-icon fontSet="material-icons-outlined">refresh</mat-icon>
+            <ng-container *ngIf="pidUriTemplates$ | async">
+              Reload
+            </ng-container>
+            <ng-container *ngIf="!(pidUriTemplates$ | async)">
+              Loading...
+            </ng-container>
+          </button>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <app-pid-uri-template-table></app-pid-uri-template-table>
+    </div>
+</div>

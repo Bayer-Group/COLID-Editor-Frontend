@@ -1,0 +1,23 @@
+<mat-card class="mb-2" *ngFor="let groupedNests of endpoints | groupBy">
+    <mat-card-header>
+      <mat-card-title>{{getTypeMetadata(groupedNests.value[0].properties).label}}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <ng-container *ngFor="let nest of groupedNests.value; let i = index">
+        <div *ngFor="let m of getTypeMetadata(nest.properties).properties">
+          <app-resource-display-item [resource]="nest" [metadata]="m">
+          </app-resource-display-item>
+        </div>
+        <div class="row" *ngIf="(mainDistribution$ | async) === nest.id">
+          <div class="col-auto text-bold">
+            <span class="badge badge-success">
+              <fa-icon class="fa mr-2" icon="check"></fa-icon><strong>The base URI resolves to this
+                endpoint.</strong>
+            </span>
+          </div>
+        </div>
+        <mat-divider *ngIf="groupedNests.value.length !== i + 1 "></mat-divider>
+      </ng-container>
+
+    </mat-card-content>
+  </mat-card>

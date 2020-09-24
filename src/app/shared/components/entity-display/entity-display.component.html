@@ -1,0 +1,17 @@
+<div class="mt-3" *ngIf="metadata && entity; else loading">
+  <div class="row p-0 m-0" *ngFor="let groupedMetadata of metadata | groupByGroup; let i = index">
+    <div class="col-12">
+      <ng-container *ngIf="isVisibleMetadataGroup(groupedMetadata.key)">
+        <app-entity-display-group (versionClick)="versionClicked($event)" [invisbleProperties]="invisbleProperties" [entityVersions]="entityVersions" [group]="groupedMetadata.key" [groupedMetadata]="groupedMetadata.value" [entity]="entity" [headerGroup]="headerGroup" [subHeaderGroup]="subHeaderGroup"></app-entity-display-group>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="row justify-content-center mt-4">
+    <div class="col-auto">
+      <app-colid-spinner></app-colid-spinner>
+    </div>
+  </div>
+</ng-template>

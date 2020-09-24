@@ -1,0 +1,44 @@
+@import "../../../../../styles.scss";
+
+mat-progress-bar {
+    margin-top: -4px;
+}
+
+.mat-standard-chip {
+    border-radius: 10px;
+    min-height: 20px;
+    padding: 0px 8px;
+}
+
+:host ::ng-deep .mat-chip-list-wrapper {
+    flex-wrap: nowrap;
+}
+
+.resource-name {
+    font-size: 0.8em !important;
+}
+
+.resource-definition {
+    font-size: 0.75em !important;
+
+    ::ng-deep p {
+        margin: unset;
+    }
+}
+
+.active {
+    background-color: rgba(0, 0, 0, 0.12);
+    border-radius: 5px;
+}
+
+$sidebar-filter-height: 171px;
+
+.search-results {
+    height: calc(100vh - #{$sidebar-filter-height} - #{$mat-toolbar-height}) !important;
+    overflow-y:scroll;
+    overflow-x:hidden;
+}
+
+.mat-list-base .mat-list-item.mat-2-line, .mat-list-base .mat-list-option.mat-2-line {
+    height: 60px;
+}

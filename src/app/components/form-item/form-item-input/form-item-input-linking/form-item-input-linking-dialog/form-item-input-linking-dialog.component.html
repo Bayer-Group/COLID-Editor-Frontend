@@ -1,0 +1,33 @@
+<div class="modal-content h-100">
+  <div class="modal-header justify-content-center">
+    <h2 class="mb-0">Please select another resource to link</h2>
+  </div>
+  <div class="modal-body pb-0">
+    <div class="row">
+      <div class="col-12">
+        <div class="row align-items-end">
+          <div class="col">
+            <div class="linking-searchbar-container w-auto">
+              <div class="linking-searchbar-header mb-2">
+                <app-sidebar-filter [resourceOverviewState]="resourceOverviewState$"
+                  (resourceSearchEvent)="handleResourceSearchChanged($event)">
+                </app-sidebar-filter>
+              </div>
+              <div class="linking-searchbar-list">
+                <app-sidebar-content [resourceOverviewState]="resourceOverviewState$" class="text-left"
+                  [loadingState]="loading" [selectedResourcePidUri]="selectedResource?.pidUri"
+                  (nextResourceBatchEvent)="handleNextResourceBatch($event)"
+                  (resourceSelectedEvent)="handleResourceSelectionChanged($event)" [currentPageStatus]="currentPageStatus">
+                </app-sidebar-content>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button mat-raised-button color="accent" id='btnCancelSelectedLinkResource' class="mr-2" mat-dialog-close>Cancel</button>
+    <button mat-raised-button color="primary" id='btnLinkResource' class="mr-2" [mat-dialog-close]="selectedResource">Link</button>
+  </div>
+</div>

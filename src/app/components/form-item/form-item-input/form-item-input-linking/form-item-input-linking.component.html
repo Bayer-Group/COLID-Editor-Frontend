@@ -1,0 +1,40 @@
+<ng-container *ngIf="!fetching; else loading">
+  <ng-container *ngIf="_linkedEntities && _linkedEntities.length !== 0">
+    <mat-accordion multi>
+      <mat-expansion-panel *ngFor="let linkEntity of _linkedEntities; let i = index" [expanded]="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <ds-icon class="mr-1" iconType="S3" [tooltipDisabled]="true" [icon]="linkEntity.resourceType">
+            </ds-icon>
+            {{label}}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="row d-flex" *ngIf="!isLoading; else loading">
+          <div class="col-md-3 text-muted font-weight-normal">
+            Label:
+          </div>
+          <div class="col-md-9 my-1" style="overflow-y: hidden">
+            {{linkEntity.name}}
+          </div>
+          <div class="col-md-3 text-muted font-weight-normal">
+            Definition:
+          </div>
+          <div class="col-md-9 my-1" style="overflow-y: hidden" innerHTML="{{linkEntity.definition}}">
+          </div>
+          <div class="col-md-3 text-muted font-weight-normal">
+            PID URI:
+          </div>
+          <div class="col-md-9" [class.font-weight-bold]="!displayForm">
+            <a class="wordbreak" [href]="linkEntity.pidUri" target="_blank" rel="noopener">{{linkEntity.pidUri}}</a>
+          </div>
+          <div class="col-12 text-right">
+            <button (click)="confirmAndRemoveLinking(linkEntity, i)" mat-raised-button color="primary">Remove</button>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </ng-container>
+</ng-container>
+<ng-template #loading>
+  <fa-icon icon="spinner" [spin]="true"></fa-icon>
+</ng-template>

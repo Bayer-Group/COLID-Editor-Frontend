@@ -1,0 +1,20 @@
+<form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+    <div class="row">
+        <div class="col-12 justify-content-center welcome-message ql-editor">
+            <quill-editor id="editControl" [styles]="{height: '400px'}" [modules]="editorQuillConfig" formControlName="editControl"></quill-editor>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 text-right">
+            <button type="button" mat-raised-button class="ml-3" color="secondary"
+                (click)="onResetWelcomeMessage()">
+                <mat-icon fontSet="material-icons-outlined">cancel</mat-icon>
+                Reset
+            </button>
+            <button type="submit" mat-raised-button class="ml-3" color="primary">
+                <mat-icon fontSet="material-icons-outlined">save</mat-icon>
+                Save
+            </button>
+        </div>
+    </div>
+</form>

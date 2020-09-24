@@ -1,0 +1,37 @@
+.resource-fab-buttons {
+  z-index: 99;
+  position: absolute;
+  right: 0px;
+  top: 15px;
+}
+
+.sticky-buttons {
+  position: sticky;
+  position: -webkit-sticky; /* For macOS/iOS Safari */
+  top: 0; /* Sets the sticky toolbar to be on top */
+  z-index: 1000; /* Ensure that your app's content doesn't overlap the toolbar */
+}
+
+.mat-standard-chip {
+  border-radius: 10px;
+  min-height: 20px;
+  padding: 0px 8px;
+}
+
+.mat-standard-chip > .mat-icon {
+  height: 16px;
+  width: 16px;
+}
+
+.mat-standard-chip > .material-icons-outlined {
+  font-size: 16px;
+}
+
+mat-chip-list {
+  margin-left: 1em;
+}
+
+a:hover {
+  color: rgba(0, 0, 0, 0.87);
+  text-decoration: none;
+}

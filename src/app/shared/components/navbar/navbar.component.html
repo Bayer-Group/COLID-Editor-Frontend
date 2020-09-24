@@ -1,0 +1,106 @@
+<mat-toolbar class="align-items-center" color="primary">
+  <mat-toolbar-row>
+    <span class="menu-spacer"></span>
+    <button type="button" mat-icon-button (click)="toggleNavbar()" color="white">
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <a href="">
+      <img src="assets/BAG_COLID-Visual_white_lh.svg" height="29" alt="COLID">
+    </a>
+    <div class="app-title">Editor
+      <span *ngIf="(buildInformation$ | async) as buildInformation">{{buildInformation.versionNumber}}
+        <span>{{environmentLabel}}</span>
+      </span>
+    </div>
+    <span class="gap"></span>
+
+    <button *ngIf="hasCreatePrivilege | async" mat-flat-button class="d-none d-md-block" id="button-sidebar-pid-link" (click)="registerNewResource()">
+      Register Resource
+    </button>
+
+    <span class="gap d-none d-xl-block"></span>
+
+    <button mat-flat-button class="d-none d-xl-block" id="button-sidebar-datamarketplace-link"
+      (click)="goToDataMarketplace()">
+      Want to search data? Go to Data Marketplace
+    </button>
+
+    <span class="filler"></span>
+
+    <ng-container *ngIf="(consumerGroups$ | async) as consumerGroups">
+      <mat-form-field *ngIf="consumerGroups.length !== 0">
+        <mat-select matTooltip="Select your consumer group" style="font-size: 14px !important;"
+          [(ngModel)]='selectedConsumerGroup' (selectionChange)="selectConsumerGroup($event)">
+          <mat-select-trigger>
+            <span id='selectConsumerGroup'>{{ selectedConsumerGroup.name }}</span>
+          </mat-select-trigger>
+          <mat-option *ngFor="let consumerGroup of consumerGroups" [value]="consumerGroup"
+            matTooltip="This consumer group is set as default."
+            [matTooltipDisabled]="consumerGroup.id !== defaultConsumerGroup.uri">
+            <mat-icon>{{consumerGroup.id === defaultConsumerGroup.uri ? "check" : ""}}</mat-icon>
+            <span id="{{consumerGroup.name |removeWhiteSpaces}}">{{ consumerGroup.name }}</span>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </ng-container>
+
+
+    <span class="gap"></span>
+
+    <div *ngIf="isLoggedIn">
+      <button *ngIf="hasCreatePrivilege | async" mat-icon-button matTooltip="Statistics" [routerLink]="'/systemanalytics'">
+        <mat-icon>insert_chart_outlined</mat-icon>
+      </button>
+
+      <button mat-icon-button (click)="toggleNotification.emit()" matTooltip="Notifications"> 
+        <mat-icon *ngIf="newNotifications === 0">notifications_none</mat-icon>
+        <mat-icon *ngIf="newNotifications !== 0" [matBadge]="newNotifications" matBadgeColor="warn">notifications_active</mat-icon>
+      </button>
+
+      <button mat-icon-button [matMenuTriggerFor]="appMenu">
+        <mat-icon>person</mat-icon>
+      </button>
+
+      <mat-menu #appMenu="matMenu">
+        <div class="mat-menu-header" mat-menu-item disabled>
+          <mat-icon class="mat-menu-header-icon" fontSet="material-icons-outlined">face</mat-icon>
+          <span>{{ currentName }}</span>
+        </div>
+        <button  mat-menu-item [matMenuTriggerFor]="usersettings">
+          <mat-icon fontSet="material-icons-outlined">settings</mat-icon>
+          <span>User Settings</span>
+        </button>
+        <button *ngIf="hasAdminPrivilege" mat-menu-item [routerLink]="'admin'">
+          <mat-icon fontSet="material-icons-outlined">security</mat-icon>
+          <span>Administration</span>
+        </button>
+        <button mat-menu-item (click)="createSupportTicket()">
+          <mat-icon fontSet="material-icons-outlined">contact_support</mat-icon>
+          <span>Contact Support</span>
+        </button>
+      </mat-menu>
+
+      <mat-menu #usersettings="matMenu">
+        <button *ngIf="hasCreatePrivilege | async" mat-menu-item (click)="setDefaultConsumerGroup()"
+          matTooltip="Sets the currently selected consumer group as default. The consumer group currently selected as default is marked with a tick.">
+          <mat-icon fontSet="material-icons-outlined">people</mat-icon>
+          <span>Set default consumer group</span>
+        </button>
+        <button mat-menu-item (click)="setDefaultSidebarFilters()"
+          matTooltip="Sets the currently selected search filters as default (except search text).">
+          <mat-icon fontSet="material-icons-outlined">filter_alt</mat-icon>
+          <span>Set default search filters</span>
+        </button>
+        <button mat-menu-item [routerLink]="'user'" matTooltip="">
+          <mat-icon fontSet="material-icons-outlined">settings</mat-icon>
+          <span>Open settings</span>
+        </button>
+      </mat-menu>
+    </div>
+
+    <button mat-icon-button matTooltip="Help" [routerLink]="'/resource/help'">
+      <mat-icon>help_outline</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>

@@ -1,0 +1,37 @@
+<ng-container *ngIf="!isDistribution && !isLinking">
+  <ng-container *ngFor="let metadataProperty of groupedMetadata; let i = index">
+    <div class="row mb-2">
+      <div class="col-3 text-muted" *ngIf="!isHeader && !isSubHeader">
+        <ng-container *ngIf="showLabel(metadataProperty, i)">{{label(metadataProperty)}}</ng-container>
+      </div>
+      <div class="col-9" [class.col-12]="isHeader || isSubHeader" [class.h2]="isHeader" [class.h5]="isSubHeader">
+        <ng-container>
+          <app-entity-display-item (versionClick)="versionClicked($event)" [entityVersions]="entityVersions"
+            [entityProperty]="entity.properties[metadataProperty.key]" [metadataProperty]="metadataProperty">
+          </app-entity-display-item>
+        </ng-container>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>
+<ng-container *ngIf="isDistribution || isLinking">
+  <div class="row mb-2">
+    <div class="col-3 text-muted" *ngIf="!isHeader && !isSubHeader">
+      {{groupLabel}}
+    </div>
+    <div class="col-9 pl-0">
+      <ng-container *ngIf="hasSomeGroupValue">
+        <mat-accordion multi>
+          <ng-container *ngFor="let metadataProperty of groupedMetadata; let i = index">
+            <ng-container *ngIf="entity.properties[metadataProperty.key] as entityProperty">
+              <app-entity-display-item [expanded]="!hasMoreThanOneGroupValue"
+                [mainDistributionEndpoint]="constants.Metadata.MainDistribution === metadataProperty.key"
+                [entityProperty]="entityProperty" [metadataProperty]="metadataProperty">
+              </app-entity-display-item>
+            </ng-container>
+          </ng-container>
+        </mat-accordion>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>

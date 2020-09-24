@@ -1,0 +1,13 @@
+<ng-container *ngIf="activeResource && metadata && metadata.length; else loading">
+  <app-entity-display (versionClick)="versionClicked($event)" [entityVersions]="(activeResource$ | async)?.versions"
+  [entity]="activeResource" [metadata]="metadata" [headerGroup]="headerGroup"
+  [subHeaderGroup]="subHeaderGroup" [invisbleProperties]="['https://pid.bayer.com/kos/19050/hasLabel']">
+</app-entity-display>
+</ng-container>
+<ng-template #loading>
+  <div class="row justify-content-center mt-4">
+    <div class="col-auto">
+      <app-colid-spinner></app-colid-spinner>
+    </div>
+  </div>
+</ng-template>

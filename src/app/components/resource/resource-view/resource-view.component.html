@@ -1,0 +1,64 @@
+<ng-container *ngIf="activeResource; else loading">
+  <div class="mx-5">
+    <!-- Resource Header with Icon, Title and Button -->
+    <section class="sticky-buttons">
+      <div class="d-flex justify-content-end resource-fab-buttons">
+        <button id='btnEditResource' mat-fab color="primary" [disabled]="!authorizedForEdit" (click)="editResource()">
+          <mat-icon id="button-resource-display-edit" fontSet="material-icons-outlined">edit</mat-icon>
+        </button>
+        <div>
+          <mat-fab-menu direction="bottom" [fabButtons]="fabResourceMenu" [disabled]="!fabResourceMenu.length > 0"
+            (onFabMenuItemSelected)="onFabMenuItemSelected($event)">
+          </mat-fab-menu>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <app-entity-header [entity]="activeResource" key="https://pid.bayer.com/kos/19050/hasLabel">
+      </app-entity-header>
+    </section>
+
+    <!-- Tab Navigation Current - History -->
+    <section>
+      <div class="row">
+        <div class="col">
+          <nav mat-tab-nav-bar animationDuration="0ms" mat-align-tabs="start" dynamicHeight="true">
+            <a mat-tab-link routerLink="./" [queryParams]="{ pidUri: activeResource.pidUri }" routerLinkActive
+              #graph="routerLinkActive" [routerLinkActiveOptions]="{exact:true}" [active]="graph.isActive">
+              Current
+              <mat-chip-list>
+                <mat-chip selected color="deleted" *ngIf="isMarkedForDeletion" matTooltip="Marked for deletion">
+                  <mat-icon class="icon-display" fontSet="material-icons-outlined">delete_forever</mat-icon>
+                </mat-chip>
+                <mat-chip selected color="draft" *ngIf="isDraft">
+                  <mat-icon class="icon-display" fontSet="material-icons-outlined" matTooltip="Draft">edit</mat-icon>
+                </mat-chip>
+                <mat-chip selected color="published" *ngIf="isPublished">
+                  <mat-icon class="icon-display" fontSet="material-icons-outlined" matTooltip="Published">cloud_upload
+                  </mat-icon>
+                </mat-chip>
+              </mat-chip-list>
+            </a>
+            <a mat-tab-link routerLink="history" [queryParams]="{ pidUri: activeResource.pidUri }" routerLinkActive
+              #history="routerLinkActive" [routerLinkActiveOptions]="{exact:true}" [active]="history.isActive">
+              History
+            </a>
+          </nav>
+        </div>
+      </div>
+    </section>
+
+    <!-- Display and History of resource -->
+    <router-outlet></router-outlet>
+  </div>
+</ng-container>
+
+<!-- Loading Template -->
+<ng-template #loading>
+  <div class="row justify-content-center mt-4">
+    <div class="col-auto">
+      <app-colid-spinner></app-colid-spinner>
+    </div>
+  </div>
+</ng-template>

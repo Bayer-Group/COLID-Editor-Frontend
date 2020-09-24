@@ -1,0 +1,21 @@
+.entity-header-icon {
+  min-width: fit-content;
+  align-self: center;
+}
+
+:host ::ng-deep .entity-header-icon mat-icon {
+  height: 2.3rem;
+  width: 2.3rem;
+}
+
+.entity-header-text {
+  width: 100%;
+  padding: 1rem;
+  align-self: center;
+  margin: 0;
+}
+
+.entity-content {
+  min-width: fit-content;
+  align-self: center;
+}

@@ -1,0 +1,25 @@
+<div style="padding-left: 40px; padding-top: 0.2rem;">
+  <mat-checkbox color="primary" [checked]="allSelected"
+    (change)="selectAll($event)">Select all</mat-checkbox>
+</div>
+
+<mat-divider></mat-divider>
+
+<mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+  <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
+    <button mat-icon-button disabled></button>
+    <mat-checkbox class="checklist-leaf-node" color="primary" [checked]="checklistSelection.isSelected(node)"
+      (change)="leafItemSelectionToggle(node)">{{node.name}}</mat-checkbox>
+  </mat-tree-node>
+
+  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+    <button mat-icon-button matTreeNodeToggle>
+      <mat-icon>
+        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+      </mat-icon>
+    </button>
+    <mat-checkbox color="primary" [checked]="descendantsAllSelected(node)"
+      [indeterminate]="descendantsPartiallySelected(node)" (change)="itemSelectionToggle(node)">{{node.name}}
+    </mat-checkbox>
+  </mat-tree-node>
+</mat-tree>

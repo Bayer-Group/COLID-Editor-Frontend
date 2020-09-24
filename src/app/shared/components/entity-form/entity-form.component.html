@@ -1,0 +1,56 @@
+<div class="row p-2">
+  <div class="col-12" *ngIf="isNew || _entity; else loading">
+    <div class="w-100" *ngIf="entityForm; else loading">
+      <form [formGroup]="entityForm" class="w-100">
+        <div *ngFor="let m of metaData">
+          <div class="form-group row align-items-start">
+            <label class="col-md-3 col-form-label">
+              <span class="font-weight-bold">
+                {{m.properties[constants.Metadata.Name]}}
+                <span *ngIf="m.properties[constants.Metadata.MinCount] !== '0'" style="color:red">*</span>
+              </span>
+            </label>
+            <div class="col-md-9">
+              <app-form-item name="{{m.properties[constants.Metadata.HasPidUri]}}"
+                [formControl]="entityForm.controls[m.properties[constants.Metadata.HasPidUri]]" [metaData]="m"
+                [readOnly]="null" [errors]="f[m.properties[constants.Metadata.HasPidUri]].errors"
+                [formItemSettings]="formItemSettings">
+              </app-form-item>
+              <small class="form-text text-muted" innerHTML="{{m.properties[constants.Metadata.Comment]}}"></small>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col d-flex justify-content-end">
+            <button mat-raised-button color="white" (click)="cancelEditing()" class="mr-2">
+              <mat-icon fontSet="material-icons-outlined">cancel</mat-icon>
+              Cancel
+            </button>
+            <ng-content select="[buttons]"></ng-content>
+            <button mat-raised-button color="accent" *ngIf="!isNew && isDeletable" (click)="confirmAndDelete()"
+              class="mr-2">
+              <mat-icon fontSet="material-icons-outlined">delete_forever</mat-icon>
+              Delete
+            </button>
+            <button mat-raised-button color="primary" (click)="editEntity()" *ngIf="!isNew">
+              <mat-icon fontSet="material-icons-outlined">save</mat-icon>
+              Save
+            </button>
+            <button mat-raised-button color="primary" (click)="createEntity()" *ngIf="isNew">
+              <mat-icon fontSet="material-icons-outlined">create</mat-icon>
+              Create
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="row justify-content-center mt-4">
+    <div class="col-auto">
+      <app-colid-spinner></app-colid-spinner>
+    </div>
+  </div>
+</ng-template>

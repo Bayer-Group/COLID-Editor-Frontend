@@ -1,0 +1,18 @@
+@import '../../../../../styles.scss';
+
+.list-group-item {
+    border-radius: 0.25rem;
+    cursor: pointer !important;
+}
+
+.list-group-item.active {
+    background-color: $bayer-dark-blue !important;
+    border-color: $bayer-dark-blue !important;
+    background-image: none;
+}
+
+.subActive {
+    color: white;
+    background-color: $bayer-green;
+    border-color: $bayer-green;
+}

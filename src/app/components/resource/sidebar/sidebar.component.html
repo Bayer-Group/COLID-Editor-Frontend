@@ -1,0 +1,10 @@
+<div class="sidebar-content">
+  <app-sidebar-filter [resourceOverviewState]="resourceSidebarOverview$"
+    (resourceSearchEvent)="handleResourceSearchChanged($event)">
+  </app-sidebar-filter>
+
+  <app-sidebar-content class="pt-1" [resourceOverviewState]="resourceSidebarOverview$" [loadingState]="loading$"
+    [selectedResourcePidUri]="selectedResourcePidUri" (nextResourceBatchEvent)="handleNextResourceBatch($event)"
+    (resourceSelectedEvent)="handleResourceSelectionChanged($event)" [currentPageStatus]="currentPageStatus">
+  </app-sidebar-content>
+</div>
