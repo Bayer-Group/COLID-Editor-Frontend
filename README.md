@@ -1,6 +1,11 @@
-# COLID Frontend
+# Editor Frontend
+The Editor Frontend is part of the Corporate Linked Data Catalog - short: COLID - application.
+[Here](https://colid.pages.gitlab.bayer.com/docs/tech/#/?id=introduction) you can find an introduction to the application.
+A description of all its functions is [here](https://colid.pages.gitlab.bayer.com/docs/tech/#/functional-specification).
 
-User Interface for COLID Editor to create and maintain resources.
+The complete guide can be found at the following [link](https://bayer-group.github.io/colid-documentation).
+
+The COLID Editor is the user interface to create and maintain resources and administer the system.
 
 ## Getting Started
 
