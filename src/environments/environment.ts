@@ -32,7 +32,8 @@ export const environment = {
     ciPipelineId: '$BUILD_CIPIPELINEID',
     ciCommitSha:  '$BUILD_CICOMMITSHA',
   },
-  dmpUrl: 'http://localhost:4300/'
+  dmpUrl: 'http://localhost:4300/', 
+  colidIconsUrl : 'https://dataservices-icons.dev.colid.int.bayer.com/'
 };
 
 
