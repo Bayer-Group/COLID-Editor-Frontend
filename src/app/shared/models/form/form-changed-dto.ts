@@ -12,11 +12,14 @@ export class FormChangedDTO {
 
     initialBuild: boolean;
 
-    constructor(id: string, value: any, formValue: any, main: boolean, initialBuild: boolean = false) {
+    created : boolean;
+
+    constructor(id: string, value: any, formValue: any, main: boolean, initialBuild: boolean = false, created = false) {
         this.id = id;
         this.value = value;
         this.formValue = formValue;
         this.initialBuild = initialBuild;
         this.main = main;
+        this.created = created;
     }
 }

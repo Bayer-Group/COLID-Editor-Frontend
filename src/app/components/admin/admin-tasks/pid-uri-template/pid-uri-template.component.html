@@ -3,15 +3,10 @@
         <h1>PID URI Templates</h1>
     </div>
     <div class="col-auto">
-        <button mat-raised-button color="primary" (click)="reload()" [disabled]="!(pidUriTemplates$ | async)">
-            <mat-icon fontSet="material-icons-outlined">refresh</mat-icon>
-            <ng-container *ngIf="pidUriTemplates$ | async">
+      <action-button color="primary" (click)="reload()" [disabled]="!(pidUriTemplates$ | async)"
+              [loading]="!(pidUriTemplates$ | async)" icon="refresh">
               Reload
-            </ng-container>
-            <ng-container *ngIf="!(pidUriTemplates$ | async)">
-              Loading...
-            </ng-container>
-          </button>
+            </action-button>
     </div>
 </div>
 <div class="row">

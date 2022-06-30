@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Constants } from 'src/app/shared/constants';
-import { ControlTypeMapping, MetaDataPropertyIdentifier } from '../../resource-form/resource-form.constants';
+import { FieldTypeMapping, MetaDataPropertyIdentifier } from '../../resource-form/resource-form.constants';
 import { MetaDataProperty } from 'src/app/shared/models/metadata/meta-data-property';
 import { Resource } from '../../../../shared/models/resources/resource';
 import { MetaDataPropertyGroup } from 'src/app/shared/models/metadata/meta-data-property-group';
@@ -47,7 +47,7 @@ export class ResourceDisplayItemComponent implements OnInit {
     }
 
     if (this.metadata.properties[Constants.Metadata.Range] && this.metadata.properties[Constants.Metadata.NodeKind] === Constants.Metadata.NodeType.IRI && !(group != null && group.key === Constants.Resource.Groups.LinkTypes)) {
-      this.displayType = 'cvDropdown';
+      this.displayType = 'list';
       this.InternalValueToArray();
       return;
     }
@@ -57,12 +57,12 @@ export class ResourceDisplayItemComponent implements OnInit {
       return;
     }
 
-    if (ControlTypeMapping[this.metadata.properties[Constants.Metadata.Datatype]] === 'textarea') {
+    if (FieldTypeMapping[this.metadata.properties[Constants.Metadata.Datatype]] === 'html') {
       this.displayType = 'html';
       return;
     }
 
-    if (ControlTypeMapping[this.metadata.properties[Constants.Metadata.Datatype]] === 'datetime') {
+    if (FieldTypeMapping[this.metadata.properties[Constants.Metadata.Datatype]] === 'datetime') {
       this.displayType = 'datetime';
       return;
     }

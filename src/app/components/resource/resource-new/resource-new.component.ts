@@ -5,6 +5,7 @@ import { LogService } from 'src/app/core/logging/log.service';
 import { FetchMetadata } from 'src/app/state/meta-data.state';
 import { ClearActiveResource, FetchResource } from 'src/app/state/resource.state';
 import { Subscription } from 'rxjs';
+import { ResourceCreationType } from 'src/app/shared/models/resources/resource-creation-type';
 
 @Component({
   selector: 'app-resource-new',
@@ -14,7 +15,9 @@ import { Subscription } from 'rxjs';
 export class ResourceNewComponent implements OnInit, OnDestroy {
 
   selectedResourceType: string;
-  previousVersion: string;
+  basedResourceUri: string;
+  creationType: ResourceCreationType;
+
   routeSubscription: Subscription
 
   constructor(private store: Store, private router: Router, private route: ActivatedRoute,
@@ -22,24 +25,25 @@ export class ResourceNewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.routeSubscription = this.route.queryParams.subscribe(res => {
-      if (res.type == null) {
+      if (res.type == null || res.creationType == null) {
         this.router.navigate(['resource', 'hierarchy']);
       }
 
-      if (res.previousVersion != null) {
-        this.store.dispatch([new ClearActiveResource(), new FetchResource(res.previousVersion, true)]).subscribe(() => { });
+      this.creationType = res.creationType;
+      this.basedResourceUri = res.based;
+      this.selectedResourceType = res.type;
+
+      if (this.creationType != ResourceCreationType.NEW && res.based != null) {
+        this.store.dispatch([new ClearActiveResource(), new FetchResource(res.based, true, this.selectedResourceType)]).subscribe(() => { });
       } else {
-        this.store.dispatch([new ClearActiveResource(), new FetchMetadata(res.type)]).subscribe(() => { });
+        this.store.dispatch([new ClearActiveResource(), new FetchMetadata(this.selectedResourceType)]).subscribe(() => { });
       }
 
       this.logger.info('PID_RESOURCE_NEW_OPENED');
-
-      this.selectedResourceType = res.type;
-      this.previousVersion = res.previousVersion;
     });
   }
 
   ngOnDestroy() {
-      this.routeSubscription.unsubscribe();
+    this.routeSubscription.unsubscribe();
   }
 }

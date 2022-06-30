@@ -1,28 +1,15 @@
-<li class="list-group-item mt-1" [class.active]="!hidden && !(activeItem?.id === item.id && activeItem.instantiable)" [style.margin-left]="marginPixel + 'px'"
-  [class.subActive]="activeItem?.id === item.id && activeItem.instantiable" (click)="select();">
-  <div attr.data-testing-id="hierarchy-element-{{item.id}}"  class="row">
-    <div class="col-auto m-0 p-0" >
-        <ds-icon *ngIf="!isLeaf" iconType="S3" [tooltipDisabled]="false" class="col-auto pr-0" [delay]="300" [icon]="item.id"></ds-icon>
-    </div>
-    <div class="col"> 
-      <div class="row">
-        <div  class="col">
-          <strong id='{{item.label | removeWhiteSpaces}}'>{{item.label}}</strong>
-          <br>
-          <small [innerHTML]="item.description"></small>
-        </div>
-        <div class="col-auto">
-          <span *ngIf="isLeaf">
-            <mat-icon *ngIf="hidden">expand_more</mat-icon>
-            <mat-icon *ngIf="!hidden">expand_less</mat-icon>
-          </span>
-        </div>
+<div attr.data-testing-id="hierarchy-element-{{item.id}}" class="row">
+  <div class="col-auto pr-0">
+      <ds-icon iconType="S3" *ngIf="item.instantiable" [tooltipDisabled]="false" class="col-auto pr-0" [delay]="300" [icon]="item.id"></ds-icon>
+  </div>
+  <div class="col"> 
+    <div class="row">
+      <div  class="col-12 d-flex justify-content-between">
+        <strong id='{{item.label | removeWhiteSpaces}}'>{{item.label}} <ng-container *ngIf="defaultItem === item.id">(Preselected Type)</ng-container></strong>
+      </div>
+      <div class="col-12">
+        <small [innerHTML]="item.description"></small>
       </div>
     </div>
   </div>
-</li>
-<ng-container *ngIf="!hidden">
-  <app-resource-hierarchy-item [activeItem]="activeItem" (selectType)="handleSelectType($event)"
-    *ngFor="let subItem of item.subClasses; let i = index" [item]="subItem" [marginPixel]="marginPixel * 1.5">
-  </app-resource-hierarchy-item>
-</ng-container>
+</div>

@@ -1,7 +1,8 @@
-import { HostListener } from '@angular/core';
+import { HostListener, Directive } from '@angular/core';
 import { Store } from '@ngxs/store';
 
 
+@Directive()
 export abstract class ComponentCanDeactivate {
 
     protected constructor(private _store: Store) { }

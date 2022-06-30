@@ -3,11 +3,12 @@ import { Store, Select } from '@ngxs/store';
 import { LogService } from 'src/app/core/logging/log.service';
 import { Router } from '@angular/router';
 import { ResourceSearchDTO } from 'src/app/shared/models/search/resource-search-dto';
-import { ResourceOverviewState, FetchNextResourceBatch, SetSidebarSearch } from 'src/app/state/resource-overview.state';
+import { ResourceOverviewState, FetchNextResourceBatch, SetSidebarSearch, SetInitialSidebarSearch } from 'src/app/state/resource-overview.state';
 import { Observable } from 'rxjs';
 import { ResourceOverviewCTO } from 'src/app/shared/models/resources/resource-overview-cto';
 import { SidebarState, ClickedSidebarLink } from 'src/app/state/sidebar.state';
 import { ResourceOverviewDTO } from 'src/app/shared/models/resources/resource-overview-dto';
+import { SearchResult } from 'src/app/shared/models/search/search-result';
 
 @Component({
     selector: 'app-sidebar',
@@ -16,7 +17,7 @@ import { ResourceOverviewDTO } from 'src/app/shared/models/resources/resource-ov
 })
 export class SidebarComponent implements OnInit {
 
-    @Select(ResourceOverviewState.resourceSidebarOverview) resourceSidebarOverview$: Observable<ResourceOverviewCTO>;
+    @Select(ResourceOverviewState.searchResult) searchResult$: Observable<SearchResult>;
     @Select(ResourceOverviewState.loading) loading$: Observable<boolean>;
 
     @Select(SidebarState.sidebarMode) sidebarMode$: Observable<string>;
@@ -31,8 +32,7 @@ export class SidebarComponent implements OnInit {
         this.currentPageStatus = "listSideNav";
     }
 
-    handleResourceSelectionChanged(selectedResource: ResourceOverviewDTO) {
-        const selectedResourcePidUri = selectedResource.pidUri;
+    handleResourceSelectionChanged(selectedResourcePidUri: string) {
         this.logger.info('PID_SIDEBAR_FILTER_RESOURCE_SELECTED', { 'resourcePidUri': selectedResourcePidUri });
         this.router.navigate(['resource'], { queryParams: { pidUri: selectedResourcePidUri } })
             .then(t => {
@@ -47,7 +47,7 @@ export class SidebarComponent implements OnInit {
     }
 
     handleResourceSearchChanged(resourceSearchObject: ResourceSearchDTO) {
-        this.store.dispatch(new SetSidebarSearch(resourceSearchObject)).subscribe();
+        this.store.dispatch(new SetSidebarSearch(resourceSearchObject)).subscribe();         
     }
 
     handleNextResourceBatch(offset: number) {

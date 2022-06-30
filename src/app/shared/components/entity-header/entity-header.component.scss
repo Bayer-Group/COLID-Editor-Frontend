@@ -9,13 +9,30 @@
 }
 
 .entity-header-text {
-  width: 100%;
+  font-weight: 400;
+  font-size: 24px;
   padding: 1rem;
-  align-self: center;
-  margin: 0;
+  white-space: nowrap;
+  overflow: hidden; 
+  text-overflow: ellipsis;
 }
 
-.entity-content {
-  min-width: fit-content;
-  align-self: center;
+.entity-header-small {
+  width: calc(100% - 100px);
+}
+
+.entity-header-smaller {
+  width: calc(100% - 130px);
+}
+
+.entity-header-smallest {
+  width: calc(100% - 160px);
+}
+
+.entity-header-ultra-smallest {
+  width: calc(100% - 190px);
+}
+
+span{
+  font-size: 15px;
 }

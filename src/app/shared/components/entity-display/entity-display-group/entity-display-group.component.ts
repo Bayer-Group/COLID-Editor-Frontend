@@ -31,6 +31,31 @@ export class EntityDisplayGroupComponent implements OnInit {
     if (this.invisbleProperties) {
       this.groupedMetadata = this.groupedMetadata.filter(g => !this.invisbleProperties.includes(g.key));
     }
+    this.addInboundLinkTypes()
+  }
+
+  addInboundLinkTypes(){
+
+    if(this.group == Constants.Resource.Groups.LinkTypes && this.groupedMetadata.length != 0){
+      let linkMetadata = this.groupedMetadata.map(x=>x.key)
+      let allResourceLinks = Object.keys(this.entity['links'])
+      let inboundLinkMetadata = allResourceLinks.filter( x => (!linkMetadata.some(y=> y == x)))
+      
+      inboundLinkMetadata.forEach(x => {
+        let metadataproperty = new MetaDataProperty();
+        metadataproperty.key = x;
+        let propertylist = new Map<string,any>()
+        propertylist[Constants.Metadata.Group.toString()] = new MetaDataPropertyGroup(Constants.Resource.Groups.LinkTypes.toString(), "Linked Resources" , 900 , "A group for all link types between resources",  "Grouping all link types")
+        propertylist[Constants.Metadata.HasPidUri] = x;
+        propertylist[Constants.Metadata.Comment] = this.entity['links'][x][0]['inboundLinkComment'];
+        propertylist[Constants.Metadata.Name] = this.entity['links'][x][0]['inboundLinkLabel'];
+        metadataproperty.properties = propertylist;
+        metadataproperty.nestedMetadata = [];
+        var metadataproperty_object = JSON.parse(JSON.stringify(metadataproperty));
+        this.groupedMetadata.push(metadataproperty_object) 
+  
+      })
+    }
 
   }
 
@@ -49,8 +74,8 @@ export class EntityDisplayGroupComponent implements OnInit {
     return group == null ? '' : group.label;
   }
 
-  get isLinking(): boolean {
-    return this.group === Constants.Resource.Groups.LinkTypes
+  get isLinking(): boolean { 
+    return this.group === Constants.Resource.Groups.LinkTypes;
   }
 
   get isDistribution(): boolean {
@@ -68,7 +93,9 @@ export class EntityDisplayGroupComponent implements OnInit {
   get hasSomeGroupValue(): boolean {
     return this.groupedMetadata.some(g => this.propertyIsFilled(g.key));
   }
-
+  get hasSomeGroupLinkValue(): boolean {
+    return this.groupedMetadata.some(g => this.linkIsFilled(g.key));
+  }
   get hasMoreThanOneGroupValue(): boolean {
     const filledProperties = this.groupedMetadata.filter(g => this.propertyIsFilled(g.key));
 
@@ -76,11 +103,20 @@ export class EntityDisplayGroupComponent implements OnInit {
       return a + this.entity.properties[b.key].length;
     }, 0) > 1;
   }
+  get hasMoreThanOneLinkValue(): boolean {
+    const filledProperties = this.groupedMetadata.filter(g => this.linkIsFilled(g.key));
 
+    return filledProperties.reduce((a, b) => {
+      return a + this.entity['links'][b.key].length;
+    }, 0) > 1;
+  }
   propertyIsFilled(key: string) {
     return this.entity.properties[key] != null && this.entity.properties[key].length !== 0;
   }
 
+  linkIsFilled(key: string) {
+    return this.entity['links'][key] != null && this.entity['links'][key].length !== 0;
+  }
   nextGroupItemHasValue(index: number) {
     var nextProperty = this.groupedMetadata[index + 1];
 

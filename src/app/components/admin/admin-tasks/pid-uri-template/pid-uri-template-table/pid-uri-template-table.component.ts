@@ -5,7 +5,6 @@ import { Observable, Subscription } from 'rxjs';
 import { PidUriTemplateResultDTO } from 'src/app/shared/models/pidUriTemplates/pid-uri-template-result-dto';
 import { MetaDataProperty } from 'src/app/shared/models/metadata/meta-data-property';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { ControlTypeMapping } from 'src/app/components/resource/resource-form/resource-form.constants';
 import { FormItemSettings } from 'src/app/shared/models/form/form-item-settings';
 import { DeleteItemDialogComponent } from 'src/app/shared/components/delete-item-dialog/delete-item-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -13,6 +12,14 @@ import { ValidationResult } from 'src/app/shared/models/validation/validation-re
 import { ColidMatSnackBarService } from 'src/app/modules/colid-mat-snack-bar/colid-mat-snack-bar.service';
 import { EntityFormService } from 'src/app/shared/services/entity-form/entity-form.service';
 import { Constants } from 'src/app/shared/constants';
+import { EntityFormStatus } from 'src/app/shared/components/entity-form/entity-form-status';
+
+export enum PidUriTemplateAction {
+  CREATE = 'create',
+  SAVE = 'save',
+  DELETE = 'delete',
+  REACTIVATE = 'reactivate'
+}
 
 @Component({
   selector: 'app-pid-uri-template-table',
@@ -24,7 +31,9 @@ export class PidUriTemplateTableComponent implements OnInit, OnDestroy {
   @Select(PidUriTemplateState.getPidUriTemplateMetadata) pidUriTemplateMetadata$: Observable<Array<MetaDataProperty>>;
   @Select(PidUriTemplateState.getPidUriTemplates) pidUriTemplates$: Observable<Array<PidUriTemplateResultDTO>>;
 
-  showOverlaySpinner = false;
+  entityStatus: EntityFormStatus = EntityFormStatus.INITIAL;
+  entityAction: PidUriTemplateAction;
+
   metaData: Array<MetaDataProperty>;
   pidUriTemplateForm: FormGroup;
   selectedForEdit: PidUriTemplateResultDTO;
@@ -34,11 +43,14 @@ export class PidUriTemplateTableComponent implements OnInit, OnDestroy {
   entityType = Constants.ResourceTypes.PidUriTemplate;
 
   formItemSettings: FormItemSettings = {
-    controlTypeMapping: ControlTypeMapping,
     debounceTime: 500
   };
 
   pidUriTemplateMetadataSubscription: Subscription;
+
+  get isLoading(): boolean {
+    return this.entityStatus === EntityFormStatus.LOADING;
+  }
 
   get f() { return this.pidUriTemplateForm.controls; }
 
@@ -66,6 +78,10 @@ export class PidUriTemplateTableComponent implements OnInit, OnDestroy {
     this.pidUriTemplateMetadataSubscription.unsubscribe();
   }
 
+  isCurrentEntity(pidUriTemplate: PidUriTemplateResultDTO, action: string = null) {
+    return this.isLoading && action === this.entityAction && (pidUriTemplate === null || this.selectedForEdit === pidUriTemplate);
+  }
+
   setPlaceholder() {
     this.placeholder[Constants.PidUriTemplate.HasBaseUrl] = [Constants.PidUriTemplate.BaseUrl];
     this.placeholder[Constants.PidUriTemplate.HasPidUriTemplateLifecycleStatus] = [Constants.PidUriTemplate.LifecycleStatus.Active];
@@ -84,7 +100,10 @@ export class PidUriTemplateTableComponent implements OnInit, OnDestroy {
       if (m.properties[Constants.Metadata.ControlledVocabulary] && m.properties[Constants.Metadata.ControlledVocabulary].length) {
         this.pidUriTemplateForm.controls[m.properties[this.pidUriConstant]].setValue(m.properties[Constants.Metadata.ControlledVocabulary][0].key);
       } else {
-        this.pidUriTemplateForm.controls[m.properties[this.pidUriConstant]].setValue(this.placeholder[m.properties[this.pidUriConstant]]);
+        const customPlaceholder = this.placeholder[m.properties[this.pidUriConstant]];
+        const shaclPlaceholder = m.properties[Constants.Shacl.DefaultValue];
+        const placeholder = customPlaceholder == null ? shaclPlaceholder : customPlaceholder;
+        this.pidUriTemplateForm.controls[m.properties[this.pidUriConstant]].setValue(placeholder);
       }
     }
   }
@@ -104,9 +123,9 @@ export class PidUriTemplateTableComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(DeleteItemDialogComponent, {
       data: {
         header: 'Deleting PID URI template',
-        body: 'You are about to delete a pid uri template. <br>' + 
-        'If the template is not used, it will be completely deleted by this procedure. <br>' +
-        'Otherwise, the template is set to status deprecated and can be reactivated later'
+        body: 'You are about to delete a pid uri template. <br>' +
+          'If the template is not used, it will be completely deleted by this procedure. <br>' +
+          'Otherwise, the template is set to status deprecated and can be reactivated later'
       },
       width: 'auto',
       disableClose: true
@@ -120,10 +139,12 @@ export class PidUriTemplateTableComponent implements OnInit, OnDestroy {
   }
 
   delete(pidUriTemplate) {
-    this.showOverlaySpinner = true;
+    this.entityStatus = EntityFormStatus.LOADING;
+    this.entityAction = PidUriTemplateAction.DELETE;
+
     this.store.dispatch(new DeletePidUriTemplate(pidUriTemplate.id)).subscribe(
       () => {
-        this.showOverlaySpinner = false;
+        this.entityStatus = EntityFormStatus.SUCCESS;
         this.snackbar.success('PID URI template', 'Deleted successfully');
       },
       error => {
@@ -133,13 +154,15 @@ export class PidUriTemplateTableComponent implements OnInit, OnDestroy {
   }
 
   create() {
-    this.showOverlaySpinner = true;
+    this.entityStatus = EntityFormStatus.LOADING;
+    this.entityAction = PidUriTemplateAction.CREATE;
+
     const formProperties = Object.entries(this.pidUriTemplateForm.value);
     const pidUriTemplate = this.entityFormService.createEntity(formProperties, this.metaData, this.entityType);
     this.store.dispatch(new CreatePidUriTemplate(pidUriTemplate)).subscribe(
       () => {
         this.buildForm();
-        this.showOverlaySpinner = false;
+        this.entityStatus = EntityFormStatus.SUCCESS;
         this.snackbar.success('PID URI template', 'Created successfully');
       },
       error => {
@@ -154,13 +177,15 @@ export class PidUriTemplateTableComponent implements OnInit, OnDestroy {
   }
 
   editPidUriTemplate() {
-    this.showOverlaySpinner = true;
+    this.entityStatus = EntityFormStatus.LOADING;
+    this.entityAction = PidUriTemplateAction.SAVE;
+
     const formProperties = Object.entries(this.pidUriTemplateForm.value);
     const pidUriTemplate = this.entityFormService.createEntity(formProperties, this.metaData, this.entityType);
     this.store.dispatch(new EditPidUriTemplate(this.selectedForEdit.id, pidUriTemplate)).subscribe(
       () => {
         this.cancelEditing();
-        this.showOverlaySpinner = false;
+        this.entityStatus = EntityFormStatus.SUCCESS;
         this.snackbar.success('PID URI template', 'Edited successfully');
       },
       error => {
@@ -169,16 +194,18 @@ export class PidUriTemplateTableComponent implements OnInit, OnDestroy {
   }
 
   reactivate(pidUriTemplate: PidUriTemplateResultDTO) {
-    this.showOverlaySpinner = true;
+    this.entityStatus = EntityFormStatus.LOADING;
+    this.entityAction = PidUriTemplateAction.REACTIVATE;
+
     this.store.dispatch(new ReactivatePidUriTemplate(pidUriTemplate.id)).subscribe(
       () => {
-        this.showOverlaySpinner = false;
+        this.entityStatus = EntityFormStatus.SUCCESS;
         this.snackbar.success('PID URI template', 'Reactivation successfully');
       },
       error => {
         this.handleResponseError(error);
       });
-  } 
+  }
 
   cancelEditing() {
     this.selectedForEdit = null;
@@ -196,7 +223,7 @@ export class PidUriTemplateTableComponent implements OnInit, OnDestroy {
     if (error.status === 400 && error.error && error.error.validationResult) {
       this.showValidationResult(error.error.validationResult);
     }
-    this.showOverlaySpinner = false;
+    this.entityStatus = EntityFormStatus.ERROR;
   }
 
   showValidationResult(validationResult: ValidationResult) {
@@ -205,9 +232,9 @@ export class PidUriTemplateTableComponent implements OnInit, OnDestroy {
     });
   }
 
-  isTemplateDeprecated(template: PidUriTemplateResultDTO){
+  isTemplateDeprecated(template: PidUriTemplateResultDTO) {
     var status = template.properties[Constants.PidUriTemplate.HasPidUriTemplateLifecycleStatus];
-    
+
     return status != null && status.some(s => s === Constants.PidUriTemplate.LifecycleStatus.Deprecated);
   }
 }

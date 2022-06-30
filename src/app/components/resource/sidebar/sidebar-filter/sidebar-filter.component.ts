@@ -7,6 +7,8 @@ import { LogService } from 'src/app/core/logging/log.service';
 import { ResourceOverviewCTO } from 'src/app/shared/models/resources/resource-overview-cto';
 import { AuthService } from 'src/app/modules/authentication/services/auth.service';
 import { SearchFilterEditor } from 'src/app/shared/models/user/search-filter-editor';
+import { SearchResult } from 'src/app/shared/models/search/search-result';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-sidebar-filter',
@@ -19,7 +21,7 @@ export class SidebarFilterComponent implements OnInit, OnDestroy {
 
   @Output() resourceSearchEvent = new EventEmitter<ResourceSearchDTO>();
 
-  @Input() resourceOverviewState: Observable<ResourceOverviewCTO>;
+  @Input() searchResultState: Observable<SearchResult>;
 
   searchFilterEditorSubscription: Subscription;
   selectedConsumerGroupIdSubscription: Subscription;
@@ -33,7 +35,7 @@ export class SidebarFilterComponent implements OnInit, OnDestroy {
     markedForDeletion: false
   };
 
-  sequenceDesc = false;
+  sequenceDesc = true;
 
   filterVocabulary =
     [
@@ -71,35 +73,47 @@ export class SidebarFilterComponent implements OnInit, OnDestroy {
   ];
   orderSelected: any = this.orderVocabulary[0];
 
-  constructor(private logger: LogService, private store: Store, private authService: AuthService) { }
+  userEmail: string;
+
+  constructor(private logger: LogService, private store: Store, private authService: AuthService) {
+    if (environment.enableIndexSearch) {
+      this.orderVocabulary.push({
+        key: {
+          Predicate: '_score',
+          Sequence: 'desc'
+        },
+        value: 'Score'
+      })
+    }
+  }
 
   ngOnInit() {
     this.selectedConsumerGroupIdSubscription = this.selectedConsumerGroupId$.subscribe(cgId => {
-      if(cgId != null) {
         this.filter();
-      }
     });
 
-    this.searchFilterEditorSubscription = this.searchFilterEditor$.subscribe((searchFilterEditor : SearchFilterEditor) => {
+    this.authService.currentEmail$.subscribe(userEmail => this.userEmail = userEmail)
+
+    this.searchFilterEditorSubscription = this.searchFilterEditor$.subscribe((searchFilterEditor: SearchFilterEditor) => {
       if (searchFilterEditor != null) {
         this.filters.draft = searchFilterEditor.filterJson.draft;
         this.filters.published = searchFilterEditor.filterJson.published;
         this.filters.markedForDeletion = searchFilterEditor.filterJson.markedForDeletion;
         this.filters.searchText = searchFilterEditor.filterJson.searchText;
-        this.filters.lastChanged = searchFilterEditor.filterJson.lastChangeUser != null ? true: false;
-        this.filters.consumerGroup = searchFilterEditor.filterJson.consumerGroup != null ? true: false;
+        this.filters.lastChanged = searchFilterEditor.filterJson.lastChangeUser != null ? true : false;
+        this.filters.consumerGroup = searchFilterEditor.filterJson.consumerGroup != null ? true : false;
         this.limitSelected = searchFilterEditor.filterJson.limit;
         this.offsetSelected = searchFilterEditor.filterJson.offset;
         this.orderSelected = this.orderVocabulary.find(ov => ov.key.Predicate === searchFilterEditor.filterJson.orderPredicate);
-        this.sequenceDesc = searchFilterEditor.filterJson.sequence == 'desc' ? true: false;
+        this.sequenceDesc = searchFilterEditor.filterJson.sequence == 'desc' ? true : false;
 
         this.filter();
-        this.searchFilterEditorSubscription.unsubscribe();
+        //this.searchFilterEditorSubscription.unsubscribe();
       }
     });
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.searchFilterEditorSubscription.unsubscribe();
     this.selectedConsumerGroupIdSubscription.unsubscribe();
   }
@@ -113,8 +127,8 @@ export class SidebarFilterComponent implements OnInit, OnDestroy {
       draft: this.filters.draft,
       published: this.filters.published,
       markedForDeletion: this.filters.markedForDeletion,
-      searchText: this.filters.searchText,
-      lastChangeUser: this.filters.lastChanged ? this.authService.currentEmail : null,
+      searchText: (this.filters.searchText && this.filters.searchText.split("\"").length - 1==1) ? this.filters.searchText.replace("\"","") : this.filters.searchText,
+      lastChangeUser: this.filters.lastChanged ? this.userEmail : null,
       consumerGroup: this.filters.consumerGroup ? this.store.selectSnapshot(UserInfoState.getSelectedConsumerGroupId) : null,
       limit: this.limitSelected,
       offset: this.offsetSelected,
@@ -124,6 +138,7 @@ export class SidebarFilterComponent implements OnInit, OnDestroy {
       orderPredicate: this.orderSelected.key.Predicate,
       sequence: this.sequenceDesc ? 'desc' : 'asc'
     };
+
     this.logger.info('PID_SIDEBAR_FILTER_RESOURCE_SEARCHED', { 'searchText': this.filters.searchText });
 
     this.resourceSearchEvent.emit(resourceSearchObject);

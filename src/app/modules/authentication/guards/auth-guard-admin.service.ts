@@ -1,36 +1,29 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { RouteExtension } from 'src/app/shared/extensions/route.extension';
 import { AuthService } from '../services/auth.service';
+import { AuthGuardService } from './auth-guard.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuardAdminService implements CanActivate {
+export class AuthGuardAdminService extends AuthGuardService implements CanActivate {
 
-  constructor(private authService: AuthService, private router: Router) { }
-
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-
-    if (!this.authService.isLoggedIn) {
-      if (!this.authService.loginInProgress) {
-        RouteExtension.SetRouteInStorage(route);
-      }
-
-      this.router.navigate(['/login-in-progress']);
-      return false;
-    }
-
-    return this.authService.isAuthorized.pipe(map(isAuthorized => {
-      if (isAuthorized && (this.authService.hasAdminPrivilege || this.authService.hasSuperAdminPrivilege)) {
-        return true;
-      } else {
-        this.router.navigate(['/unauthorized']);
-        return false;
-      }
-    }));
+  constructor(protected authService: AuthService, protected router: Router) {
+    super(authService, router)
   }
 
+  canActivate(route: ActivatedRouteSnapshot) {
+    return combineLatest([this.authService.isLoggedIn$, this.authService.hasAdminPrivilege$, this.authService.hasSuperAdminPrivilege$])
+      .pipe(map(([isLoggedIn, hasAdminPrivilege, hasSuperAdminPrivilege]) => {
+        const isAuthorized = this.processLoggedIn(isLoggedIn, route);
+        const hasAnyAdminPrivilege = hasAdminPrivilege || hasSuperAdminPrivilege;
 
+        if (isAuthorized && !hasAnyAdminPrivilege) {
+          this.router.navigate(['/unauthorized']);
+        }
+        return hasAnyAdminPrivilege;
+      }));
+  }
 }

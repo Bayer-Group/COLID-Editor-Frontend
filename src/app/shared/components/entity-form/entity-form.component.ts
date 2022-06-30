@@ -3,18 +3,24 @@ import { MetaDataProperty } from 'src/app/shared/models/metadata/meta-data-prope
 import { Constants } from 'src/app/shared/constants';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { FormItemSettings } from 'src/app/shared/models/form/form-item-settings';
-import { ControlTypeMapping } from '../../../components/resource/resource-form/resource-form.constants';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteItemDialogComponent } from '../delete-item-dialog/delete-item-dialog.component';
 import { ValidationResult } from 'src/app/shared/models/validation/validation-result';
 import { EntityBase } from 'src/app/shared/models/Entities/entity-base';
 import { Entity } from 'src/app/shared/models/Entities/entity';
 import { EntityFormService } from '../../services/entity-form/entity-form.service';
+import { EntityFormStatus } from './entity-form-status';
+
+export enum EntityFormAction {
+  CREATE = 'create',
+  SAVE = 'save',
+  DELETE = 'delete'
+}
 
 @Component({
   selector: 'app-entity-form',
   templateUrl: './entity-form.component.html',
-  styleUrls: ['./entity-form.component.css']
+  styleUrls: ['./entity-form.component.scss']
 })
 export class EntityFormComponent implements OnInit {
 
@@ -45,7 +51,7 @@ export class EntityFormComponent implements OnInit {
 
   @Input() entityType: string;
 
-  @Output() showOverlaySpinner: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Input() status: EntityFormStatus = EntityFormStatus.INITIAL;
 
   @Output() createEntityEmitter: EventEmitter<EntityBase> = new EventEmitter<EntityBase>();
 
@@ -58,12 +64,22 @@ export class EntityFormComponent implements OnInit {
 
   constants = Constants;
 
-
-
   entityForm: FormGroup = null;
+  currentAction: EntityFormAction;
+
+  get actionButtonDisabled(): boolean {
+    return this.status === EntityFormStatus.LOADING;
+  }
+
+  get formReadOnly(): boolean {
+    return this.status === EntityFormStatus.LOADING ? true : false;
+  }
+
+  actionButtonLoading(action: string): boolean {
+    return this.actionButtonDisabled && this.currentAction == action;
+  }
 
   formItemSettings: FormItemSettings = {
-    controlTypeMapping: ControlTypeMapping,
     debounceTime: 500
   };
 
@@ -88,21 +104,14 @@ export class EntityFormComponent implements OnInit {
     this.entityForm = this.formBuilder.group(formBuilderGroup);
 
     for (const m of this.metaData) {
-      const value = m.key === Constants.Metadata.EntityType ? this.entityType : null;
+      const customPlaceholder = this.placeholder[m.properties[Constants.Metadata.HasPidUri]];
+      const shaclPlaceholder = m.properties[Constants.Shacl.DefaultValue];
+      const placeholder = customPlaceholder == null ? shaclPlaceholder : customPlaceholder;
+      const value = m.key === Constants.Metadata.EntityType ? this.entityType : placeholder;
       this.entityForm.controls[m.properties[Constants.Metadata.HasPidUri]].setValue(value);
-      this.fillPlaceholder();
     }
 
     this.fillForm();
-  }
-
-  fillPlaceholder() {
-    Object.keys(this.placeholder).forEach(key => {
-      const formItem = this.entityForm.controls[key];
-      if (formItem) {
-        formItem.setValue(this.placeholder[key]);
-      }
-    });
   }
 
   fillForm() {
@@ -117,7 +126,9 @@ export class EntityFormComponent implements OnInit {
   }
 
   createEntity() {
-    this.showOverlaySpinner.emit(true);
+    this.currentAction = EntityFormAction.CREATE;
+    this.status = EntityFormStatus.LOADING;
+
     const formProperties = Object.entries(this.entityForm.value);
     const entity = this.entityFormService.createEntity(formProperties, this.metaData, this.entityType);
 
@@ -125,6 +136,8 @@ export class EntityFormComponent implements OnInit {
   }
 
   confirmAndDelete() {
+    this.currentAction = EntityFormAction.DELETE;
+
     const dialogRef = this.dialog.open(DeleteItemDialogComponent, {
       data: {
         header: `Deleting ${this.label}`,
@@ -149,12 +162,14 @@ export class EntityFormComponent implements OnInit {
   }
 
   deleteEntity() {
-    this.showOverlaySpinner.emit(true);
+    this.status = EntityFormStatus.LOADING;
     this.deleteEntityEmitter.emit(this._entity.id);
   }
 
   editEntity() {
-    this.showOverlaySpinner.emit(true);
+    this.currentAction = EntityFormAction.SAVE;
+    this.status = EntityFormStatus.LOADING;
+    
     const formProperties = Object.entries(this.entityForm.value);
     const entity = this.entityFormService.createEntity(formProperties, this.metaData, this.entityType);
 

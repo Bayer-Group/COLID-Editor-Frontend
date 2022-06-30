@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse } from '@angular/common/http';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -22,10 +22,9 @@ export class ColidDefaultInterceptor implements HttpInterceptor {
   constructor(public router: Router, private snackBar: ColidMatSnackBarService) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
     const updateHeaders = { 'Cache-Control': 'no-cache' }
     if (request.headers.has('x-skip-content-type')) {
-      request.headers.delete('x-skip-content-type')
+      request.headers.delete('x-skip-content-type');
     } else {
       updateHeaders['Content-Type'] = 'application/json; charset=utf-8'
     }
@@ -37,27 +36,26 @@ export class ColidDefaultInterceptor implements HttpInterceptor {
         tap(event => { },
           error => {
             if (error instanceof HttpErrorResponse) {
-
               // Needed to ignore first user not found exception
-              if (error.status === 404 && this.isToBeIgnoredAppDataUrl(request.url)) {
-                return;
+              if (this.isToBeIgnoredResponse(error.status, request.url)) {
+                return of(error);
               }
 
               // Needed to handle blocked resources separately
               if (error.status === 423) {
                 return of(error);
               }
-
-              if (error.error as GeneralException) {
-                this.handleException(error.error);
-                return of(error);
-              }
-
+              
               if (error.status === 401) {
                 this.router.navigate(['unauthorized']);
                 return of(error);
               } else if (error.status === 503) {
                 this.router.navigate(['unavailable']);
+              }
+
+              if (error.error as GeneralException) {
+                this.handleException(error.error);
+                return of(error);
               }
             }
             console.error(error);
@@ -66,8 +64,10 @@ export class ColidDefaultInterceptor implements HttpInterceptor {
       );
   }
 
-  private isToBeIgnoredAppDataUrl(url: string) {
-    return url.startsWith(`${environment.appDataApiUrl}/Users/`) || url.startsWith(`${environment.appDataApiUrl}/activeDirectory/`)
+  private isToBeIgnoredResponse(errorStatus: number, url: string) {
+    return errorStatus == 404 && url.startsWith(`${environment.appDataApiUrl}/Users/`) ||
+           errorStatus == 404 && url.startsWith(`${environment.appDataApiUrl}/activeDirectory/`) ||
+           errorStatus == 409 && url.startsWith(`${environment.colidApiUrl}/attachment`)
   }
 
   private handleException(colidException: GeneralException) {

@@ -13,6 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "outputPath": "dist/colid-editor-frontend",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -35,6 +36,12 @@
           },
           "configurations": {
             "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -53,7 +60,16 @@
               "serviceWorker": true,
               "ngswConfigPath": "ngsw-config.json"
             },
+            "es5": {
+              "tsConfig": "src/tsconfig.app.json"
+          },
             "release": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -73,6 +89,12 @@
               "ngswConfigPath": "ngsw-config.json"
             },
             "development": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -92,6 +114,12 @@
               "ngswConfigPath": "ngsw-config.json"
             },
             "docker": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -111,6 +139,12 @@
               "ngswConfigPath": "ngsw-config.json"
             },
             "onprem": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -130,6 +164,7 @@
               "ngswConfigPath": "ngsw-config.json"
             }
           }
+         
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -142,6 +177,9 @@
             "production": {
               "browserTarget": "colid-editor-frontend:build:production"
             },
+            "es5": {
+              "browserTarget": "colid-editor-frontend:build:es5"
+          },
             "release": {
               "browserTarget": "colid-editor-frontend:build:release"
             },
@@ -221,5 +259,8 @@
       }
     }
   },
-  "defaultProject": "colid-editor-frontend"
+  "defaultProject": "colid-editor-frontend",
+  "cli": {
+    "analytics": "69e9281d-4bf7-4389-b94b-4ec2dc6cb2bc"
+  }
 }

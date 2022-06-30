@@ -15,15 +15,14 @@
                     *ngFor="let notification of notifications">
                     <div class="d-flex justify-content-between">
                         <span class="mr-1" *ngIf="!notification.readOn">
-                            <mat-chip color="draft" matTooltip="New Notification"> NEW
-                            </mat-chip>
+                            <mat-chip color="draft" disableRipple style="display: inline-block;" matTooltip="New notification">NEW</mat-chip>
                         </span>
                         <span class="header flex-grow-1" [innerHTML]="notification.subject"
                             (click)="openNotification(notification)"></span>
                         <mat-icon class="close" matTooltip="Delete" (click)="deleteNotification(notification)">close</mat-icon>
                     </div>
                     <div class="body" (click)="openNotification(notification)">
-                        {{notification.body}}
+                        <p [innerHTML]="notification.body" ></p>
                     </div>
                     <div class="text-muted text-right">
                         {{notification.createdAt | timeAgo}}

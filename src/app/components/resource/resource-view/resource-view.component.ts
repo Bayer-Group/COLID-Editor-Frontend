@@ -14,20 +14,26 @@ import { MatDialog } from '@angular/material/dialog';
 import { Constants } from 'src/app/shared/constants';
 import { ResourceExtension } from 'src/app/shared/extensions/resource.extension';
 import { AuthConsumerGroupService } from 'src/app/modules/authentication/services/auth-consumer-group.service';
-import { MatFabMenu } from '@angular-material-extensions/fab-menu';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ColidEntrySubscriptionDto } from 'src/app/shared/models/user/colid-entry-subscription-dto';
 import { ResourceLockedDialogComponent } from '../resource-dialogs/resource-locked-dialog/resource-locked-dialog.component';
 import { AuthService } from 'src/app/modules/authentication/services/auth.service';
+import { ResourceCreationType } from 'src/app/shared/models/resources/resource-creation-type';
+import { map } from 'rxjs/operators';
+import { ColidEntrySubscriberCountState } from 'src/app/state/colid-entry-subcriber-count.state';
+import { EntityFormStatus } from 'src/app/shared/components/entity-form/entity-form-status';
+import { HostListener } from '@angular/core';
+import { ResourceHierarchyComponent } from '../resource-hierarchy/resource-hierarchy.component';
+import { FetchSecondMetadata } from 'src/app/state/meta-data.state';
+import { FetchSidebarResourceOverview } from 'src/app/state/resource-overview.state';
 
-enum FabMenuOptions {
-  Subscribe = 1,
-  Unsubscribe,
-  DeleteDraft,
-  MarkForDeletion,
-  LinkResource,
-  UnlinkResource,
-  CreateNewVersion
+export enum ResourceViewAction {
+  SUBSCRIBE = 'subscribe', 
+  UNSUBSCRIBE = 'unsubscribe',
+  DELETE = 'delete',
+  MARKFORDELETION = 'markForDeletion',
+  LINK = 'link',
+  UNLINK = 'unlink'
 }
 
 @Component({
@@ -38,28 +44,77 @@ enum FabMenuOptions {
 export class ResourceViewComponent implements OnInit, OnDestroy {
   @Select(ResourceState.activeResource) activeResource$: Observable<Resource>;
   @Select(UserInfoState.getColidEntrySubscriptions) colidEntrySubscriptions$: Observable<ColidEntrySubscriptionDto[]>;
+  @Select(ColidEntrySubscriberCountState.getSubscriptionNumbers) colidEntrySubscriptionNumber$: Observable<ColidEntrySubscriptionDto>;
 
-  authorizedForEdit: boolean;
   activeResource: Resource;
+  resourceSubNumbers: ColidEntrySubscriptionDto;
+  isSubscribed: boolean;
+  windowSize: number = 1024;
+  actionBarOpened: boolean = false;
 
+  status: EntityFormStatus = EntityFormStatus.INITIAL;
+  action: ResourceViewAction;
+
+  ResourceNumSubscription: Subscription;
   activeResourceSubscription: Subscription;
   combineLatestSubscription: Subscription;
   routerEventSubscription: Subscription;
-  fabResourceMenu: MatFabMenu[] = [];
+  userEmail: string;
 
-  get isAuthorizedForDeleteDraft(): boolean {
-    return ResourceExtension.isAuthorizedForDeleteDraft(this.activeResource);
+  get isAuthorizedToEdit$(): Observable<boolean> {
+    return this.authConsumerGroupService.IsAuthorizedToEdit();
   }
 
-  get isAuthorizedForMarkForDeletion(): boolean {
-    return ResourceExtension.isAuthorizedForMarkForDeletion(this.activeResource);
+  get isAuthorizedToDeleteDraft(): boolean {
+    return ResourceExtension.isAuthorizedToDeleteDraft(this.activeResource);
+  }
+
+  get isAuthorizedToMarkForDeletion(): boolean {
+    return ResourceExtension.isAuthorizedToMarkForDeletion(this.activeResource);
+  }
+
+  get isAllowedToLink() {
+    return !this.activeResource.laterVersion && !this.activeResource.previousVersion;
   }
 
   get isAllowedToUnlink() {
     return ResourceExtension.isAllowedToUnlink(this.activeResource);
   }
 
-  constructor (
+  get isAllowedCreateNewVersion() {
+    return !this.activeResource.laterVersion;
+  }
+
+  get isResourceSubscribed(): boolean {
+    return this.isSubscribed;
+  }
+  
+  get getNumSubscribers(): number {
+    return this.resourceSubNumbers == null ? 0 : this.resourceSubNumbers.subscriptions;
+  }
+
+  get isLoading(): boolean {
+    return this.status === EntityFormStatus.LOADING;
+  }
+
+  @HostListener("window:resize", [])
+  private onResize() {
+    this.detectScreenSize();
+  }
+
+  ngAfterViewInit() {
+    this.detectScreenSize();
+  }
+
+  private detectScreenSize() {
+    this.windowSize = window.innerWidth
+  }
+
+  toggleActionBar(){
+    this.actionBarOpened = !this.actionBarOpened
+  }
+
+  constructor(
     private logger: LogService,
     private store: Store,
     private router: Router,
@@ -79,102 +134,40 @@ export class ResourceViewComponent implements OnInit, OnDestroy {
     this.activeResourceSubscription = this.activeResource$.subscribe(activeResource => {
       this.activeResource = activeResource;
     });
-
-    this.buildFabMenu();
+    this.ResourceNumSubscription = this.colidEntrySubscriptionNumber$.subscribe(x => {
+      this.resourceSubNumbers = x;
+    });
+    this.buildMenu();
+    this.authService.currentEmail$.subscribe(userEmail => this.userEmail = userEmail);
   }
 
   ngOnDestroy() {
     this.store.dispatch(new ClearActiveResource()).subscribe();
     this.activeResourceSubscription.unsubscribe();
+    this.ResourceNumSubscription.unsubscribe();
     this.combineLatestSubscription.unsubscribe();
     this.routerEventSubscription.unsubscribe();
   }
 
-  buildFabMenu() {
-    this.combineLatestSubscription = combineLatest(
-      this.authConsumerGroupService.IsAuthorizedForEdit(),
+  isActionLoading(action: string) {
+    return this.isLoading && action === this.action;
+  }
+
+  buildMenu() {
+    this.combineLatestSubscription = combineLatest([
       this.colidEntrySubscriptions$,
-      this.activeResource$,
-    ).subscribe(([isAuthorizedForEdit, colidEntrySubscriptions, activeResource]: [boolean, ColidEntrySubscriptionDto[], Resource]) => {
-      if(isAuthorizedForEdit == null || activeResource == null) {
+      this.activeResource$]
+    ).subscribe(([colidEntrySubscriptions, activeResource]: [ColidEntrySubscriptionDto[], Resource]) => {
+      if (activeResource == null) {
         return;
       }
 
-      this.authorizedForEdit = isAuthorizedForEdit;
-      this.fabResourceMenu = [];
-
       if (colidEntrySubscriptions != null) {
-        const isSubscribed = colidEntrySubscriptions.some(ces => ces.colidPidUri === this.activeResource.pidUri)
-
-        if (isSubscribed) {
-          this.fabResourceMenu.push({id: FabMenuOptions.Unsubscribe, icon: 'notifications_active', tooltip: 'Unsubscribe from resource', tooltipPosition: 'left'});
-        } else {
-          this.fabResourceMenu.push({id: FabMenuOptions.Subscribe, icon: 'notifications_none', tooltip: 'Subscribe to resource', tooltipPosition: 'left'});
-        }
+        this.isSubscribed = colidEntrySubscriptions.some(ces => ces.colidPidUri === this.activeResource.pidUri)
       }
 
-      // Add the buttons to the sub menu only, if the user is an authorized editor
-      if(this.authorizedForEdit) {
-        if(this.isAuthorizedForDeleteDraft) {
-          this.fabResourceMenu.push({id: FabMenuOptions.DeleteDraft, icon: 'delete', tooltip: 'Delete draft', tooltipPosition: 'left'});
-        }
-
-        if(this.isAuthorizedForMarkForDeletion) {
-          this.fabResourceMenu.push({id: FabMenuOptions.MarkForDeletion, icon: 'delete_forever', tooltip: 'Mark for deletion', tooltipPosition: 'left'});
-        }
-
-        if(!this.activeResource.laterVersion && !this.activeResource.previousVersion) {
-          this.fabResourceMenu.push({id: FabMenuOptions.LinkResource, icon: 'link', tooltip: 'Link resource', tooltipPosition: 'left'});
-        }
-
-        if(this.isAllowedToUnlink) {
-          this.fabResourceMenu.push({id: FabMenuOptions.UnlinkResource, icon: 'link_off', tooltip: 'Unlink resource', tooltipPosition: 'left'});
-        }
-
-        if(!this.activeResource.laterVersion) {
-          this.fabResourceMenu.push({id: FabMenuOptions.CreateNewVersion, icon: 'dynamic_feed', tooltip: 'Create new version', tooltipPosition: 'left'});
-        }
-      }
-
-      return { isAuthorizedForEdit, colidEntrySubscriptions, activeResource };
+      return { colidEntrySubscriptions, activeResource };
     });
-  }
-
-  onFabMenuItemSelected(buttonId) {
-    switch(buttonId) {
-      case FabMenuOptions.Subscribe: {
-         this.subscribeToResource();
-         break;
-      }
-      case FabMenuOptions.Unsubscribe: {
-         this.unsubscribeFromResource();
-         break;
-      }
-      case FabMenuOptions.DeleteDraft: {
-         this.confirmAndDelete();
-         break;
-      }
-      case FabMenuOptions.MarkForDeletion: {
-         this.markResourceForDeletion();
-         break;
-      }
-      case FabMenuOptions.LinkResource: {
-         this.showLinkingResourceDialog();
-         break;
-      }
-      case FabMenuOptions.UnlinkResource: {
-         this.unlinkResource();
-         break;
-      }
-      case FabMenuOptions.CreateNewVersion: {
-         this.createNewVersion();
-         break;
-      }
-      case 5: {
-        this.createNewVersion();
-        break;
-      }
-    }
   }
 
   loadResource() {
@@ -193,22 +186,35 @@ export class ResourceViewComponent implements OnInit, OnDestroy {
   }
 
   subscribeToResource() {
+    this.status = EntityFormStatus.LOADING;
+    this.action = ResourceViewAction.SUBSCRIBE;
+
     let colidEntrySubscriptionDto = new ColidEntrySubscriptionDto(this.activeResource.pidUri);
     this.store.dispatch(new AddColidEntrySubscription(colidEntrySubscriptionDto)).subscribe(() => {
       this.snackbar.success('Resource subscribed', 'You have successfully subscribed the resource.');
+      this.status = EntityFormStatus.SUCCESS;
     });
   }
 
   unsubscribeFromResource() {
+    this.status = EntityFormStatus.LOADING;
+    this.action = ResourceViewAction.UNSUBSCRIBE;
+
     let colidEntrySubscriptionDto = new ColidEntrySubscriptionDto(this.activeResource.pidUri);
     this.store.dispatch(new RemoveColidEntrySubscription(colidEntrySubscriptionDto)).subscribe(() => {
       this.snackbar.success('Resource unsubscribed', 'You have successfully unsubscribed to the resource.');
+      this.status = EntityFormStatus.SUCCESS;
     });
   }
 
   createNewVersion() {
     const resourceType = this.activeResource.properties[Constants.Metadata.EntityType];
-    this.router.navigate(['resource', 'new'], { queryParams: { type: resourceType[0], previousVersion: this.activeResource.pidUri } });
+    this.router.navigate(['resource', 'new'], { queryParams: { type: resourceType[0], based: this.activeResource.pidUri, creationType: ResourceCreationType.NEWVERSION } });
+  }
+
+  copyResource() {
+    const resourceType = this.activeResource.properties[Constants.Metadata.EntityType];
+    this.router.navigate(['resource', 'hierarchy'], { queryParams: { type: resourceType[0], based: this.activeResource.pidUri, creationType: ResourceCreationType.COPY } });
   }
 
   showLinkingResourceDialog() {
@@ -218,26 +224,52 @@ export class ResourceViewComponent implements OnInit, OnDestroy {
       disableClose: true
     });
 
-    dialogRef.afterClosed().subscribe((result: ResourceOverviewDTO) => {
+    dialogRef.afterClosed().subscribe((result: string) => {
       if (result) {
-        this.linkResource(result.pidUri);
+       this.linkResource(result);
       }
     });
   }
 
   linkResource(selectedResourceForLinking: string) {
+    this.status = EntityFormStatus.LOADING;
+    this.action = ResourceViewAction.LINK;
+
     this.store.dispatch(new LinkResource(this.activeResource.pidUri, selectedResourceForLinking)).subscribe(() => {
       this.snackbar.success('Resource linked', 'The resource has been linked successfully with the selected resource.');
+      this.status = EntityFormStatus.SUCCESS;
     }, error => {
       this.handleHttpErrorResponse(error);
     });
   }
 
   unlinkResource() {
+    this.status = EntityFormStatus.LOADING;
+    this.action = ResourceViewAction.UNLINK;
+
     this.store.dispatch(new UnlinkResource(this.activeResource.pidUri)).subscribe(() => {
       this.snackbar.success('Resource unlinked', 'The resource has been unlinked from the list successfully.');
+      this.status = EntityFormStatus.SUCCESS;
     }, error => {
       this.handleHttpErrorResponse(error);
+    });
+  }
+
+  changeResourceType() {
+    const dialogRef = this.dialog.open(ResourceHierarchyComponent, {
+      // minWidth: '80vw',
+      width: '60em',
+      height: '60em',
+      // minHeight: '80vh',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // alert(result.id);
+        // this.store.dispatch(new FetchSecondMetadata(result.id));
+        this.router.navigate(['/resource', 'edit'], { queryParams: { pidUri: this.activeResource.pidUri, typeUri: result.id } });
+      }
     });
   }
 
@@ -263,7 +295,9 @@ export class ResourceViewComponent implements OnInit, OnDestroy {
   }
 
   deleteResource() {
-    this.store.dispatch(new DeleteResource(this.activeResource.pidUri)).subscribe(() => {
+    this.status = EntityFormStatus.LOADING;
+    this.action = ResourceViewAction.DELETE;
+    this.store.dispatch(new DeleteResource(this.activeResource.pidUri, this.userEmail)).subscribe(() => {
       const hasPublishedResource = this.activeResource.publishedVersion;
       this.activeResource = null;
       if (hasPublishedResource) {
@@ -271,23 +305,33 @@ export class ResourceViewComponent implements OnInit, OnDestroy {
       } else {
         this.router.navigate(['resource', 'welcome']);
       }
+      this.status = EntityFormStatus.SUCCESS;
       this.snackbar.success('COLID entry deleted', 'Deleted successfully.');
+      this.store.dispatch(new FetchSidebarResourceOverview(true)).subscribe(res => res);
     }, error => {
       this.handleHttpErrorResponse(error);
     });
   }
 
   markResourceForDeletion() {
-    const currentEmail = this.authService.currentEmail;
+    this.status = EntityFormStatus.LOADING;
+    this.action = ResourceViewAction.MARKFORDELETION;
+
     const currentPidUri = this.activeResource.pidUri;
-    this.store.dispatch(new MarkResourceAsDeleted(currentPidUri, currentEmail)).subscribe(() => {
-      this.snackbar.success('Resource marked for deletion', 'The resource has been marked for deletion. An administrator will review your request soon.');
-    }, error => {
-      this.handleHttpErrorResponse(error);
-    });
+    this.authService.currentEmail$.pipe(map(currentEmail$ =>
+      this.store.dispatch(new MarkResourceAsDeleted(currentPidUri, currentEmail$)))
+    )
+      .subscribe(() => {
+        this.snackbar.success('Resource marked for deletion', 'The resource has been marked for deletion. An administrator will review your request soon.');
+        this.status = EntityFormStatus.SUCCESS;
+      }, error => {
+        this.handleHttpErrorResponse(error);
+      });
   }
 
   handleHttpErrorResponse(error: HttpErrorResponse) {
+    this.status = EntityFormStatus.ERROR;
+
     if (error.status === 423) {
       this.handleItemLocked(error);
     }
@@ -300,20 +344,10 @@ export class ResourceViewComponent implements OnInit, OnDestroy {
   }
 
   get lifeCycleStatus(): string {
-    return this.activeResource.properties[Constants.Metadata.LifeCycleStatus][0];
-  }
-
-  get currentLifeCycleStatus() {
-    switch (this.lifeCycleStatus) {
-      case Constants.Resource.LifeCycleStatus.Draft:
-        return 'Draft';
-      case Constants.Resource.LifeCycleStatus.Published:
-        return 'Published';
-      case Constants.Resource.LifeCycleStatus.MarkedDeletion:
-        return 'Marked For Deletion';
-      default:
-        return '';
+    if (Object.keys(this.activeResource.properties).length > 0) {
+      return this.activeResource.properties[Constants.Metadata.LifeCycleStatus][0];
     }
+    return null;
   }
 
   get isDraft() {

@@ -24,5 +24,4 @@ export class PidUriTemplateComponent implements OnInit {
   reload() {
     this.store.dispatch(new FetchPidUriTemplates).subscribe();
   }
-
 }

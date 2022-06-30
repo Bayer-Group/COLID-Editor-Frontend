@@ -32,6 +32,14 @@ export class GraphManagementApiService {
     return this.httpClient.delete<any>(url, { params });
   }
 
+  downloadGraph(graph: string): any  {
+    const url = environment.colidApiUrl + '/graph/download';
+    let params = new HttpParams();
+    params = params.append('graph', graph);
+    var data = this.httpClient.get(url, {responseType: 'blob', params});
+    return data
+  }
+
   uploadGraph(file: any, graphName: string, overwriteExisting: string): Observable<HttpEvent<NeptuneLoaderResponse>> {
     const url = environment.colidApiUrl + '/graph';
     let params = new HttpParams();

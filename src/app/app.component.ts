@@ -20,6 +20,9 @@ import { Constants } from './shared/constants';
 import { TaxonomyResultDTO } from './shared/models/taxonomy/taxonomy-result-dto';
 import { AuthService } from './modules/authentication/services/auth.service';
 import { FetchNotifications } from './modules/notification/notification.state'
+import { of } from 'rxjs';
+import { mergeMap, map, switchMap } from 'rxjs/operators';
+import { ColidAccount } from './modules/authentication/models/colid-account.model';
 
 @Component({
   selector: 'app-root',
@@ -37,24 +40,24 @@ export class AppComponent implements OnInit {
 
   disableNavbar = false;
 
-  get isLoggedIn() {
-    return this.authService.isLoggedIn;
+  get isLoggedIn$(): Observable<boolean> {
+    return this.authService.isLoggedIn$;
   }
 
-  get currentName() {
-    return this.authService.currentName || 'Unknown User';
+  get currentName$() : Observable<string> {
+    return this.authService.currentName$ || of('Unknown User');
   }
 
-  get accountIdentifier() {
-    return this.authService.currentIdentity.accountIdentifier;
+  get currentAccountIdentifier$(): Observable<string>{
+    return this.authService.currentIdentity$.pipe(map(identity => identity.accountIdentifier));
   }
 
-  get hasAdminPrivilege() {
-    return this.authService.hasAdminPrivilege;
+  get hasAdminPrivilege$() : Observable<boolean> {
+    return this.authService.hasAdminPrivilege$;
   }
 
-  get hasCreatePrivilege() {
-    return this.authService.hasCreatePrivilege;
+  get hasCreatePrivilege$() : Observable<boolean> {
+    return this.authService.hasCreatePrivilege$;
   }
 
   constructor(
@@ -86,17 +89,21 @@ export class AppComponent implements OnInit {
 
 
   ngOnInit() {
+    
     if (this.isBrowserSupported) {
-
+      
       this.store.dispatch([new FetchBuildInformation()]).subscribe();
       this.store.dispatch(new FetchTaxonomyList(Constants.OWL.Class));
 
-      if (this.authService.isAuthorized) {
-        const identity = this.authService.currentIdentity;
-        this.store.dispatch([new FetchUser(identity.accountIdentifier, identity.email),new FetchNotifications(identity.accountIdentifier)]).subscribe(() => {
-          this.store.dispatch(new SetLastLoginEditor()).subscribe();
-        });
-      }
+      this.isLoggedIn$.pipe(switchMap(isAuth => {
+        return isAuth ? this.authService.currentIdentity$ : of(null)}) 
+      ).pipe(switchMap(identity => {
+        if (identity) {
+          return this.store.dispatch([new FetchUser(identity.accountIdentifier, identity.email),new FetchNotifications(identity.accountIdentifier)])
+        }
+      })).pipe(switchMap(() => {
+        return this.store.dispatch(new SetLastLoginEditor());
+      })).subscribe();
 
       const taxonomyListSubscription = this.taxonomyList$.subscribe(taxonomies => {
         if (taxonomies.has(Constants.OWL.Class)) {

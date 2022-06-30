@@ -2,7 +2,7 @@
   <app-navbar (toggleNotification)="notificationSidenav.toggle()"></app-navbar>
   <mat-sidenav-container hasBackdrop="false">
     <mat-sidenav class="notification" #notificationSidenav disableClose="true" mode="over" position="end">
-      <colid-notification (closeSidebar)="notificationSidenav.toggle()" [user]="accountIdentifier" [sidebarOpen]="notificationSidenav.opened"></colid-notification>
+      <colid-notification (closeSidebar)="notificationSidenav.toggle()" [user]="currentAccountIdentifier$ | async" [sidebarOpen]="notificationSidenav.opened"></colid-notification>
     </mat-sidenav>
     <router-outlet></router-outlet>
   </mat-sidenav-container>

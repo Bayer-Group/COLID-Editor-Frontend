@@ -74,4 +74,8 @@ export class StatisticsApiService {
     return this.httpClient.get<PropertyCharacteristic[]>(url);
   }
   
+  getLifecycleStatusCharacteristics(): Observable<PropertyCharacteristic[]> {
+    const url = environment.reportingApiUrl + '/statistics/resource/characteristics/lifecyclestatus';
+    return this.httpClient.get<PropertyCharacteristic[]>(url);
+  }
 }

@@ -3,10 +3,9 @@
     <h1>Orphaned Identifiers</h1>
   </div>
   <div class="col-auto">
-    <button mat-raised-button color="primary" (click)="loadingData()">
-      <mat-icon fontSet="material-icons-outlined">refresh</mat-icon>
+    <action-button color="primary" (click)="loadData()"  matTooltip="Reload identifier" [disabled]="isLoading" [loading]="status === entityFormStatus.RELOADING" icon="refresh">
       Refresh
-    </button>
+    </action-button>
   </div>
 </div>
 <div class="row mt-2" *ngIf="!(loading$ | async) && dataSourceLength !== 0">
@@ -27,13 +26,19 @@
 
       <ng-container matColumnDef="identifierUri">
         <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Identifier URI </th>
-        <td mat-cell *matCellDef="let element"> {{element.identifierUri}} </td>
+        <td mat-cell *matCellDef="let element"> 
+          <span>
+            {{element.identifierUri}}
+          </span>
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="delete">
         <th mat-header-cell class="text-center" *matHeaderCellDef>Delete</th>
-        <td mat-cell *matCellDef="let element" class="text-center">
-          <mat-icon (click)="deleteOrphanedIdentifier(element.identifierUri)">delete_forever</mat-icon>
+        <td mat-cell *matCellDef="let element">
+          <span class="w-100 d-flex justify-content-center">
+            <action-button type="mat-icon-button" color="primary" (click)="deleteOrphanedIdentifier(element.identifierUri)"  matTooltip="Delete identifier" [disabled]="isLoading" [loading]="isLoading && selectedIdentifier === element.identifierUri" icon="delete_forever"></action-button>
+          </span>
         </td>
       </ng-container>
 

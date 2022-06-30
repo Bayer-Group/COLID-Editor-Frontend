@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { ClickedSidebarLink } from 'src/app/state/sidebar.state';
 import { AuthService } from 'src/app/modules/authentication/services/auth.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-admin-tasks',
@@ -14,8 +15,8 @@ export class AdminTasksComponent implements OnInit {
 
   ngOnInit() {}
 
-  get hasSuperAdminPrivilege(): boolean {
-    return this.authService.hasSuperAdminPrivilege;
+  get hasSuperAdminPrivilege$(): Observable<boolean> {
+    return this.authService.hasSuperAdminPrivilege$;
   }
 
   linkClicked() {

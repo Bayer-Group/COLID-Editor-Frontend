@@ -19,7 +19,7 @@ import {
 import { AzureIdentityProvider } from './services/azure-identity-provider.service';
 
 // checks if the app is running on IE
-export const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigator.userAgent.indexOf('Trident/') > -1;
+export const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigator.userAgent.indexOf('Trident/') > -1 || window.navigator.userAgent.indexOf('Edge') > -1;
 
 export function MSALConfigFactory(): Configuration {
   return {

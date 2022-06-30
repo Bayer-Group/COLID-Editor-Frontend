@@ -3,12 +3,11 @@ import { Store, Select } from '@ngxs/store';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { AuthService } from 'src/app/modules/authentication/services/auth.service';
-import { StatusState } from 'src/app/state/status.state';
 import { UserInfoState, FetchConsumerGroupsByUser, SelectConsumerGroup, SetDefaultConsumerGroupForUser, SetSearchFilterEditor } from 'src/app/state/user-info.state';
 import { ToggleSidebar } from 'src/app/state/sidebar.state';
 import { ConsumerGroupResultDTO } from 'src/app/shared/models/consumerGroups/consumer-group-result-dto';
 import { BuildInformationDto } from 'src/app/shared/models/status/build-information-dto';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { CreateResource } from 'src/app/state/resource.state';
 import { DefaultConsumerGroupDto } from '../../models/user/default-consumer-group-dto';
@@ -26,7 +25,6 @@ export class NavbarComponent implements OnInit {
   @Select(UserInfoState.getConsumerGroups) consumerGroups$: Observable<ConsumerGroupResultDTO[]>;
   @Select(UserInfoState.getSelectedConsumerGroupId) selectedConsumerGroupId$: Observable<string>;
   @Select(UserInfoState.getDefaultConsumerGroup) defaultConsumerGroup$: Observable<DefaultConsumerGroupDto>;
-  @Select(StatusState.getBuildInformation) buildInformation$: Observable<BuildInformationDto>;
   @Select(NotificationState.getNotifications) notifications$: Observable<MessageDto[]>;
 
   @Output() toggleNotification: EventEmitter<any> = new EventEmitter();
@@ -81,28 +79,28 @@ export class NavbarComponent implements OnInit {
 
   }
 
-  get isLoggedIn() {
-    return this.authService.isLoggedIn;
+  get isLoggedIn$() : Observable<boolean> {
+    return this.authService.isLoggedIn$;
   }
 
-  get hasCreatePrivilege() {
-    return this.authService.hasCreatePrivilege;
+  get hasCreatePrivilege$() : Observable<boolean> {
+    return this.authService.hasCreatePrivilege$;
   }
 
-  get isAuthorized() {
-    return this.authService.isAuthorized;
+  get isAuthorized() : Observable<boolean> {
+    return this.authService.isLoggedIn$;
   }
 
   get isLoadingUser() {
     return this.authService.isLoadingUser;
   }
 
-  get currentName() {
-    return this.authService.currentName || 'Unknown User';
+  get currentName$() : Observable<string> {
+    return this.authService.currentName$ || of('Unknown User');
   }
 
-  get hasAdminPrivilege() {
-    return this.authService.hasAdminPrivilege;
+  get hasAdminPrivilege$() : Observable<boolean> {
+    return this.authService.hasAdminPrivilege$;
   }
 
   registerNewResource() {
@@ -128,6 +126,11 @@ export class NavbarComponent implements OnInit {
         this.snackbar.error('Default Consumer Group', error.error.message);
       }
     });
+  }
+
+  goToRRM() {
+    const url = environment.rrmUrl;
+    window.open(url, '_blank');
   }
 
   setDefaultSidebarFilters() {

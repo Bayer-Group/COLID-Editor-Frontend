@@ -16,25 +16,26 @@ export class AuthConsumerGroupService {
 
     constructor(private authService: AuthService) { }
 
-    IsAuthorizedForEdit(): Observable<boolean> {
-        return combineLatest(this.resourceState$, this.userInfoState$).pipe(map(([resourceState, userInfoState]) => {
-            let authorized: boolean = null;
-            if (resourceState.fetched === true && userInfoState.fetched === true) {
-              authorized = this.authService.hasAdminPrivilege;
+    IsAuthorizedToEdit(): Observable<boolean> {
+        return combineLatest([this.resourceState$, this.userInfoState$, this.authService.hasAdminPrivilege$])
+            .pipe(map(([resourceState, userInfoState, hasAdminPrivilege]) => {
+                let authorized: boolean = false;
+                if (resourceState.fetched && userInfoState.fetched) {
+                    authorized = hasAdminPrivilege;
 
-              const consumerGroupProperty = resourceState.activeResource.properties[Constants.Metadata.HasConsumerGroup];
+                    const consumerGroupProperty = resourceState.activeResource.properties[Constants.Metadata.HasConsumerGroup];
 
-                if (consumerGroupProperty && consumerGroupProperty[0] === userInfoState.selectedConsumerGroupId) {
-                    authorized = true;
+                    if (consumerGroupProperty && consumerGroupProperty[0] === userInfoState.selectedConsumerGroupId) {
+                        authorized = true;
+                    }
+
+                    const lifeCycleStatusProperty = resourceState.activeResource.properties[Constants.Metadata.LifeCycleStatus];
+
+                    if (lifeCycleStatusProperty && lifeCycleStatusProperty[0] === Constants.Resource.LifeCycleStatus.MarkedDeletion) {
+                        return false;
+                    }
                 }
-
-                const lifeCycleStatusProperty = resourceState.activeResource.properties[Constants.Metadata.LifeCycleStatus];
-
-                if (lifeCycleStatusProperty && lifeCycleStatusProperty[0] === Constants.Resource.LifeCycleStatus.MarkedDeletion) {
-                    return false;
-                }
-            }
-            return authorized;
-        }));
+                return authorized;
+            }));
     }
 }

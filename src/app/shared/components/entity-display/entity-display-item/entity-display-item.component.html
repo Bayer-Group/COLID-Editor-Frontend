@@ -9,7 +9,7 @@
   <ng-container *ngIf="displayType === 'distribution'">
     <mat-expansion-panel *ngFor="let value of entityProperty; let i = index" [expanded]="expanded">
       <mat-expansion-panel-header>
-        <mat-panel-title style="align-items: baseline;">
+        <mat-panel-title class="mat-expansion-panel-title">
           <ds-icon class="mr-1" iconType="S3" [tooltipDisabled]="false" [icon]="value.properties[constants.Metadata.EntityType][0]">
           </ds-icon>
           <app-entity-display-item-taxonomy [range]="constants.OWL.Class" [values]="value.properties[constants.Metadata.EntityType]">
@@ -28,29 +28,37 @@
   </ng-container>
 
   <ng-container *ngIf="displayType === 'linking'">
-    <mat-expansion-panel *ngFor="let value of entityProperty; let i = index" [expanded]="expanded">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <ds-icon class="mr-1" iconType="S3" [tooltipDisabled]="false" [icon]="value.resourceType">
-          </ds-icon>
-          {{metadataProperty.properties[constants.Metadata.Name]}}:
-          <span class="ml-1" [innerHTML]="value.name"></span>
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <div class="row d-flex" *ngIf="!isLoading; else loading">
-        <div class="col-md-3 text-muted font-weight-normal">
-          Definition:
+    
+    <ng-container *ngFor="let value of links; let i = index">
+
+      <mat-expansion-panel *ngIf="linkEntityExist(value.pidUri)"  [expanded]="expanded">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+             
+            <ds-icon class="mr-1" iconType="S3" [tooltipDisabled]="false" [icon]="getLinkedEntityResourceType(value.pidUri)">
+            </ds-icon> 
+            <span *ngIf="getLinktype(value) == 'Inbound'" class="badge badge-primary mx-1">Inbound</span>
+            
+            {{metadataProperty.properties[constants.Metadata.Name] | titlecase }}:
+            <span class="ml-1" [innerHTML]="getLinkedEntityLabel(value.pidUri)"></span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="row d-flex" *ngIf="!isLoading; else loading">
+          <div class="col-md-3 text-muted font-weight-normal">
+            Definition:
+          </div>
+          <div class="col-md-9 my-1" style="overflow-y: hidden" innerHTML="{{getLinkedEntityDefinition(value.pidUri)}}">
+          </div>
+          <div class="col-md-3 text-muted font-weight-normal">
+            PID URI:
+          </div>
+          <div class="col-md-9" [class.font-weight-bold]="!displayForm">
+            <a class="wordbreak" [href]="value.pidUri" target="_blank" rel="noopener noreferrer">{{value.pidUri}}</a>
+          </div>
         </div>
-        <div class="col-md-9 my-1" style="overflow-y: hidden" innerHTML="{{value.definition}}">
-        </div>
-        <div class="col-md-3 text-muted font-weight-normal">
-          PID URI:
-        </div>
-        <div class="col-md-9" [class.font-weight-bold]="!displayForm">
-          <a class="wordbreak" [href]="value.pidUri" target="_blank" rel="noopener">{{value.pidUri}}</a>
-        </div>
-      </div>
-    </mat-expansion-panel>
+      </mat-expansion-panel>
+    </ng-container>
+
   </ng-container>
 
 
@@ -61,24 +69,24 @@
           <span>{{value | date:'yyyy-MM-dd HH:mm'}}</span>
         </ng-container>
         <ng-container *ngSwitchCase="'url'">
-          <a class="wordbreak" [href]="value" target="_blank" rel="noopener">{{value}}</a>
+          <a class="wordbreak" [href]="value" target="_blank" rel="noopener noreferrer">{{value}}</a>
         </ng-container>
         <ng-container *ngSwitchCase="'version'">
           <app-entity-display-item-versioning (versionClick)="versionClicked($event)" [versions]="entityVersions"
             [version]="value"></app-entity-display-item-versioning>
         </ng-container>
         <ng-container *ngSwitchCase="'externalUrl'">
-          <a class="wordbreak" [href]="'//' + value" target="_blank" rel="noopener">{{value}}</a>
+          <a class="wordbreak" [href]="'//' + value" target="_blank" rel="noopener noreferrer">{{value}}</a>
         </ng-container>
         <ng-container *ngSwitchCase="'identifier'">
-          <a class="wordbreak" [href]="value?.id" target="_blank" rel="noopener">{{value?.id}}</a>
+          <a class="wordbreak" [href]="value?.id" target="_blank" rel="noopener noreferrer">{{value?.id}}</a>
         </ng-container>
         <ng-container *ngSwitchCase="'email'">
           <a class="wordbreak mr-2" [href]="'mailto:' + value">{{value}}</a>
         </ng-container>
         <ng-container *ngSwitchCase="'html'">
           <div class="ql-editor-parent w-100">
-            <quill-view-html [content]="value" theme="default"></quill-view-html>
+            <quill-view-html [content]="replaceSpecialCharacterFromText(value)" theme="default"></quill-view-html>
           </div>
         </ng-container>
         <ng-container *ngSwitchDefault>

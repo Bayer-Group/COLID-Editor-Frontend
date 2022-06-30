@@ -22,7 +22,7 @@ export class EntityDisplayItemTaxonomyComponent implements OnInit {
   @Input() key: string;
   @Input() range: string;
 
-  badgeTaxonomies = [Constants.Metadata.Keywords, Constants.ConsumerGroup.HasPidUriTemplate];
+  badgeTaxonomies = [Constants.Metadata.Keywords, Constants.ConsumerGroup.HasPidUriTemplate, Constants.Metadata.ContainsTherapeuticAreas, Constants.Metadata.ContainsRwdDimensions];
 
   // TODO: Inject list of taxonomies to be shwon as badges
   get isBadgeTaxonomy(): boolean {

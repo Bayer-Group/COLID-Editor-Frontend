@@ -1,0 +1,75 @@
+<ng-container *ngIf="historyEntity; else loading">
+  <ng-container *ngIf="historyEntity.length !== 0; else empty">
+    <br>
+    <mat-accordion [multi]="false">
+      <mat-expansion-panel *ngFor="let entity of historyEntity; let i = index;" (opened)="openPanel(entity)"
+      (closed)="closedPanel(entity)">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <span>
+              
+                <mat-icon fontSet="material-icons-outlined" class="iconClose" inline="true" *ngIf="!entity.isExpanded" >history</mat-icon>
+             <mat-icon *ngIf="entity.isExpanded" class="iconOpen" inline="true">arrow_right_alt</mat-icon>
+              
+              
+             
+              &nbsp;
+            <span>{{entity.lastchangedByDateTime | date:'yyyy-MM-dd HH:mm'}}
+          </span>
+          </span>
+            <small>{{getLastChangeUser(entity,i)}}</small>
+          </mat-panel-title>
+          <mat-panel-description class="right-aligned">
+           <span *ngIf="showLatest(i)" class="latest">Current Version</span>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <div class="row">
+          <div class="col-6 history-header">
+            Removals
+          </div>
+          <div class="col-6 history-header">
+            Additions
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <ng-container *ngIf="!isEmptyObject(entity.removals.entity)">
+
+              <app-entity-display [metadata]="entity.removals.metadata" [entity]="entity.removals.entity"
+                [entityVersions]="entity.removals.entityVersion">
+              </app-entity-display>
+            </ng-container>
+          </div>
+          <div class="col-6">
+            <ng-container *ngIf="!isEmptyObject(entity.additions.entity)">
+              <app-entity-display [metadata]="entity.additions.metadata" (versionClick)="versionClicked($event)"
+                [entity]="entity.additions.entity" [entityVersions]="entity.additions.entityVersion">
+              </app-entity-display>
+            </ng-container>
+          </div>
+        </div>
+
+      </mat-expansion-panel>
+    </mat-accordion>
+  </ng-container>
+</ng-container>
+
+<ng-template #empty>
+  <div class="mt-4 row">
+    <div class="col">
+      <div class="mt-4 text-center">
+        <mat-icon style="font-size: 5rem;" [inline]="true">history</mat-icon>
+        <h4>Currently there are no historical entries yet</h4>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #loading>
+  <div class="row justify-content-center mt-4">
+    <div class="col-auto">
+      <app-colid-spinner></app-colid-spinner>
+    </div>
+  </div>
+</ng-template>

@@ -1,15 +1,3 @@
-$mat-toolbar-height: 54px;
-
-.mat-toolbar {
-    min-height: #{$mat-toolbar-height};
-    height: #{$mat-toolbar-height};
-}
-
-.mat-toolbar-row {
-    min-height: #{$mat-toolbar-height};
-    height: #{$mat-toolbar-height};
-}
-
 .mat-flat-button {
     line-height: 32px;
 }
@@ -28,10 +16,6 @@ $mat-toolbar-height: 54px;
 img {
     margin-right: 10px;
     margin-bottom: 4px;
-}
-
-.app-title {
-    font-size: x-large;
 }
 
 .filler {

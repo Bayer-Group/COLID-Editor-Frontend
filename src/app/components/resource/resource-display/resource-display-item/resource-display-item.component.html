@@ -9,23 +9,19 @@
    <ng-container  *ngIf="internalValue.length">
     <ng-container *ngFor="let value of internalValue">
       <ng-container [ngSwitch]="displayType">
-        <app-resource-display-item-dropdown *ngSwitchCase="'cvDropdown'" [dropdownList]="value" [metadata]="metadata">
+        <app-resource-display-item-dropdown *ngSwitchCase="'list'" [dropdownList]="value" [metadata]="metadata">
         </app-resource-display-item-dropdown>
-        <div *ngSwitchCase="'cvDropdownBadge'" class="d-flex">
-          <span *ngFor="let cv of value" class="badge badge-info mr-1"
-            style="font-size: 0.7rem;">{{cv}}</span>
-        </div>
         <ng-container *ngSwitchCase="'datetime'">
           <span>{{value | date:'yyyy-MM-dd HH:mm'}}</span>
         </ng-container>
         <ng-container *ngSwitchCase="'url'">
-          <a class="wordbreak" [href]="value" target="_blank" rel="noopener">{{value}}</a>
+          <a class="wordbreak" [href]="value" target="_blank" rel="noopener noreferrer">{{value}}</a>
         </ng-container>
         <ng-container *ngSwitchCase="'externalUrl'">
-          <a class="wordbreak" [href]="'//' + value" target="_blank" rel="noopener">{{value}}</a>
+          <a class="wordbreak" [href]="'//' + value" target="_blank" rel="noopener noreferrer">{{value}}</a>
         </ng-container>
         <ng-container *ngSwitchCase="'identifier'">
-          <a class="wordbreak" [href]="value?.id" target="_blank" rel="noopener">{{value?.id}}</a>
+          <a class="wordbreak" [href]="value?.id" target="_blank" rel="noopener noreferrer">{{value?.id}}</a>
         </ng-container>
         <ng-container *ngSwitchCase="'email'">
           <a class="wordbreak mr-2" [href]="'mailto:' + value">{{value}}</a>

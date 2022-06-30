@@ -3,33 +3,27 @@ import { CanActivate, Router, ActivatedRouteSnapshot } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { RouteExtension } from 'src/app/shared/extensions/route.extension';
 import { AuthService } from '../services/auth.service';
+import { Observable, combineLatest } from 'rxjs';
+import { AuthGuardService } from './auth-guard.service';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
-export class AuthGuardSuperAdminService implements CanActivate {
+export class AuthGuardSuperAdminService extends AuthGuardService implements CanActivate {
 
-    constructor(private authService: AuthService, private router: Router) { }
+  constructor(protected authService: AuthService, protected router: Router) {
+    super(authService, router)
+  }
 
-    canActivate(route: ActivatedRouteSnapshot) {
+  canActivate(route: ActivatedRouteSnapshot) {
+    return combineLatest([this.authService.isLoggedIn$, this.authService.hasSuperAdminPrivilege$])
+      .pipe(map(([isLoggedIn, hasSuperAdminPrivilege]) => {
+        const isAuthorized = this.processLoggedIn(isLoggedIn, route);
 
-      if (!this.authService.isLoggedIn) {
-        if (!this.authService.loginInProgress) {
-          RouteExtension.SetRouteInStorage(route);
+        if (isAuthorized && !hasSuperAdminPrivilege) {
+            this.router.navigate(['/unauthorized']);
         }
-        this.router.navigate(['/login-in-progress']);
-        return false;
-      }
-
-        return this.authService.isAuthorized.pipe(map(isAuthorized => {
-            if (isAuthorized && this.authService.hasSuperAdminPrivilege) {
-                return true;
-            } else {
-                this.router.navigate(['/unauthorized']);
-                return false;
-            }
-        }));
-    }
-
-
+        return hasSuperAdminPrivilege;
+      }));
+  }
 }

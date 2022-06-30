@@ -1,0 +1,38 @@
+.link-element {
+    background-color: #FF304C33 !important;
+    margin-bottom: 16px;
+    border: black;
+    border-radius: 4px;
+}
+
+.link-label {
+    font-weight: bold;
+}
+
+.link-content {
+    text-align: left;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+}
+
+.link-title {
+    font-weight: bolder;
+    font-size: 14px;
+}
+
+.right-aligned-content {
+    align-content: right;
+}
+
+.link-data-container {
+    height: 320px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.dialog-title {
+    color: #00354F;
+    font-size: 24px;
+}

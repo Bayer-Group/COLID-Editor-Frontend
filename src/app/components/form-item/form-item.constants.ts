@@ -1,0 +1,16 @@
+export const FieldTypeFormItemMapping = {
+    'https://pid.bayer.com/ns/shacl/fieldType#string' : 'general',
+    'https://pid.bayer.com/ns/shacl/fieldType#naturalNumber' : 'number',
+    'https://pid.bayer.com/ns/shacl/fieldType#number' : 'number',
+    'https://pid.bayer.com/ns/shacl/fieldType#dateTime' : 'datetime',
+    'https://pid.bayer.com/ns/shacl/fieldType#html' : 'html',
+    'https://pid.bayer.com/ns/shacl/fieldType#boolean' : 'boolean',
+    'https://pid.bayer.com/ns/shacl/fieldType#list' : 'list',
+    'https://pid.bayer.com/ns/shacl/fieldType#extendableList' : 'extendableList' ,
+    'https://pid.bayer.com/ns/shacl/fieldType#hierarchy' : 'taxonomy',
+    'https://pid.bayer.com/ns/shacl/fieldType#identifier' : 'identifier',
+    'https://pid.bayer.com/ns/shacl/fieldType#entity' : 'nested',
+    'https://pid.bayer.com/ns/shacl/fieldType#attachment' : 'attachment',
+    'https://pid.bayer.com/ns/shacl/fieldType#linkedEntity' : 'linking',
+    'https://pid.bayer.com/ns/shacl/fieldType#person' : 'person',
+};

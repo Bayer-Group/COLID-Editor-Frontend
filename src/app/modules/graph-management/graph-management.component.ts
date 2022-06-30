@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { GraphManagementApiService } from './services/graph-management-api.service';
 import { GraphDto } from 'src/app/shared/models/graphs/graph-dto';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -9,6 +8,16 @@ import { ColidMatSnackBarService } from '../colid-mat-snack-bar/colid-mat-snack-
 import { DeleteItemDialogComponent } from 'src/app/shared/components/delete-item-dialog/delete-item-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { GraphUploadDialogComponent } from './components/graph-upload-dialog/graph-upload-dialog.component';
+import { GraphManagementApiService } from 'src/app/core/http/graph-management-api.service';
+import * as fileSaver from 'file-saver';
+import { EntityFormStatus } from 'src/app/shared/components/entity-form/entity-form-status';
+
+
+export enum GraphManagmentAction {
+  LOADING = 'loading',
+  DELETION = 'deletion',
+  DOWNLOAD = 'download'
+}
 
 @Component({
   selector: 'app-graph-management',
@@ -18,7 +27,10 @@ import { GraphUploadDialogComponent } from './components/graph-upload-dialog/gra
 export class GraphManagementComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['name', 'status', 'startTime', 'action'];
 
-  loadingStatus: 'loaded' | 'deletion' | 'loading' | 'error';
+  loadingStatus: EntityFormStatus = EntityFormStatus.INITIAL;
+  currentAction: GraphManagmentAction;
+  downloadingGraphs: string[] = [];
+
   graphs: GraphDto[];
   dataSource: MatTableDataSource<GraphDto>;
 
@@ -26,6 +38,10 @@ export class GraphManagementComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
+
+  get isLoading(): boolean {
+    return this.loadingStatus === EntityFormStatus.LOADING;
+  }
 
   constructor(private graphApiService: GraphManagementApiService, private snackBar: ColidMatSnackBarService, private dialog: MatDialog) {
     this.dataSource = new MatTableDataSource([]);
@@ -45,13 +61,19 @@ export class GraphManagementComponent implements OnInit, OnDestroy {
     this.sortChangeSubscription.unsubscribe();
   }
 
+  isLoadingAction(action: string): boolean {
+    return this.isLoading && this.currentAction === action;
+  }
+
   loadGraphs() {
-    this.loadingStatus = 'loading';
+    this.currentAction = GraphManagmentAction.LOADING;
+    this.loadingStatus = EntityFormStatus.LOADING;
+
     this.graphApiService.getGraphs().subscribe(res => {
-      this.dataSource.data = res;
-      this.loadingStatus = 'loaded';
+      this.dataSource.data = res.filter(x=>!x.name.includes("Rev"));
+      this.loadingStatus = EntityFormStatus.SUCCESS;
     }, error => {
-      this.loadingStatus = 'error';
+      this.loadingStatus = EntityFormStatus.ERROR;
     })
   }
 
@@ -67,17 +89,40 @@ export class GraphManagementComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.loadingStatus = 'loading';
+        this.currentAction = GraphManagmentAction.DELETION;
+        this.loadingStatus = EntityFormStatus.LOADING;
         this.graphApiService.deleteGraph(graph.name).subscribe(res => {
+          this.loadingStatus = EntityFormStatus.SUCCESS;
           this.loadGraphs();
           this.snackBar.success("Graph", "Deleted successfully");
         }, error => {
-          this.loadingStatus = 'error'
+          this.loadingStatus = EntityFormStatus.ERROR;
         })
       }
     });
+  }
 
+  downloadGraph(namedGraph: string) {
+    this.currentAction = GraphManagmentAction.DOWNLOAD;
+    this.loadingStatus = EntityFormStatus.LOADING;
+    this.downloadingGraphs.push(namedGraph)
 
+    this.graphApiService.downloadGraph(namedGraph).subscribe(blob => {
+      fileSaver.saveAs(blob, this.getFileName(namedGraph));
+      this.downloadingGraphs = this.downloadingGraphs.filter(x => x !== namedGraph)
+      this.loadingStatus = EntityFormStatus.SUCCESS;
+    }, error => {
+      this.downloadingGraphs = this.downloadingGraphs.filter(x => x !== namedGraph)
+      this.snackBar.error("Error", "An error occured during the graph download!");
+      this.loadingStatus = EntityFormStatus.ERROR;
+
+    });
+  }
+
+  getFileName(namedGraph: string): string {
+    var prefix = "https://pid.bayer.com/";
+    var filename = namedGraph.replace(prefix, "").replace("graph/", "").replace("/", "__") + ".ttl";
+    return filename;
   }
 
   applyFilter(filterValue: string) {

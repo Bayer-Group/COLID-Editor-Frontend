@@ -2,28 +2,34 @@
   <div class="col-md-3">
     <span class="font-weight-bold">{{label}}</span>
   </div>
-    <div class="col-md-9">
-      <div *ngIf="!linkingTypesVisible">
-        <button mat-raised-button id='btnAddLinkResource' (click)="showLinkingTypes()">Add {{label}}</button>
+  <div class="col-md-9">
+    <div *ngIf="!linkingTypesVisible">
+      <button mat-raised-button id='btnAddLinkResource' (click)="showLinkingTypes()" [disabled]="disabled">Add
+        {{label}}</button>
+    </div>
+    <div *ngIf="linkingTypesVisible">
+      <div class="list-group">
+        <button type="button" class="list-group-item list-group-item-action" style="cursor: pointer;"
+          (click)="selectedLinkingType = m"
+          [class.active]="selectedLinkingType?.properties[pidUriConstant] === m.properties[pidUriConstant]"
+          [disabled]="disabled"
+          *ngFor="let m of linkingTypes">
+          <p class="m-0">{{m.properties[constants.Metadata.Name]}}</p>
+          <small class="m-0">{{m.properties[constants.Metadata.Comment]}}</small>
+        </button>
       </div>
-      <div *ngIf="linkingTypesVisible">
-        <div class="list-group">
-          <button type="button" class="list-group-item list-group-item-action" style="cursor: pointer;" (click)="selectedLinkingType = m"
-            [class.active]="selectedLinkingType?.properties[pidUriConstant] === m.properties[pidUriConstant]" *ngFor="let m of linkingTypes">
-            <p class="m-0">{{m.properties[constants.Metadata.Name]}}</p>
-            <small class="m-0">{{m.properties[constants.Metadata.Comment]}}</small>
-          </button>
-        </div>
-        <div class="row justify-content-end mr-1">
-          <button mat-raised-button color="white" id='btnCancelLinkResource' (click)="hideLinkingTypes()">
-            <mat-icon fontSet="material-icons-outlined">cancel</mat-icon>
-            Cancel
-          </button>
-          <button mat-raised-button color="primary" id='btnCreateLinkResource' class="ml-2" [disabled]="selectedLinkingType == null" (click)="addLinking()">
-            <mat-icon fontSet="material-icons-outlined">add</mat-icon>
-            Create
-          </button>
-        </div>
+      <div class="row justify-content-end mr-1">
+        <button mat-raised-button color="white" id='btnCancelLinkResource' (click)="hideLinkingTypes()"
+          [disabled]="disabled">
+          <mat-icon fontSet="material-icons-outlined">cancel</mat-icon>
+          Cancel
+        </button>
+        <button mat-raised-button color="primary" id='btnCreateLinkResource' class="ml-2"
+          [disabled]="selectedLinkingType == null || disabled" (click)="addLinking()" [disabled]="disabled">
+          <mat-icon fontSet="material-icons-outlined">add</mat-icon>
+          Create
+        </button>
       </div>
     </div>
   </div>
+</div>

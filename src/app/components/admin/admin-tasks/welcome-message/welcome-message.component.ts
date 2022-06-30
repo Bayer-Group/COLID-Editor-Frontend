@@ -11,7 +11,7 @@ export class WelcomeMessageComponent implements OnInit {
 
     constructor(private store: Store) { }
 
-    ngOnInit() { 
+    ngOnInit() {
         this.store.dispatch(new FetchWelcomeMessage()).subscribe();
     }
 }

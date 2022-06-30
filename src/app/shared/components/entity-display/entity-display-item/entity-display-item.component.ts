@@ -1,16 +1,18 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { MetaDataProperty } from 'src/app/shared/models/metadata/meta-data-property';
 import { Constants } from 'src/app/shared/constants';
-import { MetaDataPropertyIdentifier, ControlTypeMapping } from 'src/app/components/resource/resource-form/resource-form.constants';
-import { EntitySearch } from 'src/app/shared/models/Entities/entity-search';
-import { EntityApiService } from 'src/app/core/http/entity.api.service';
+import { MetaDataPropertyIdentifier, FieldTypeMapping } from 'src/app/components/resource/resource-form/resource-form.constants';
 import { ResourceSearchDTO } from 'src/app/shared/models/search/resource-search-dto';
 import { ResourceApiService } from 'src/app/core/http/resource.api.service';
 import { ResourceOverviewDTO } from 'src/app/shared/models/resources/resource-overview-dto';
 import { Entity } from 'src/app/shared/models/Entities/entity';
 import { VersionProperty } from 'src/app/shared/models/resources/version-property';
+import { MetaDataPropertyGroup } from 'src/app/shared/models/metadata/meta-data-property-group';
 import { Store } from '@ngxs/store';
 import { FetchTaxonomyList } from 'src/app/state/taxonomy.state';
+import { FieldTypeFormItemMapping } from 'src/app/components/form-item/form-item.constants';
+import { StringExtension } from 'src/app/shared/extensions/string.extension';
+import { LinkingMapping, LinkType } from 'src/app/shared/models/resources/linking-mapping';
 
 @Component({
   selector: 'app-entity-display-item',
@@ -22,6 +24,7 @@ export class EntityDisplayItemComponent implements OnInit {
   @Input() metadataProperty: MetaDataProperty;
   @Input() entityVersions: Array<any>;
   @Input() entityProperty: Array<any>;
+  links: LinkingMapping[];
   @Input() mainDistributionEndpoint: boolean;
   @Input() expanded: boolean = false;
   
@@ -29,6 +32,8 @@ export class EntityDisplayItemComponent implements OnInit {
 
   isLoading: boolean = false;
   constants = Constants;
+
+  replaceSpecialCharacterFromText = StringExtension.ReplaceSpecialCharacterFromText;
 
   constructor(private store: Store, private resourceApiService: ResourceApiService) { }
 
@@ -50,12 +55,36 @@ export class EntityDisplayItemComponent implements OnInit {
     });
   }
 
+  linkEntityExist(pidUri:string){
+    let linkElement  = this.entityProperty.find(x=>x.pidUri == pidUri)
+    return linkElement != null || linkElement!=undefined
+  }
+  getLinkedEntityLabel(pidUri:string){
+    let linkElement  = this.entityProperty.find(x=>x.pidUri == pidUri)
+    return linkElement.name
+  }
+  getLinkedEntityResourceType(pidUri:string){
+    let linkElement  = this.entityProperty.find(x=>x.pidUri == pidUri)
+    return linkElement.resourceType
+  }
+  getLinkedEntityDefinition(pidUri:string){
+    let linkElement  = this.entityProperty.find(x=>x.pidUri == pidUri)
+    return linkElement.definition
+  }
+  getLinktype(link){ 
+    //var link :LinkingMapping = this.links.find(x=>x.pidUri==pidUri)
+    var linktype  = LinkType[link.linkType];  
+    return linktype;
+  }
+
   private fetchLinkedEntries() {
+    this.links=this.entityProperty
     this.isLoading = true;
 
     const resourceSearch = new ResourceSearchDTO();
-    resourceSearch.pidUris = this.entityProperty;
+    resourceSearch.pidUris = this.entityProperty.map(x => x.pidUri);
     resourceSearch.limit = this.entityProperty.length;
+    resourceSearch.published = true;
 
     this.resourceApiService.getFilteredResources(resourceSearch).subscribe(
       res => {
@@ -92,7 +121,7 @@ export class EntityDisplayItemComponent implements OnInit {
   }
 
   get displayType(): string {
-
+    const group = this.metadataProperty.properties[Constants.Metadata.Group];
     if (this.metadataProperty.key === Constants.Metadata.HasPidUri || this.metadataProperty.key === MetaDataPropertyIdentifier.baseUri) {
       return 'identifier';
     }
@@ -105,9 +134,7 @@ export class EntityDisplayItemComponent implements OnInit {
       return 'distribution';
     }
 
-    const group = this.metadataProperty.properties[Constants.Metadata.Group];
-
-    if (this.isLinking) {
+    if (group != null && group.key === Constants.Resource.Groups.LinkTypes) {
       return 'linking';
     }
 
@@ -119,11 +146,11 @@ export class EntityDisplayItemComponent implements OnInit {
       return 'email';
     }
 
-    if (ControlTypeMapping[this.metadataProperty.properties[Constants.Metadata.Datatype]] === 'textarea') {
+    if (FieldTypeMapping[this.metadataProperty.properties[Constants.Metadata.Datatype]] === 'html') {
       return 'html';
     }
 
-    if (ControlTypeMapping[this.metadataProperty.properties[Constants.Metadata.Datatype]] === 'datetime') {
+    if (FieldTypeMapping[this.metadataProperty.properties[Constants.Metadata.Datatype]] === 'datetime') {
       return 'datetime';
     }
 
@@ -152,7 +179,7 @@ export class EntityDisplayItemComponent implements OnInit {
 
   getEndpointLabel(entity: Entity): string {
     const entityLabel = entity.properties[Constants.Metadata.NetworkedResourceLabel]
-    return entityLabel == null || entityLabel.length === 0 ? '' : entityLabel[0];
+    return StringExtension.ReplaceHtmlToText(entityLabel[0]);
   }
 }
 

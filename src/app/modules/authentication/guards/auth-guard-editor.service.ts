@@ -1,38 +1,34 @@
-import { Router, ActivatedRouteSnapshot, RouterStateSnapshot, CanActivate } from '@angular/router';
-import { RouteExtension } from 'src/app/shared/extensions/route.extension';
+import { Router, ActivatedRouteSnapshot, CanActivate } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { FetchConsumerGroupsByUser } from 'src/app/state/user-info.state';
-import { Store } from '@ngxs/store';
-import { Observable, of } from 'rxjs';
+import { combineLatest, timer } from 'rxjs';
+import { map, debounce } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
-;
+import { AuthGuardService } from './auth-guard.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuardEditorService implements CanActivate {
+export class AuthGuardEditorService extends AuthGuardService implements CanActivate {
+  
+  constructor(protected authService: AuthService, protected router: Router) {
+    super(authService, router)
+    this.authService.hasCreatePrivilege$.subscribe(val => this.hasCreatePrivilege = val)
+  }
 
-  constructor(private authService: AuthService, private router: Router, private store: Store) { }
+  hasCreatePrivilege : boolean = false;
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-
-    if (!this.authService.isLoggedIn) {
-      if (!this.authService.loginInProgress) {
-        RouteExtension.SetRouteInStorage(route);
-      }
-      this.router.navigate(['/login-in-progress']);
-    }
-
-    return new Observable(observer => {
-      this.store.dispatch(new FetchConsumerGroupsByUser).
-      subscribe(result => {
-        if (result.UserInfo.fetched && result.UserInfo.consumerGroups.length > 0) {
-          return observer.next(true);
-        } else {
+  canActivate(route: ActivatedRouteSnapshot) {
+    return combineLatest([this.authService.isLoggedIn$, this.authService.hasCreatePrivilege$])
+      .pipe(
+        // TODO: timer should be eliminated. It is used to wait for hasCreatePrivilege to become true (i.e. userInfo.consumerGroups to be filled)
+        // USECASE: when creating a resource, reload the page. Without timer the user get's sent to unauthorized page
+        debounce(() => !this.hasCreatePrivilege ? timer(60000) : timer(0)),
+        map(([isLoggedIn, hasCreatePriv]) => {
+        const isAuthorized = this.processLoggedIn(isLoggedIn, route);
+        if (isAuthorized && !hasCreatePriv) {
           this.router.navigate(['/unauthorized']);
-          return observer.next(false);
         }
-      })
-    });
+        return hasCreatePriv;
+      }));
   }
 }

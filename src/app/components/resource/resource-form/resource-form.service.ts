@@ -9,12 +9,12 @@ import { PidUriTemplateResultDTO } from 'src/app/shared/models/pidUriTemplates/p
 import { Entity } from 'src/app/shared/models/Entities/entity';
 import { UserInfoStateModel } from 'src/app/state/user-info.state';
 import { ValidationResultSeverity } from 'src/app/shared/models/validation/validation-result-severity';
-import { ConsumerGroupStateModel } from 'src/app/state/consumer-group.state';
 
 export enum OPERATION {
-  SAVE,
-  SAVEANDPUBLISH,
-  PUBLISH
+  SAVE = 'save',
+  SAVEANDPUBLISH = 'saveAndPublish',
+  PUBLISH = 'publish',
+  REVERT = 'revert'
 }
 
 @Injectable({
@@ -25,18 +25,36 @@ export class ResourceFormService {
   constructor(private store: Store) { }
 
   createResourceDto(formProperties, metadata, mainDistribution): ResourceRequestDTO {
-    const newResource = new ResourceRequestDTO();
+    let newResource = new ResourceRequestDTO();
     newResource.properties = FormExtension.createEntityPropertyList(formProperties, metadata);
 
-    var distributionEndpoints = newResource.properties[Constants.Metadata.Distribution];
+    //newResource = this.transformAttachmentEntitiesToIdList(newResource);
+    newResource = this.transformDistributionEndpointList(newResource, mainDistribution);
 
+    return newResource;
+  }
+
+  transformAttachmentEntitiesToIdList(resource: ResourceRequestDTO): ResourceRequestDTO {
+    let attachments = resource.properties[Constants.Metadata.HasAttachment];
+
+    if(attachments != null && attachments.length > 0) {
+      let uploadedAttachments = attachments.filter(attachment => !attachment.id.startsWith(Constants.Resource.Prefix));
+
+      resource.properties[Constants.Metadata.HasAttachment] = uploadedAttachments;
+    }
+
+    return resource;
+  }
+
+  transformDistributionEndpointList(resource: ResourceRequestDTO, mainDistribution: string): ResourceRequestDTO {
+    var distributionEndpoints = resource.properties[Constants.Metadata.Distribution];
 
     if (distributionEndpoints) {
       let indexToRemove = null;
 
       distributionEndpoints.forEach((item: Entity, index) => {
         if (item && item.id === mainDistribution) {
-          newResource.properties[Constants.Metadata.MainDistribution] = [item];
+          resource.properties[Constants.Metadata.MainDistribution] = [item];
           indexToRemove = index;
         }
       });
@@ -44,14 +62,14 @@ export class ResourceFormService {
       if (indexToRemove !== null) {
         distributionEndpoints.splice(indexToRemove, 1);
         if (distributionEndpoints) {
-          newResource.properties[Constants.Metadata.Distribution] = distributionEndpoints;
+          resource.properties[Constants.Metadata.Distribution] = distributionEndpoints;
         } else {
-          delete newResource.properties[Constants.Metadata.Distribution];
+          delete resource.properties[Constants.Metadata.Distribution];
         }
       }
     }
 
-    return newResource;
+    return resource;
   }
 
   get SelectedConsumerGroup() {

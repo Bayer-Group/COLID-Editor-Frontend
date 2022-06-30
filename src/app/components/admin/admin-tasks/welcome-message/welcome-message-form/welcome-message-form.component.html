@@ -1,20 +1,19 @@
-<form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="editForm">
     <div class="row">
         <div class="col-12 justify-content-center welcome-message ql-editor">
-            <quill-editor id="editControl" [styles]="{height: '400px'}" [modules]="editorQuillConfig" formControlName="editControl"></quill-editor>
+            <quill-editor id="editControl" [styles]="{height: '400px'}" [formats]="quillEditorConfig.Formats" [modules]="quillEditorConfig.Modules" [disabled]="isLoading" [readOnly]="isLoading"
+                formControlName="editControl"></quill-editor>
         </div>
     </div>
     <div class="row">
-        <div class="col-12 text-right">
-            <button type="button" mat-raised-button class="ml-3" color="secondary"
-                (click)="onResetWelcomeMessage()">
-                <mat-icon fontSet="material-icons-outlined">cancel</mat-icon>
+        <div class="col-12 d-flex justify-content-end">
+            <action-button color="secondary" (click)="onResetWelcomeMessage()" class="mr-2" [disabled]="isLoading"
+                icon="cancel">
                 Reset
-            </button>
-            <button type="submit" mat-raised-button class="ml-3" color="primary">
-                <mat-icon fontSet="material-icons-outlined">save</mat-icon>
+            </action-button>
+            <action-button color="primary" (click)="onSubmit()" [loading]="isLoading" icon="save">
                 Save
-            </button>
+            </action-button>
         </div>
     </div>
 </form>

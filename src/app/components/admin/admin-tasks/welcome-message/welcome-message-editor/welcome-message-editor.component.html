@@ -1,5 +1,5 @@
 <ng-container *ngIf="welcomeMessageEditor$ | async; else loading">
-    <welcome-message-form [defaultMessage]="welcomeMessageEditorDefault" (submitForm)="updateWelcomeMessageEditor($event)"></welcome-message-form>
+    <welcome-message-form [defaultMessage]="welcomeMessageEditorDefault" (submitForm)="updateWelcomeMessageEditor($event)" [status]="status"></welcome-message-form>
 </ng-container>
 <ng-template #loading>
     <div class="row justify-content-center mt-4">

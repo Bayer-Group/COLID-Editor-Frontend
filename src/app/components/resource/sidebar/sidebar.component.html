@@ -1,9 +1,9 @@
 <div class="sidebar-content">
-  <app-sidebar-filter [resourceOverviewState]="resourceSidebarOverview$"
+  <app-title [iconColor]="'primary'" class="sidenav-title"></app-title>
+  <app-sidebar-filter [searchResultState]="searchResult$"
     (resourceSearchEvent)="handleResourceSearchChanged($event)">
   </app-sidebar-filter>
-
-  <app-sidebar-content class="pt-1" [resourceOverviewState]="resourceSidebarOverview$" [loadingState]="loading$"
+  <app-sidebar-content class="pt-1" [searchResultState]="searchResult$" [loadingState]="loading$"
     [selectedResourcePidUri]="selectedResourcePidUri" (nextResourceBatchEvent)="handleNextResourceBatch($event)"
     (resourceSelectedEvent)="handleResourceSelectionChanged($event)" [currentPageStatus]="currentPageStatus">
   </app-sidebar-content>

@@ -1,0 +1,36 @@
+.mat-standard-chip {
+    border-radius: 10px;
+    min-height: 20px;
+    padding: 0px 8px;
+}
+
+.click-cursor{
+    cursor: pointer;
+}
+
+::ng-deep .mat-tooltip {
+    display: -webkit-box;
+    -webkit-line-clamp: 8;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+:host ::ng-deep .mat-chip-list-wrapper {
+    flex-wrap: nowrap;
+}
+
+.resource-name {
+    font-size: 0.8em !important;
+}
+
+.resource-definition {
+    font-size: 0.75em !important;
+
+    ::ng-deep p {
+        margin: unset;
+    }
+}
+
+.active {
+    background-color: rgba(0, 0, 0, 0.12);
+    border-radius: 5px;
+}

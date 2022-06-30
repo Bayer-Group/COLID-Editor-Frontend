@@ -6,11 +6,11 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./colid-spinner.component.css']
 })
 export class ColidSpinnerComponent implements OnInit {
-  @Input() diameter: Number = 100;
-  @Input() strokeWidth: Number = 5;
+  @Input() diameter: number = 100;
+  @Input() strokeWidth: number = 5;
 
-  matDiameter: Number;
-  matStrokeWidth: Number;
+  matDiameter: number;
+  matStrokeWidth: number;
 
   constructor() { 
   }

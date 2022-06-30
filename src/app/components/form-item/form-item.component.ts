@@ -3,12 +3,14 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { FormItemSettings } from 'src/app/shared/models/form/form-item-settings';
 import { MetaDataProperty } from 'src/app/shared/models/metadata/meta-data-property';
 import { FormItemChangedDTO } from 'src/app/shared/models/form/form-item-changed-dto';
-import { MetaDataPropertyIdentifier } from '../resource/resource-form/resource-form.constants';
+import { FieldTypeMapping, MetaDataPropertyIdentifier } from '../resource/resource-form/resource-form.constants';
 import { Observable, of } from 'rxjs';
 import { PidUriTemplateResultDTO } from 'src/app/shared/models/pidUriTemplates/pid-uri-template-result-dto';
 import { MetaDataPropertyGroup } from 'src/app/shared/models/metadata/meta-data-property-group';
 import { MultiselectSettings } from '../../shared/models/form/multi-select-settings';
 import { Constants } from 'src/app/shared/constants';
+import { FieldTypeFormItemMapping } from './form-item.constants';
+import { AttachmentUploadedDto } from 'src/app/shared/models/attachment/attachment-uploaded-dto';
 
 @Component({
   selector: 'app-form-item',
@@ -36,6 +38,8 @@ export class FormItemComponent implements OnInit, ControlValueAccessor {
   @Input() metaData: MetaDataProperty;
   @Input() errors: any;
   @Input() fetched: boolean;
+  @Input() formReadOnly: boolean = false;
+  @Input() isNew: boolean;
 
   get fetched$(): Observable<boolean> {
     return of(this.fetched);
@@ -55,11 +59,14 @@ export class FormItemComponent implements OnInit, ControlValueAccessor {
 
   @Output() removeFormItem: EventEmitter<any> = new EventEmitter<any>();
   @Output() mainDistributionChanged: EventEmitter<any> = new EventEmitter<any>();
+  @Output() attachmentUploaded: EventEmitter<AttachmentUploadedDto> = new EventEmitter<AttachmentUploadedDto>();
   @Output() valueChanged: EventEmitter<FormItemChangedDTO> = new EventEmitter<FormItemChangedDTO>();
 
   @Input() controlSize: string;
   onChange: any = () => { };
   onTouched: any = () => { };
+
+  created : boolean = true;
 
   constructor() { }
 
@@ -68,7 +75,7 @@ export class FormItemComponent implements OnInit, ControlValueAccessor {
       multiple: !this.singleSelection,
       maxSelectedItems: this.limitSelection,
       disabled: this.readonly,
-      addTag: this.metaData.properties[Constants.Metadata.HasPidUri] === Constants.Metadata.Keywords,
+      addTag: this.fieldType === 'extendableList',
       hideSelected: true
     };
   }
@@ -92,18 +99,22 @@ export class FormItemComponent implements OnInit, ControlValueAccessor {
       this.readonly = true;
       return;
     }
-
-    if (this.metaData.properties[Constants.Metadata.Group] != null && this.metaData.properties[Constants.Metadata.Group].key === Constants.Resource.Groups.TechnicalInformation) {
+    if (this.metaData.key === Constants.Metadata.HasConsumerGroup && this.adminPrivilege && !this.isNew) {
+      this.readonly = false;
+      return;
+    }
+    if (this.metaData.properties[Constants.Metadata.Group] != null && this.metaData.properties[Constants.Metadata.Group].key == Constants.Resource.Groups.TechnicalInformation) {
       this.readonly = true;
+      return;
     }
 
-    // If set from outside of the component, this overwrites the readonly group settings
+    if (this.fieldType === 'nested') {
+      this.readonly = false;
+      return;
+    }
+
     if (readOnly != null) {
       this.readonly = readOnly;
-    }
-
-    if (this.controlType === 'nested') {
-      this.readonly = false;
     }
   }
 
@@ -118,8 +129,14 @@ export class FormItemComponent implements OnInit, ControlValueAccessor {
   handleInputValueChanged(event: FormItemChangedDTO) {
     this.onChange(this.internalValue);
     this.onTouched();
-
+    event.created = this.created;
+    console.log(event.created)
     this.valueChanged.emit(event);
+    this.created = false;
+  }
+
+  handleAttachmentUploaded(event: AttachmentUploadedDto) {
+    this.attachmentUploaded.emit(event);
   }
 
   writeValue(value: any): void {
@@ -136,50 +153,59 @@ export class FormItemComponent implements OnInit, ControlValueAccessor {
     this.mainDistributionChanged.emit();
   }
 
-  get controlType() {
-    let compareControltype = this.formItemSettings.controlTypeMapping[this.metaData.properties[Constants.Metadata.Datatype]];
+  get fieldType() {
+    const fieldType = this.metaData.properties[Constants.Metadata.FieldType];
+    
+    if(fieldType == null) {
+      return this.fieldTypeByShaclDeepCheck;
+    }
+    return FieldTypeFormItemMapping[fieldType];
+  }
 
+  get fieldTypeByShaclDeepCheck() {
+    let fieldType = FieldTypeMapping[this.metaData.properties[Constants.Metadata.Datatype]];
+    
     const metadataKey = this.metaData.properties[Constants.Metadata.HasPidUri];
     const range = this.metaData.properties[Constants.Metadata.Range];
 
-    if (metadataKey === Constants.Metadata.Keywords) {
-      return 'cvDropdown';
-    }
-
     if (metadataKey === MetaDataPropertyIdentifier.pidUri || metadataKey === MetaDataPropertyIdentifier.baseUri) {
       return 'identifier';
-    }
-
-    if (this.metaData.properties[Constants.Metadata.Pattern] === Constants.Regex.NaturalNumber) {
-      compareControltype = 'number';
-    }
-
-    if (this.metaData.properties[Constants.Metadata.MaxCount] == null || this.metaData.properties[Constants.Metadata.MaxCount] != null && this.metaData.properties[Constants.Metadata.MaxCount] > 1) {
-      compareControltype = 'general-multi';
     }
 
     if (range === Constants.Person.Type) {
       return 'person';
     }
 
-    if (this.metaData.properties[Constants.Metadata.NodeKind] === Constants.Metadata.NodeType.IRI && range) {
-      compareControltype = this.singleSelection ? 'cvDropdown' : 'taxonomy';
+    if (this.metaData.properties[Constants.Metadata.Pattern] === Constants.Regex.NaturalNumber) {
+      fieldType = 'number';
     }
 
-    if (this.metaData.nestedMetadata.length !== 0) {
-      compareControltype = 'nested';
+    if (this.metaData.properties[Constants.Metadata.MaxCount] == null || this.metaData.properties[Constants.Metadata.MaxCount] != null && this.metaData.properties[Constants.Metadata.MaxCount] > 1) {
+      fieldType = 'general-multi';
+    }
+
+    if (this.metaData.properties[Constants.Metadata.NodeKind] === Constants.Metadata.NodeType.IRI && range) {
+      fieldType = 'list';
+    }
+
+    if (this.metaData.key == Constants.Metadata.HasAttachment && this.metaData.nestedMetadata.length !== 0) {
+      fieldType = 'attachment';
+    }
+
+    if (this.metaData.key == Constants.Metadata.Distribution && this.metaData.nestedMetadata.length !== 0) {
+      fieldType = 'distribution';
     }
 
     const group: MetaDataPropertyGroup = this.metaData.properties[Constants.Metadata.Group];
     if (group != null && group.key === Constants.Resource.Groups.LinkTypes) {
-      compareControltype = 'linking';
+      fieldType = 'linking';
     }
 
-    if ((compareControltype === 'taxonomy' || compareControltype === 'cvDropdown')) {
+    if ((fieldType === 'taxonomy' || fieldType === 'list')) {
       this.internalValue = Array.isArray(this.internalValue) || this.internalValue == null ? this.internalValue : [this.internalValue];
     }
 
-    return compareControltype;
+    return fieldType;
   }
 
   prepareInternalValue(value: any) {

@@ -26,6 +26,7 @@ export class SystemAnalyticsComponent implements OnInit, OnDestroy {
   @Select(StatisticsState.getResourceTypeCharacteristics) resourceTypeCharacteristics$: Observable<PropertyCharacteristic[]>;
   @Select(StatisticsState.getConsumerGroupCharacteristics) consumerGroupCharacteristics$: Observable<PropertyCharacteristic[]>;
   @Select(StatisticsState.getInfromationClassificationCharacteristics) infromationClassificationCharacteristics$: Observable<PropertyCharacteristic[]>;
+  @Select(StatisticsState.getLifecycleStatusCharacteristics) lifecycleStatusCharacteristics$: Observable<PropertyCharacteristic[]>;
 
   @Select(StatisticsState.getResourceStatisticsLoading) loading$: Observable<boolean>;
 
@@ -47,6 +48,9 @@ export class SystemAnalyticsComponent implements OnInit, OnDestroy {
   
   informationClassificationCharacteristics: ChartData;
   informationClassificationCharacteristicsSubscription: Subscription;
+
+  lifecycleStatusCharacteristics: ChartData;
+  lifecycleStatusCharacteristicsSubscription: Subscription;
 
   numberOfPropertiesSubscription: Subscription;
   labelLengthStatisticSubscription: Subscription;
@@ -97,6 +101,12 @@ export class SystemAnalyticsComponent implements OnInit, OnDestroy {
         this.setInformationClassificationCharacteristics(icCharacteristics);
       }
     });
+
+    this.lifecycleStatusCharacteristicsSubscription = this.lifecycleStatusCharacteristics$.subscribe(lsCharacteristics => {
+      if (lsCharacteristics != null) {
+        this.setLifecycleStatusCharacteristics(lsCharacteristics);
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -108,6 +118,7 @@ export class SystemAnalyticsComponent implements OnInit, OnDestroy {
     this.resourceTypeCharacteristicsSubscription.unsubscribe();
     this.consumerGroupCharacteristicsSubscription.unsubscribe()
     this.informationClassificationCharacteristicsSubscription.unsubscribe()
+    this.lifecycleStatusCharacteristicsSubscription.unsubscribe();
     this.store.dispatch(new ResetResourceStatistics()).subscribe();
   }
 
@@ -145,6 +156,18 @@ export class SystemAnalyticsComponent implements OnInit, OnDestroy {
     chartData.data = propertyCharacteristics.map(res => { return { 'name': res.name, 'value': res.count } });
 
     this.informationClassificationCharacteristics = chartData;
+  }
+
+  setLifecycleStatusCharacteristics(propertyCharacteristics: PropertyCharacteristic[]) {
+    const chartData = new ChartData();
+    chartData.xLabel = 'Lifecycle Status';
+    chartData.yLabel = 'Number of entries';
+    chartData.name = 'Lifecycle Status Characteristics';
+    chartData.description = 'Some description';
+    chartData.initalChart = 'bar-vertical';
+    chartData.data = propertyCharacteristics.map(res => { return { 'name': res.name, 'value': res.count } });
+
+    this.lifecycleStatusCharacteristics = chartData;
   }
 
   setStatisticData(charts: Map<string, ChartData>, propertyStatistics: PropertyStatistics, xLabel: string, yLabel: string, description: string, initialChart: 'pie' | 'line-chart' | 'bar-vertical' | 'bar-horizontal-normalized') {

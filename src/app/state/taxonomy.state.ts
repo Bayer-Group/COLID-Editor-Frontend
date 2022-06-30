@@ -10,7 +10,7 @@ export class TaxonomyStateModel {
 
 export class FetchTaxonomyList {
     static readonly type = '[Taxonomy] Fetch taxonomy list';
-    constructor(public type: string) { }
+    constructor(public type: string, public refresh: boolean = false) { }
 }
 
 
@@ -32,7 +32,7 @@ export class TaxonomyState {
 
     @Action(FetchTaxonomyList)
     fetchTaxonomyList(state: StateContext<TaxonomyStateModel>, action: FetchTaxonomyList) {
-        if (!state.getState().taxonomyResults.has(action.type) || action.type === Constants.ResourceTypes.Keyword) {
+        if (!state.getState().taxonomyResults.has(action.type) || action.refresh) {
             return this.taxonomyApiService.getTaxonomyList(action.type).pipe(tap((res: TaxonomyResultDTO[]) => {
                 var taxonomy: Map<string, TaxonomyResultDTO[]> = state.getState().taxonomyResults;
 

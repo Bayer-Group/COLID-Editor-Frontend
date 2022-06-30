@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, FormArray, AbstractControl } from '@angular/forms';
 import { MetaDataProperty } from 'src/app/shared/models/metadata/meta-data-property';
-import { MetaDataPropertyIdentifier, ControlTypeMapping } from '../resource/resource-form/resource-form.constants';
+import { MetaDataPropertyIdentifier } from '../resource/resource-form/resource-form.constants';
 import { FormItemSettings } from 'src/app/shared/models/form/form-item-settings';
 import { Observable } from 'rxjs';
 import { ValidationResultProperty, ValidationResultPropertyType } from 'src/app/shared/models/validation/validation-result-property';
@@ -15,6 +15,12 @@ import { Constants } from 'src/app/shared/constants';
 import { Store } from '@ngxs/store';
 import { SetMainDistribution } from 'src/app/state/resource.state';
 import { MetadataExtension } from 'src/app/shared/extensions/metadata.extension';
+import { ResourceCreationType as EntityCreationType } from 'src/app/shared/models/resources/resource-creation-type';
+import { AttachmentUploadedDto } from 'src/app/shared/models/attachment/attachment-uploaded-dto';
+import { Resource } from 'src/app/shared/models/resources/resource';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { LinkingMapping } from 'src/app/shared/models/resources/linking-mapping';
+import { getConstantValue } from 'typescript';
 
 @Component({
   selector: 'app-form',
@@ -25,12 +31,16 @@ export class FormComponent implements OnInit {
   @Output() handleFormChanged = new EventEmitter<FormChangedDTO>();
 
   @Input() adminPrivilege: boolean;
+  @Input() readOnly: boolean;
   @Input() nestedForm: boolean;
   @Input() pidUriTemplatesFetched: Observable<boolean>;
   @Input() pidUriTemplateNames: Observable<Array<PidUriTemplateResultDTO>>;
   @Input() placeholder: any;
   @Input() isNew: boolean;
+  @Input() isTypeChanging: boolean = false;
+  @Input() formReadOnly: boolean;
   @Input() hasPublishedVersion: boolean;
+  @Input() creationType: EntityCreationType = EntityCreationType.NEW;
 
   @Input() mainDistribution: string;
 
@@ -39,14 +49,25 @@ export class FormComponent implements OnInit {
   get indexerNested_() {
     return this.indexerNested == null ? '' : this.indexerNested;
   }
+  _resource :Resource;
+
   @Input()
-  set entity(entity: Entity) {
+  set entity(entity: Resource) {
+    if(entity!= null){ 
     this._entity = entity;
+    this._resource = entity
+    if(entity.links != null){
+      this._links = entity.links;
+    }
+      this._entity = new Entity();
+      this._entity.id=entity.id;
+      this._entity.properties=entity.properties;}
     if (this.ontologyForm != null) {
       this.fillForm();
     }
   }
   _entity: Entity;
+  _links :  Map<string, LinkingMapping[]>;
 
   @Input() linkingMetadata: MetaDataProperty[];
 
@@ -54,6 +75,8 @@ export class FormComponent implements OnInit {
   set metaData(metaData: MetaDataProperty[]) {
     if (metaData != null) {
       this._metaData = metaData;
+      this.linkingGroupFirstIndex = this._metaData.findIndex(m => this.isLinkingGroup(m));
+      this.addInboundLinkTypes();
       this.buildForm();
     }
   }
@@ -71,15 +94,64 @@ export class FormComponent implements OnInit {
 
   constants = Constants;
   pidUriConstant = Constants.Metadata.HasPidUri;
+  distributionConstant = Constants.Metadata.Distribution;
+  attachmentConstant = Constants.Metadata.HasAttachment;
+
   ontologyForm: FormGroup = null;
 
   newNestedEntities = new Array<string>();
   formItemSettings: FormItemSettings = {
-    controlTypeMapping: ControlTypeMapping,
     debounceTime: 500
   };
 
-  get f(): { [p: string]: AbstractControl } { return this.ontologyForm.controls; }
+  linkingGroupFirstIndex : number;
+
+  get f(): { [p: string]: AbstractControl }
+  { 
+    return this.ontologyForm.controls;
+  }
+
+  addInboundLinkTypes(){
+
+    if( !(this._links == undefined || this._links==null) && this._metaData.length != 0 && !this.isNew){
+    let allResourceLinks = Object.keys(this._links) 
+    let linkMetadata = this.linkingMetadata.map(x=>x.key)
+    let inboundLinkMetadata = allResourceLinks.filter( x => (!linkMetadata.some(y=> y == x)))
+      
+    var lastLinkString = linkMetadata.pop()
+    var lastLink = this._metaData.find(x=> x.key == lastLinkString);    
+   
+    inboundLinkMetadata.forEach(x => {
+      let metadataproperty = new MetaDataProperty();
+      metadataproperty.key = x;
+      let propertylist = new Map<string,any>()
+      propertylist[Constants.Metadata.Group.toString()] = new MetaDataPropertyGroup(Constants.Resource.Groups.LinkTypes.toString(), "Linked Resources" , 900 , "A group for all link types between resources",  "Grouping all link types")
+      propertylist[Constants.Metadata.HasPidUri] = x;
+      propertylist[Constants.Metadata.Comment] = this._links[x][0]['inboundLinkComment'];
+      propertylist[Constants.Metadata.Name] = this._links[x][0]['inboundLinkLabel'];
+      metadataproperty.properties = propertylist;
+      metadataproperty.nestedMetadata = [];
+      var metadataproperty_object = JSON.parse(JSON.stringify(metadataproperty));
+      this._metaData.splice(this._metaData.indexOf(lastLink),0,metadataproperty_object)
+
+    })
+    }
+  }
+
+  links(m :MetaDataProperty)
+  {
+    var link = new Map<string,LinkingMapping>(Object.entries( this._links)).get(m.key);
+
+    return link;
+  }
+
+  HasLinks(m :MetaDataProperty): boolean{
+    return (this._links != null || this._links != undefined) && (this._links[m.key] != null || this._links[m.key] != undefined)
+  }
+
+  get setShaclDefaultValues() {
+    return this.isNew && this.creationType === EntityCreationType.NEW;
+  }
 
   constructor(private formBuilder: FormBuilder, private store: Store
   ) { }
@@ -89,13 +161,20 @@ export class FormComponent implements OnInit {
   }
 
   buildForm(): void {
+ 
     if (this._entity && this._metaData) {
       const formBuilderGroup = {};
       for (const m of this._metaData) {
+        if(m.properties[Constants.Metadata.Group]['key']==Constants.Resource.Groups.LinkTypes){
+          continue;
+        }
         if (m.nestedMetadata.length !== 0) {
           formBuilderGroup[m.properties[this.pidUriConstant]] = new FormArray([]);
         } else {
-          formBuilderGroup[m.properties[this.pidUriConstant]] = this.formBuilder.control(this.placeholder[m.properties[this.pidUriConstant]]);
+          const customPlaceholder = this.placeholder[m.properties[this.pidUriConstant]];
+          const shaclPlaceholder = m.properties[Constants.Shacl.DefaultValue];
+          const placeholder = customPlaceholder == null && this.setShaclDefaultValues ? shaclPlaceholder : customPlaceholder;
+          formBuilderGroup[m.properties[this.pidUriConstant]] = this.formBuilder.control(placeholder);
         }
       }
       this.ontologyForm = this.formBuilder.group(formBuilderGroup);
@@ -112,17 +191,17 @@ export class FormComponent implements OnInit {
     if (this._entity && this._entity.properties) {
 
 
-      Object.keys(this._entity.properties).forEach(key => {
+      Object.keys(this._entity.properties).forEach(key => { 
         const formItem = this.ontologyForm.controls[key];
         const value = this._entity.properties[key];
         if (formItem && formItem instanceof FormControl) {
-          formItem.setValue(value);
+           formItem.setValue(value);
         }
 
         if (formItem && formItem instanceof FormArray) {
           if (Array.isArray(value)) {
             formItem.controls.splice(0, formItem.controls.length);
-            value.forEach(entity => {
+             value.forEach(entity => {
               formItem.push(this.formBuilder.control(entity));
               if (this.isNew) {
                 this.newNestedEntities.push(entity.id);
@@ -133,7 +212,9 @@ export class FormComponent implements OnInit {
       });
 
       if (!this.nestedForm) {
+        // console.log('handleFormChanged fillForm')
         this.handleFormChanged.emit(new FormChangedDTO(null, null, this.ontologyForm.value, true, true));
+        // console.log('handleFormChanged fillFormEnd')
       }
     }
   }
@@ -159,7 +240,15 @@ export class FormComponent implements OnInit {
     this.store.dispatch(new SetMainDistribution(control.value.id)).subscribe();
   }
 
-  isFormItemReadOnly(metadata: MetaDataProperty) {
+  handleAttachmentUploaded(event: AttachmentUploadedDto) {
+    this.handleFormChanged.emit(new FormChangedDTO(this.constants.Metadata.HasAttachment, null, this.ontologyForm.value, true));
+  }
+
+  isFormItemReadOnly(metadata: MetaDataProperty): boolean {
+    if(this.readOnly == true) {
+      return true;
+    }
+
     const metadataKey = metadata.properties[this.pidUriConstant];
     if (this.adminPrivilege) {
       if (metadataKey === Constants.Metadata.HasConsumerGroup) {
@@ -168,19 +257,20 @@ export class FormComponent implements OnInit {
     }
 
     if (metadataKey === MetaDataPropertyIdentifier.pidUri || metadataKey === MetaDataPropertyIdentifier.baseUri) {
-      return !this.isNew;
+      return !this.isNew && !this.isTypeChanging;
     }
 
     if (metadataKey === Constants.Metadata.EntityType) {
       return true;
     }
 
-    return null;
+    return false;
   }
 
   handleResourceFormItemChange(event: FormItemChangedDTO, main: boolean) {
     console.log('status:', this.ontologyForm);
-    this.handleFormChanged.emit(new FormChangedDTO(event.id, event.value, this.ontologyForm.value, true));
+    // console.log(event.created)
+    this.handleFormChanged.emit(new FormChangedDTO(event.id, event.value, this.ontologyForm.value, true, false, event.created));
   }
 
   removeDuplicateValidationErrors() {
@@ -231,27 +321,10 @@ export class FormComponent implements OnInit {
     });
   }
 
-  isLinkingGroup(metadata: MetaDataProperty) {
+  isLinkingGroup(metadata: MetaDataProperty) { 
     const group: MetaDataPropertyGroup = metadata.properties[Constants.Metadata.Group];
-
     return group != null && group.key === Constants.Resource.Groups.LinkTypes;
   }
 
-  // event { metadata: MetaDataProperty, resource: ResourceOverviewDTO }
-  handleLinkingEvent(event) {
-    const metadataKey = event.metadata.properties[this.pidUriConstant];
-    const formItem = this.ontologyForm.controls[metadataKey];
 
-    if (formItem && formItem instanceof FormControl) {
-      var newValue = [event.resource.pidUri];
-
-      if (formItem.value) {
-        newValue = newValue.concat(Array.isArray(formItem.value) ? formItem.value : [formItem.value]);
-      }
-
-      formItem.setValue(newValue);
-      this.handleFormChanged.emit(new FormChangedDTO(metadataKey, newValue, this.ontologyForm.value, true));
-    }
-
-  }
 }

@@ -1,0 +1,32 @@
+<ng-container *ngIf="isAttachment">
+  <div class="row mb-2">
+    <div class="col-3 text-muted" *ngIf="!isHeader && !isSubHeader">
+      {{label}}s
+    </div>
+    <div class="col-9 pl-0">
+      <ng-container *ngIf="isAttachment">
+        <ng-container *ngFor="let metadataProperty of groupedMetadata; let i = index">
+          <ng-container *ngIf="entity.properties[metadataProperty.key] as entityProperty">
+            <mat-accordion>
+              <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <mat-icon class="mr-1" fontSet="material-icons-outlined">image</mat-icon>
+                    {{ amountImagesText }}
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                    <ng-container *ngFor="let image of entityProperty; let j = index">
+                      <img [src]="image['id']"
+                        (click)="onOpenImageDialog(j, entityProperty)"
+                        matTooltip="{{entityProperty[j]['properties'][constants.Metadata.Comment]}}"
+                        alt="{{entityProperty[j]['properties'][constants.Metadata.RdfsLabel]}}"
+                        class="image"> 
+                    </ng-container>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>

@@ -2,29 +2,23 @@
     <div class="col-auto">
         <h1>Triplestore Graph Management</h1>
     </div>
-    <div class="col-auto">
-        <button mat-raised-button color="draft" [disabled]="false" (click)="uploadGraph()">
-            <mat-icon class="mr-1" fontSet="material-icons-outlined">cloud_upload</mat-icon>
-            <span> Upload Graph</span>
-        </button>
-        <button mat-raised-button class="ml-2" color="info" (click)="loadGraphs()"
-            [disabled]="loadingStatus === 'loading'">
-            <mat-icon fontSet="material-icons-outlined">refresh</mat-icon>
-            <ng-container *ngIf="loadingStatus !== 'loading'">
-                Reload
-            </ng-container>
-            <ng-container *ngIf="loadingStatus === 'loading'">
-                Loading...
-            </ng-container>
-        </button>
+    <div class="col-auto d-flex justify-content-end">
+        <action-button color="draft" (click)="uploadGraph()" icon="cloud_upload">
+            Upload Graph
+        </action-button>
+
+        <action-button class="ml-2" color="info" (click)="loadGraphs()" [disabled]="isLoading" [loading]="isLoadingAction('loading')"
+            icon="refresh">
+            Reload
+        </action-button>
     </div>
 </div>
 
 <div class="row justify-content-center">
-    <div class="col-12 d-flex justify-content-center" *ngIf="loadingStatus === 'loading'">
+    <div class="col-12 d-flex justify-content-center" *ngIf="isLoadingAction('loading')">
         <mat-spinner [diameter]="100" [strokeWidth]="5"></mat-spinner>
     </div>
-    <div class="col-12" [hidden]="loadingStatus !== 'loaded' || !dataSource.data.length">
+    <div class="col-12" [hidden]="isLoadingAction('loading') || !dataSource.data.length">
         <mat-form-field class="w-100">
             <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
         </mat-form-field>
@@ -58,10 +52,17 @@
                             <mat-icon>delete_forever</mat-icon>
                         </button>
                         <span #copyButton>
-                            <button mat-icon-button matTooltipShowDelay="300" matTooltip="Copy graph name" ngxClipboard
-                                [cbContent]="graph.name" [container]="container">
+                            <button mat-icon-button matTooltipShowDelay="300" matTooltip="Copy graph name"
+                                [cdkCopyToClipboard]="graph.name">
                                 <mat-icon>content_copy</mat-icon>
                             </button>
+                        </span>
+                        <span #downloadButton>
+                            <action-button type="mat-icon-button" 
+                            matTooltipShowDelay="300" matTooltip="Download graph in .ttl"
+                            (click)="downloadGraph(graph.name)" [loading]="downloadingGraphs.includes(graph.name) && isLoadingAction('download')"
+                            icon="get_app">
+                        </action-button>
                         </span>
                     </span>
                 </td>
@@ -73,7 +74,7 @@
         </table>
         <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </div>
-    <div class="col" *ngIf="dataSource.data.length === 0 && loadingStatus === 'loaded'">
+    <div class="col" *ngIf="dataSource.data.length === 0 && !isLoadingAction('loading')">
         <div class="mt-4 text-center">
             <mat-icon style="font-size: 5rem;" [inline]="true">done</mat-icon>
             <h4>Currently there are no graphs in the database.</h4>

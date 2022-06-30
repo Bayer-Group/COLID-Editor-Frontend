@@ -1,23 +1,7 @@
 <div class="row mb-3">
   <div class="col-12">
-    <div *ngIf="!nestedTypesVisible">
-      <button mat-raised-button color="white" id ='btnAddDistributionEndpoint' (click)="showNestedTypes()">Add {{label}}</button>
-    </div>
-    <div *ngIf="nestedTypesVisible">
-      <div class="list-group">
-        <button type="button" class="list-group-item list-group-item-action" style="cursor: pointer;" (click)="selectedNestedType = m"
-          [class.active]="selectedNestedType?.key === m.key" *ngFor="let m of metaData">
-          <p class="m-0">{{m.label}}</p>
-          <small class="m-0">{{m.description}}</small>
-        </button>
-      </div>
-      <div class="row justify-content-end mr-1">
-        <button mat-raised-button color="accent"  (click)="hideNestedTypes()">Cancel</button>
-        <button mat-raised-button color="primary" id='btnCreateDistributionEndPoint' class="ml-2" [disabled]="selectedNestedType == null" (click)="addNestedEntity()">
-          <mat-icon fontSet="material-icons-outlined">add</mat-icon>
-          Create
-        </button>
-      </div>
+    <div>
+      <button mat-raised-button color="white" id ='btnAddNestedEntity' (click)="addNestedEntity()" [disabled]="disabled">Add {{label}}</button>
     </div>
   </div>
 </div>

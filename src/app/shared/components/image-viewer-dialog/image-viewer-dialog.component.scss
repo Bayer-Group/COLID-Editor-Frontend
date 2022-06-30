@@ -1,0 +1,29 @@
+.image-view-dialog {
+    max-height: none;
+    img {
+        max-width: 100%;
+        max-height: 100%;
+    }
+}
+
+lib-ngx-image-zoom ::ng-deep .ngxImageZoomContainer > img {
+    max-width: 90vmin !important;
+    max-height: 90vmin !important;
+}
+
+.dialog-border {
+    margin: 1em;
+}
+
+.bottom-bar {
+    margin-top: 1em;
+    max-width: 90vmin !important;
+    max-height: 90vmin !important;
+}
+
+.comment {
+    display: flex;
+    align-items: center;
+    font-size: 1.2em;
+    font-weight: bold;
+}

@@ -1,11 +1,12 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { ResourceApiService } from 'src/app/core/http/resource.api.service';
-import { BehaviorSubject } from 'rxjs';
-import { ResourceOverviewCTO } from 'src/app/shared/models/resources/resource-overview-cto';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { ResourceSearchDTO } from 'src/app/shared/models/search/resource-search-dto';
-import { ResourceOverviewDTO } from 'src/app/shared/models/resources/resource-overview-dto';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
+import { SearchResult } from 'src/app/shared/models/search/search-result';
+import { SearchService } from 'src/app/core/http/search.service';
+import { Select } from '@ngxs/store';
+import { MetaDataState, MetaDataStateModel } from 'src/app/state/meta-data.state';
 
 @Component({
   selector: 'app-form-item-input-linking-dialog',
@@ -14,35 +15,47 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class FormItemInputLinkingDialogComponent implements OnInit {
 
-  resourceOverviewState$: BehaviorSubject<ResourceOverviewCTO> = new BehaviorSubject(null);
-  selectedResource: ResourceOverviewDTO = null;
+  @Select(MetaDataState.linkResourcesTypes) linkResourcesTypes$: Observable<Map<string,string[]>>;
+
+  searchResultState$: BehaviorSubject<SearchResult> = new BehaviorSubject(null);
+  selectedResource: string = null;
 
   loading = new BehaviorSubject(true);
   resourceSearchObject: ResourceSearchDTO;
+  linkResourceTypes: Map<string,string[]>  = new Map<string,string[]>();
 
   actualPidUri: string;
-  currentPageStatus:string
-  constructor(private resourceService: ResourceApiService, @Inject(MAT_DIALOG_DATA) public range: string, private route: ActivatedRoute) { }
+  currentPageStatus:string;
+  linkResourcesTypesSubscription: Subscription;
+  mapsStore$: Observable<MetaDataStateModel>;
+  constructor(private searchService: SearchService, @Inject(MAT_DIALOG_DATA) public range: string, private route: ActivatedRoute) { 
+  }
 
   ngOnInit() {
     this.actualPidUri = this.route.snapshot.queryParamMap.get('pidUri');
     this.currentPageStatus="listCreateLink";
+    this.linkResourcesTypesSubscription = this.linkResourcesTypes$.subscribe(result => this.linkResourceTypes= result);
   }
 
   handleResourceSearchChanged(resourceSearchObject: ResourceSearchDTO) {
     this.loading.next(true);
-
+ 
     this.resourceSearchObject = resourceSearchObject;
+    resourceSearchObject.published=true;
 
     if (this.range != null) {
       this.resourceSearchObject.type = this.range;
     }
+    var eligableLinks = this.linkResourceTypes[this.range]
 
-    this.resourceService.getFilteredResources(resourceSearchObject).subscribe(result => {
-      this.resourceOverviewState$.next(result);
-      this.loading.next(false);
+    this.searchService.search(resourceSearchObject,undefined,true,eligableLinks).subscribe(result => {
+    this.searchResultState$.next(result);
+    this.loading.next(false);
     });
   }
+
+
+
 
   handleNextResourceBatch(payload) {
     // offset mean already loaded records plus limit.
@@ -51,18 +64,20 @@ export class FormItemInputLinkingDialogComponent implements OnInit {
       return;
     }
 
-    const resourceOverviewState = this.resourceOverviewState$.getValue();
-
+    const searchResultState = this.searchResultState$.getValue();
+    if (this.range != null) {
+      this.resourceSearchObject.type = this.range;
+    }
+    var eligableLinks = this.linkResourceTypes[this.range]
     this.resourceSearchObject.offset = this.resourceSearchObject.offset + this.resourceSearchObject.limit;
-
+    this.resourceSearchObject.published=true;
     this.loading.next(true);
-    this.resourceService.getFilteredResources(this.resourceSearchObject).subscribe(res => {
-      if (this.resourceSearchObject.offset >= resourceOverviewState.items.length) {
+    this.searchService.search(this.resourceSearchObject,undefined,true,eligableLinks).subscribe(searchResult => {
+      if (this.resourceSearchObject.offset >= searchResultState.hits.hits.length) {
 
-        const mergedState = resourceOverviewState;
-        mergedState.items = [...resourceOverviewState.items, ...res.items];
+        searchResult.hits.hits = [...searchResultState.hits.hits, ...searchResult.hits.hits];
 
-        this.resourceOverviewState$.next({ ...mergedState });
+        this.searchResultState$.next({ ...searchResult });
       }
       this.loading.next(false);
     }, error => {
@@ -70,8 +85,10 @@ export class FormItemInputLinkingDialogComponent implements OnInit {
     });
   }
 
-  handleResourceSelectionChanged(selectedResource: ResourceOverviewDTO) {
+  handleResourceSelectionChanged(selectedResource: string) {
     this.selectedResource = selectedResource;
-    console.log('selected', this.selectedResource);
+  }
+  ngOnDestroy() {
+    this.linkResourcesTypesSubscription.unsubscribe();
   }
 }

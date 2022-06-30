@@ -1,3 +1,12 @@
+@import "../../../../styles.scss";
+
+.sidenav-title {
+    padding-left: 56px;
+    height: #{$mat-toolbar-height};
+    line-height: #{$mat-toolbar-height};
+    color: mat-color(map-get($colid-editor-frontend-theme, primary));
+}
+
 .sidebar-content {
     height: 100%;
     overflow: hidden;

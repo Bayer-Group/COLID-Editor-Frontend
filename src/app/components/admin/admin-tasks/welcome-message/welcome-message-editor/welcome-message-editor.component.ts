@@ -6,6 +6,7 @@ import { WelcomeMessageApiService } from 'src/app/core/http/welcome.message.api.
 import { Store, Select } from '@ngxs/store';
 import { WelcomeMessageState, FetchWelcomeMessage, UpdateWelcomeMessage } from 'src/app/state/welcome-message.state';
 import { Observable, Subscription } from 'rxjs';
+import { EntityFormStatus } from 'src/app/shared/components/entity-form/entity-form-status';
 
 @Component({
   selector: 'app-welcome-message-editor',
@@ -15,6 +16,7 @@ import { Observable, Subscription } from 'rxjs';
 export class WelcomeMessageEditorComponent implements OnInit, OnDestroy {
   @Select(WelcomeMessageState.getWelcomeMessage) welcomeMessageEditor$: Observable<WelcomeMessage>;
 
+  status: EntityFormStatus = EntityFormStatus.INITIAL;
   welcomeMessageEditorSubscription: Subscription;
   welcomeMessageEditorDefault: WelcomeMessage;
 
@@ -42,11 +44,15 @@ export class WelcomeMessageEditorComponent implements OnInit, OnDestroy {
 
   // Editor
   updateWelcomeMessageEditor(message: string) {
+    this.status = EntityFormStatus.LOADING;
+
     this.store.dispatch(new UpdateWelcomeMessage(message)).subscribe(
       (res: WelcomeMessage) => {
+        this.status = EntityFormStatus.SUCCESS;
         this.snackBar.success(this.msg_header_editor, this.success_msg_update);
       },
       error => {
+        this.status = EntityFormStatus.ERROR;
         this.snackBar.error(this.msg_header_editor, this.error_general);
       }
     )

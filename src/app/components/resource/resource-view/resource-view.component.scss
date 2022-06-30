@@ -1,15 +1,12 @@
-.resource-fab-buttons {
-  z-index: 99;
-  position: absolute;
-  right: 0px;
-  top: 15px;
+.spacer {
+  flex: 1 1 auto;
 }
 
-.sticky-buttons {
-  position: sticky;
-  position: -webkit-sticky; /* For macOS/iOS Safari */
-  top: 0; /* Sets the sticky toolbar to be on top */
-  z-index: 1000; /* Ensure that your app's content doesn't overlap the toolbar */
+.edit-button {
+  position: fixed;
+  top: calc(100vh - 100px);
+  right: 50px;
+  z-index: 1000;
 }
 
 .mat-standard-chip {
@@ -34,4 +31,9 @@ mat-chip-list {
 a:hover {
   color: rgba(0, 0, 0, 0.87);
   text-decoration: none;
+}
+
+.resource-title-bar {
+  background-color: white;
+  color: black;
 }

@@ -9,6 +9,14 @@ import { ResourceOverviewDTO } from 'src/app/shared/models/resources/resource-ov
 import { ColidMatSnackBarService } from 'src/app/modules/colid-mat-snack-bar/colid-mat-snack-bar.service';
 import { DeletionRequestDialogComponent } from '../deletion-request-dialog/deletion-request-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { EntityFormStatus } from 'src/app/shared/components/entity-form/entity-form-status';
+import { AuthService } from 'src/app/modules/authentication/services/auth.service';
+
+export enum DeletionRequestAction {
+  REJECT = 'reject',
+  DELETION = 'deletion'
+}
+
 
 @Component({
   selector: 'app-deletion-request',
@@ -16,23 +24,31 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./deletion-request.component.scss']
 })
 export class DeletionRequestComponent implements OnInit {
-  @Select(ResourceState.getIsResourcesMarkedDeletedLoading) loading$: Observable<boolean>;
+  @Select(ResourceState.getIsResourcesMarkedDeletedLoading) isLoading$: Observable<boolean>;
   @Select(ResourceState.getResourcesMarkedDeleted) resources$: Observable<ResourceOverviewCTO>;
+
   @ViewChild("deletionRequests", { static: false }) deletionRequests: MatSelectionList;
+
+  action: DeletionRequestAction;
+  status: EntityFormStatus = EntityFormStatus.INITIAL;
   selectedDeletionRequests: ResourceOverviewDTO[] = [];
+  userEmail: string;
+
   //---------This is for paginator----------//
-  pageSize=10;
-  lowValue:number = 0;
-  highValue:number = 10;  
-//-----------------------------------------//
-  constructor(private store: Store, private _snackbar: ColidMatSnackBarService, public dialog: MatDialog) { }
+  pageSize = 10;
+  lowValue: number = 0;
+  highValue: number = 10;
+  //-----------------------------------------//
+
+  constructor(private store: Store, private snackbar: ColidMatSnackBarService, public dialog: MatDialog, private authService: AuthService) { }
 
   ngOnInit() {
     this.store.dispatch(new FetchResourceMarkedAsDeleted()).subscribe();
+    this.authService.currentEmail$.subscribe(userEmail => this.userEmail = userEmail);
   }
 
-  get selectedDeletionRequestUris(): string[] {
-    return this.selectedDeletionRequests.map(item => item.pidUri)
+  get isLoading(): boolean {
+    return this.status === EntityFormStatus.LOADING;
   }
 
   reject() {
@@ -47,11 +63,17 @@ export class DeletionRequestComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.store.dispatch(new RejectResourceMarkedAsDeleted(this.selectedDeletionRequestUris)).subscribe(
-          res => {
-            this._snackbar.success('Reject successful', 'The entries have been rejected.')
+        this.action = DeletionRequestAction.REJECT;
+        this.status = EntityFormStatus.LOADING;
+
+        this.store.dispatch(new RejectResourceMarkedAsDeleted(this.selectedDeletionRequests.map(item => item.pidUri))).subscribe(
+          _ => {
+            this.status = EntityFormStatus.SUCCESS;
+            this.snackbar.success('Reject successful', 'The entries have been rejected.')
+          }, error => {
+            this.status = EntityFormStatus.ERROR;
           });
-        }
+      }
     });
   }
 
@@ -67,11 +89,23 @@ export class DeletionRequestComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.store.dispatch(new DeleteResources(this.selectedDeletionRequestUris)).subscribe(res => {
-          this._snackbar.success('Deletion successful', 'The entries have been deleted.')
+        this.action = DeletionRequestAction.DELETION;
+        this.status = EntityFormStatus.LOADING;
+
+        var chunkSize = 10;
+        for (let i = 0, j = this.selectedDeletionRequests.length; i < j; i += chunkSize) {
+          let tempDeletionRequestUris = this.selectedDeletionRequests.slice(i, i + chunkSize).map(item => item.pidUri);
+          this.store.dispatch(new DeleteResources(tempDeletionRequestUris,this.userEmail)).subscribe(res => {
+            this.status = EntityFormStatus.SUCCESS;
+          },
+          error => {
+            this.status = EntityFormStatus.ERROR;
         });
+
+        this.snackbar.success('Deletion successful', 'The entries have been deleted.')
       }
-    });
+    }
+    });    
   }
 
   get allSelected(): boolean {
@@ -98,8 +132,8 @@ export class DeletionRequestComponent implements OnInit {
     }
     this.selectedDeletionRequests = this.deletionRequests.selectedOptions.selected.map(item => item.value);
   }
- //Used for pagination change event
-  getPaginatorData(event){
+  //Used for pagination change event
+  getPaginatorData(event) {
     this.lowValue = event.pageIndex * event.pageSize; //from start
     this.highValue = this.lowValue + event.pageSize; //to end
     // if deleted request is select and chnage pageIndex or pagesizeso intialization delete request. 

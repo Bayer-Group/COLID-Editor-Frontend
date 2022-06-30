@@ -1,0 +1,42 @@
+.inline-spinner {
+    margin-left: 5px;
+}
+
+.attachment-image-center {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+.attachment-image {
+    max-width:100%;
+    height: auto;
+    max-height: 12.5em;
+}
+
+.file-select-label {
+    flex: 0 0 30%;
+    max-width: 30%;
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.file-select-input {
+    flex: 0 0 70%;
+    max-width: 70%;
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.file-is-uploaded > .attachment-form /deep/ .colid-form-label {
+    flex: 0 0 30%;
+    max-width: 30%;
+}
+
+.file-is-uploaded > .attachment-form /deep/ .colid-form-item {
+    flex: 0 0 70%;
+    max-width: 70%;
+}

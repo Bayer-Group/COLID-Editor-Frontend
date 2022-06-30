@@ -3,13 +3,24 @@ import { MetaDataProperty } from '../shared/models/metadata/meta-data-property';
 import { MetaDataApiService } from '../core/http/meta-data.api.service';
 import { Constants } from '../shared/constants';
 import { EntityTypeDto } from '../shared/models/Entities/entity-type-dto';
+import { ResourceApiService } from '../core/http/resource.api.service';
 
 export class ClearMetaData {
   static readonly type = '[MetaData] Clear';
 }
 
+export class ClearActiveSecondMetaData {
+  static readonly type = '[MetaData] ClearActiveSecond';
+}
+
 export class FetchMetadata {
   static readonly type = '[MetaData] FetchMetadata';
+
+  constructor(public entityType: string) { }
+}
+
+export class FetchSecondMetadata {
+  static readonly type = '[MetaData] FetchSecondMetadata';
 
   constructor(public entityType: string) { }
 }
@@ -24,11 +35,19 @@ export class FetchHierarchy {
   static readonly type = '[Hierarchy] Fetch';
 }
 
+export class FetchLinkResourcesTypesMetadata {
+  static readonly type = '[FetchLinkResourcesTypesMetadata] Fetch';
+  constructor(public resourceType: string[] ) { }
+}
+
 export class MetaDataStateModel {
   loading: boolean;
   metadataType: string;
   metadata: Map<string, Array<MetaDataProperty>>;
   hierarchy: EntityTypeDto;
+  linkResourceTypes : Map<string,string[]>;
+  secondMetadataType: string;
+  secondMetadata: Map<string, Array<MetaDataProperty>>;
 }
 
 @State<MetaDataStateModel>({
@@ -37,12 +56,15 @@ export class MetaDataStateModel {
     hierarchy: null,
     loading: true,
     metadata: new Map<string, Array<MetaDataProperty>>(),
-    metadataType: null
+    metadataType: null,
+    linkResourceTypes: new Map<string,string[]>(),
+    secondMetadataType: null,
+    secondMetadata: new Map<string, Array<MetaDataProperty>>()
   }
 })
 export class MetaDataState {
 
-  constructor(private metaDataApiService: MetaDataApiService) { }
+  constructor(private metaDataApiService: MetaDataApiService, private resourceApiService: ResourceApiService) { }
 
   @Selector()
   public static loading(state: MetaDataStateModel) {
@@ -65,8 +87,18 @@ export class MetaDataState {
   }
 
   @Selector()
+  public static actualSecondMetadata(state: MetaDataStateModel): Array<MetaDataProperty> {
+    return state.secondMetadata.has(state.secondMetadataType) ? state.secondMetadata.get(state.secondMetadataType) : null;
+  }
+
+  @Selector()
   public static hierarchy(state: MetaDataStateModel) {
     return state.hierarchy;
+  }
+
+  @Selector()
+  public static linkResourcesTypes(state: MetaDataStateModel) {
+    return state.linkResourceTypes;
   }
 
   @Action(FetchHierarchy)
@@ -75,6 +107,14 @@ export class MetaDataState {
       patchState({
         hierarchy: res,
       });
+    });
+  }
+
+  @Action(ClearActiveSecondMetaData)
+  clearSecondMetaData({ patchState }: StateContext<MetaDataStateModel>, { }: ClearActiveSecondMetaData) {
+    patchState({
+      secondMetadataType: null,
+      secondMetadata: new Map<string, Array<MetaDataProperty>>()
     });
   }
 
@@ -95,6 +135,27 @@ export class MetaDataState {
         metadata: metadataMap,
         loading: false,
         metadataType: action.entityType
+      });
+    });
+  }
+
+  @Action(FetchSecondMetadata)
+  fetchSecondMetadata(ctx: StateContext<MetaDataStateModel>, action: FetchMetadata) {
+    const state = ctx.getState();
+    if (state.secondMetadataType === action.entityType && state.secondMetadata.has(action.entityType)) {
+      return;
+    }
+
+    this.initializeState(ctx);
+
+    this.metaDataApiService.getMetaData(action.entityType).subscribe(res => {
+
+      var metadataMap = ctx.getState().secondMetadata;
+      metadataMap.set(action.entityType, res);
+      ctx.patchState({
+        secondMetadata: metadataMap,
+        loading: false,
+        secondMetadataType: action.entityType
       });
     });
   }
@@ -132,6 +193,21 @@ export class MetaDataState {
         loading: false
       });
     });
+  }
+
+  @Action(FetchLinkResourcesTypesMetadata)
+  fetchLinkResourcesTypesMetadata(
+    ctx: StateContext<MetaDataStateModel>,
+    action: FetchLinkResourcesTypesMetadata
+  ) {
+    var type = action.resourceType;
+    this.resourceApiService.getResourceHierarchy(type)
+    .subscribe(x=> {
+      const state = ctx.getState();
+      state.linkResourceTypes=x
+      ctx.setState(
+        state
+      )})
   }
 
   private initializeState(ctx: StateContext<MetaDataStateModel>) {

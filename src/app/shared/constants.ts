@@ -63,13 +63,21 @@ export const Constants = {
     HasLabel: 'https://pid.bayer.com/kos/19050/hasLabel',
     RdfsLabel: 'http://www.w3.org/2000/01/rdf-schema#label',
     Distribution: 'https://pid.bayer.com/kos/19050/distribution',
+    HasAttachment: 'https://pid.bayer.com/kos/19050/hasAttachment',
     PointAt: 'https://pid.bayer.com/kos/19050/baseURIPointsAt',
     MainDistribution: 'https://pid.bayer.com/kos/19050/mainDistribution',
     Keywords: 'https://pid.bayer.com/kos/19050/47119343',
     Pattern: 'http://www.w3.org/ns/shacl#pattern',
     HasLaterVersion: 'https://pid.bayer.com/kos/19050/hasLaterVersion',
     MetadataReleaseConfig: 'https://pid.bayer.com/kos/19050/646465',
-    NetworkedResourceLabel: 'https://pid.bayer.com/kos/19050/hasNetworkedResourceLabel'
+    NetworkedResourceLabel: 'https://pid.bayer.com/kos/19050/hasNetworkedResourceLabel',
+    FieldType: 'https://pid.bayer.com/ns/shacl/fieldType',
+    FieldTypes: {
+      ExtandableList: 'https://pid.bayer.com/ns/shacl/fieldType#extendableList'
+    },
+    ContainsTherapeuticAreas : 'https://pid.bayer.com/d188c668-b710-45b2-9631-faf29e85ac8d/contains_information_about_therapeutic_area',
+    ContainsRwdDimensions: 'https://pid.bayer.com/d188c668-b710-45b2-9631-faf29e85ac8d/contains_rwd_dimension'
+
   },
   Display: {
     Header: 'https://pid.bayer.com/kos/19050/hasResourceDefinition',
@@ -91,11 +99,13 @@ export const Constants = {
       InvisibleTechnicalInformation: 'http://pid.bayer.com/kos/19050/InvisibleTechnicalInformation',
       TechnicalInformation: 'https://pid.bayer.com/kos/19050/TechnicalInformation',
       LinkTypes: 'http://pid.bayer.com/kos/19050/LinkTypes',
-      DistributionEndpoints: 'http://pid.bayer.com/kos/19050/DistributionEndpoints'
+      DistributionEndpoints: 'http://pid.bayer.com/kos/19050/DistributionEndpoints',
+      Images: 'https://pid.bayer.com/kos/19050/AttachmentsPropertyGroup'
     }
   },
   Shacl: {
     Range: 'http://www.w3.org/2000/01/rdf-schema#range',
+    DefaultValue: 'http://www.w3.org/ns/shacl#defaultValue',
     Severity: {
       Info: 'http://www.w3.org/ns/shacl#Info',
       Warning: 'http://www.w3.org/ns/shacl#Warning',
@@ -124,6 +134,12 @@ export const Constants = {
       Deprecated: 'https://pid.bayer.com/kos/19050/deprecated'
     }
   },
+  Attachment: {
+    Type: 'https://pid.bayer.com/kos/19050/Attachment',
+    FileSize: 'https://pid.bayer.com/kos/19050/hasFileSize',
+    FileType: 'https://pid.bayer.com/kos/19050/hasFileType',
+    Comment: 'http://www.w3.org/2000/01/rdf-schema#comment',
+  },
   Authentication: {
     Roles: {
       Administration: 'COLID.Administration.ReadWrite',
@@ -133,5 +149,46 @@ export const Constants = {
   Regex: {
     NaturalNumber: '^[0-9]*$',
     Guid: /(\{)?[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}(\})?/
+  }
+};
+
+export const QuillEditorConfig = {
+  Formats: [
+    'background',
+    'bold',
+    'color',
+    'font',
+    'code',
+    'italic',
+    'link',
+    'size',
+    'strike',
+    'script',
+    'underline',
+    'blockquote',
+    'header',
+    'indent',
+    'list',
+    'align',
+    'direction',
+    'code-block',
+    'formula'
+    // 'image'
+    // 'video'
+  ],
+
+  Modules: {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'],      // toggled buttons
+      ['blockquote', 'code-block'],
+      [{ 'header': 1 }, { 'header': 2 }],             // custom button values
+      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+      [{ 'indent': '-1' }, { 'indent': '+1' }],       // outdent/indent
+      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+      [{ 'color': [] }, { 'background': [] }],        // dropdown with defaults from theme
+      [{ 'align': [] }],
+      ['clean'],                                      // remove formatting button
+      ['link']                                        // link
+    ]
   }
 };

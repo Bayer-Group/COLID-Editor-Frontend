@@ -1,11 +1,11 @@
 import { Component, Output, EventEmitter, Input, ViewChild, OnInit, ElementRef, OnDestroy, ViewEncapsulation } from '@angular/core';
-import { Select} from '@ngxs/store';
+import { Select } from '@ngxs/store';
 import { Observable, Subscription } from 'rxjs';
 import { Constants } from 'src/app/shared/constants';
 import { ResourceOverviewDTO } from 'src/app/shared/models/resources/resource-overview-dto';
 import { ResourceState } from 'src/app/state/resource.state';
 import { Resource } from '../../../../shared/models/resources/resource';
-import { ResourceOverviewCTO } from 'src/app/shared/models/resources/resource-overview-cto';
+import { SearchResult } from 'src/app/shared/models/search/search-result';
 
 @Component({
   selector: 'app-sidebar-content',
@@ -17,13 +17,13 @@ export class SidebarContentComponent implements OnInit, OnDestroy {
   @Input() selectedResourcePidUri = '';
 
   @Select(ResourceState.activeResource) activeResource$: Observable<Resource>;
-  @Output() resourceSelectedEvent: EventEmitter<ResourceOverviewDTO> = new EventEmitter<ResourceOverviewDTO>();
+  @Output() resourceSelectedEvent: EventEmitter<string> = new EventEmitter<string>();
   @Output() nextResourceBatchEvent: EventEmitter<number> = new EventEmitter<number>();
   totalResources = null;
 
-  @Input() resourceOverviewState: Observable<ResourceOverviewCTO>;
+  @Input() searchResultState: Observable<SearchResult>;
   @Input() loadingState: Observable<boolean>;
-  @Input() currentPageStatus:string
+  @Input() currentPageStatus: string
 
   @ViewChild('results', { static: false }) results: ElementRef;
 
@@ -41,19 +41,19 @@ export class SidebarContentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.resourceOverviewStateSubscription = this.resourceOverviewState.subscribe(res => {
+    this.resourceOverviewStateSubscription = this.searchResultState.subscribe(res => {
       if (res != null) {
-        this.totalResources = res.total;
+        this.totalResources = res.hits.total;
 
         setTimeout(() => {
           if (this.results != null && this.results.nativeElement != null && this.results.nativeElement.scrollHeight <= this.results.nativeElement.offsetHeight) {
-            this.nextBatch(null, res.items.length);
+            this.nextBatch(null, res.hits.hits.length);
           }
         }, 100);
       }
     });
 
-    
+
   }
 
   ngOnDestroy() {
@@ -61,12 +61,8 @@ export class SidebarContentComponent implements OnInit, OnDestroy {
     this.resourceOverviewStateSubscription.unsubscribe();
   }
 
-  selectResource(resourceOverviewDTO: ResourceOverviewDTO) {
-    this.resourceSelectedEvent.emit(resourceOverviewDTO);
-  }
-
-  public isActive(resource: ResourceOverviewDTO): boolean {
-    return this.selectedResourcePidUri === resource.pidUri;
+  selectResource(resourcePidUri: string) {
+    this.resourceSelectedEvent.emit(resourcePidUri);
   }
 
   nextBatch(currIndex: number, offset: number) {
@@ -74,10 +70,5 @@ export class SidebarContentComponent implements OnInit, OnDestroy {
 
     console.log('sidebarIndex', currIndex);
     this.nextResourceBatchEvent.emit(offset);
-  }
-
-  getStrippedHtml(str: string){
-    const re_tags = new RegExp(/<[a-zA-Z\/][^>]*>/g)
-    return str.replace(re_tags, '');
   }
 }

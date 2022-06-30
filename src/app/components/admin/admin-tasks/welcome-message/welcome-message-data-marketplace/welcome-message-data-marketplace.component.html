@@ -1,5 +1,5 @@
 <ng-container *ngIf="welcomeMessageDataMarketplace; else loading">
-    <welcome-message-form [defaultMessage]="welcomeMessageDataMarketplace" (submitForm)="updateWelcomeMessageDataMarketplace($event)"></welcome-message-form>
+    <welcome-message-form [defaultMessage]="welcomeMessageDataMarketplace" (submitForm)="updateWelcomeMessageDataMarketplace($event)" [status]="status"></welcome-message-form>
 </ng-container>
 <ng-template #loading>
     <div class="row justify-content-center mt-4">

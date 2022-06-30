@@ -13,6 +13,7 @@ import { Constants } from 'src/app/shared/constants';
 import { FetchConsumerGroupsByUser } from 'src/app/state/user-info.state';
 import { ConsumerGroupApiService } from 'src/app/core/http/consumer-group.api.service';
 import { ConsumerGroupWriteResultCTO } from 'src/app/shared/models/consumerGroups/consumer-group-write-result-cto';
+import { EntityFormStatus } from 'src/app/shared/components/entity-form/entity-form-status';
 
 @Component({
   selector: 'app-consumer-group-form',
@@ -33,8 +34,6 @@ export class ConsumerGroupFormComponent implements OnInit, OnDestroy {
     'If the consumer group is not used, it will be completely deleted by this procedure. <br>' +
     'Otherwise, the group is set to status deprecated and can be reactivated later'
 
-  showOverlaySpinner = false;
-
   validationResult: ValidationResult;
 
   entityType = Constants.ResourceTypes.ConsumerGroup;
@@ -42,6 +41,8 @@ export class ConsumerGroupFormComponent implements OnInit, OnDestroy {
   placeholder: any = {};
 
   consumerGroup: ConsumerGroupResultDTO;
+
+  formStatus: EntityFormStatus = EntityFormStatus.INITIAL;
 
   consumerGroupSubscription: Subscription;
   actionSubscription: Subscription;
@@ -86,6 +87,8 @@ export class ConsumerGroupFormComponent implements OnInit, OnDestroy {
   }
 
   handleCreateEntityEmitter(entity: EntityBase) {
+    this.formStatus = EntityFormStatus.LOADING;
+
     this.consumerGroupService.createEntity(entity).subscribe(
       (res: ConsumerGroupWriteResultCTO) => {
         this.handleSuccessProcess(res);
@@ -95,9 +98,11 @@ export class ConsumerGroupFormComponent implements OnInit, OnDestroy {
         this.handleResponseError(error);
       }
     );
+
   }
 
   handleEditEntityEmitter(event: any) {
+    this.formStatus = EntityFormStatus.LOADING;
     this.consumerGroupService.editEntity(event.id, event.entity).subscribe(
       (res: ConsumerGroupWriteResultCTO) => {
         this.handleSuccessProcess(res);
@@ -109,10 +114,11 @@ export class ConsumerGroupFormComponent implements OnInit, OnDestroy {
   }
 
   handleDeleteEntityEmitter(id: string) {
+    this.formStatus = EntityFormStatus.LOADING;
     this.store.dispatch(new DeleteConsumerGroup(id)).subscribe(
       () => {
-        this.handleSuccessProcess(null);
         this.snackBar.success('Consumer Group', 'Deleted successfully');
+        this.router.navigate(['admin', 'consumerGroups']);
       },
       error => {
         this.handleResponseError(error);
@@ -121,20 +127,19 @@ export class ConsumerGroupFormComponent implements OnInit, OnDestroy {
   }
 
   handleSuccessProcess(entityWriteResult: ConsumerGroupWriteResultCTO) {
-    this.showOverlaySpinner = false;
+    this.formStatus = EntityFormStatus.SUCCESS;
     this.isNew = false;
 
     this.store.dispatch([new FetchConsumerGroupsByUser(), new SetConsumerGroup(entityWriteResult.entity)]).subscribe();
 
-    if (entityWriteResult != null && entityWriteResult.validationResult.conforms) {
-      this.router.navigate(['admin', 'consumerGroups']);
-    } else {
-      this.validationResult = entityWriteResult.validationResult;
+    if (entityWriteResult != null) {
+      if (entityWriteResult.validationResult.conforms) {
+        this.router.navigate(['admin', 'consumerGroups']);
+      }
+      else {
+        this.validationResult = entityWriteResult.validationResult;
+      }
     }
-  }
-
-  handleShowOverlaySpinner(event) {
-    this.showOverlaySpinner = event;
   }
 
   handleCancelEditEntityEmitter() {
@@ -142,7 +147,8 @@ export class ConsumerGroupFormComponent implements OnInit, OnDestroy {
   }
 
   handleResponseError(error: HttpErrorResponse) {
-    this.showOverlaySpinner = false;
+    this.formStatus = EntityFormStatus.ERROR;
+
     if (error.status === 400 && error.error && error.error.validationResult) {
       this.validationResult = error.error.validationResult;
     }

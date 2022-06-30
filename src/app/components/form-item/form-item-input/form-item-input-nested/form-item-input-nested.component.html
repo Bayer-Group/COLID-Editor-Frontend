@@ -2,19 +2,9 @@
   <div class="col-12">
     <app-form [indexerNested]="indexerNested" [nestedForm]="true" [metaData]="nestedMetadata" [entity]="internalValue"
       [placeholder]="{}" [adminPrivilege]="adminPrivilege" [errors]="errors?.result" [isNew]="isNewEntity"
-      [pidUriTemplatesFetched]="fetched$" [pidUriTemplateNames]="presets"
+      [pidUriTemplatesFetched]="fetched$" [pidUriTemplateNames]="presets" [formReadOnly]="formReadOnly"
       (handleFormChanged)="handleNestedFormChanged($event)">
     </app-form>
-  </div>
-</div>
-<div class="row justify-content-between" *ngIf="hasMainDistributionProperty$ | async">
-  <div class="col-auto">
-    <mat-checkbox [color]="'primary'" [labelPosition]="'before'" (change)="changeMainDistribution()"
-      [(ngModel)]="_isMainDistribution">
-      <span class="font-weight-bold">
-        The base URI resolves to this endpoint.
-      </span>
-    </mat-checkbox>
   </div>
 </div>
 <div class="col-12 text-right mt-2">

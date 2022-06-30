@@ -32,7 +32,7 @@ export class FormItemInputTaxonomyComponent extends FormItemInputBaseComponent {
   taxonomyMenuOpened: boolean = false;
 
   @Input() metadata: MetaDataProperty;
-  @Input() singleSelection: boolean = false;
+  singleSelection: boolean = false;
 
   _internalValue: TaxonomyResultDTO[] = [];
 
@@ -67,12 +67,14 @@ export class FormItemInputTaxonomyComponent extends FormItemInputBaseComponent {
 
   // Filter our all double entries and return only the id of parents and selected ones
   filterDuplicatesAndRemoveChildNodes(event: TaxonomyResultDTO[]): TaxonomyResultDTO[] {
-    var resultList: TaxonomyResultDTO[] = Object.assign(event);
-    event.forEach(e => {
-      if (e.children.every(n => event.some(r => r.id === n.id))) {
-        resultList = resultList.filter(re => !e.children.some(n => n.id === re.id));
+    let resultList: TaxonomyResultDTO[] = [...new Map(event.map(item => [item.id, item])).values()];
+
+    resultList.forEach(r => {
+      if (r.hasChild) {
+        r.children = this.filterDuplicatesAndRemoveChildNodes(r.children);
       }
-    });
+    })
+
     return resultList;
   }
 

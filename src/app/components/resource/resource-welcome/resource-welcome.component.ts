@@ -21,8 +21,8 @@ export class ResourceWelcomeComponent implements OnInit {
 
   ngOnInit() { }
 
-  get hasCreatePrivilege() : Observable<boolean> {
-    return this.authService.hasCreatePrivilege;
+  get hasCreatePrivilege$() : Observable<boolean> {
+    return this.authService.hasCreatePrivilege$;
   }
 
   goToDataMarketplace() {

@@ -29,7 +29,7 @@ export class ResourceExtension {
     return lifeCycleStatusProperty != null && lifeCycleStatusProperty[0] === Constants.Resource.LifeCycleStatus.MarkedDeletion;
   }
 
-  public static isAuthorizedForDeleteDraft(resource: Resource): boolean {
+  public static isAuthorizedToDeleteDraft(resource: Resource): boolean {
     // If the draft version exists, it is shown primpary to the user instead of the published version
     // The user is only allowed to delete the draft version, not the published version, of the resource
     // The user is allowed to mark the draft version as deleted, so that the admin checks and executes this.
@@ -37,7 +37,7 @@ export class ResourceExtension {
     return this.hasDraftVersion(resource)
   }
 
-  public static isAuthorizedForMarkForDeletion(resource: Resource): boolean {
+  public static isAuthorizedToMarkForDeletion(resource: Resource): boolean {
     return this.hasPublishedVersion(resource) && !this.hasDraftVersion(resource);
   }
 

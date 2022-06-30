@@ -2,6 +2,7 @@ import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 import { Entity } from 'src/app/shared/models/Entities/entity';
 import { MetaDataProperty } from 'src/app/shared/models/metadata/meta-data-property';
 import { VersionProperty } from 'src/app/shared/models/resources/version-property';
+import { Constants } from '../../constants';
 import { MetadataExtension } from '../../extensions/metadata.extension';
 
 @Component({
@@ -10,7 +11,6 @@ import { MetadataExtension } from '../../extensions/metadata.extension';
   styleUrls: ['./entity-display.component.css']
 })
 export class EntityDisplayComponent implements OnInit {
-
 
   @Input() editable: boolean = false;
   @Input() entityVersions: Array<VersionProperty>;
@@ -38,5 +38,9 @@ export class EntityDisplayComponent implements OnInit {
 
   isVisibleMetadataGroup(key: string) {
     return !MetadataExtension.isInvisbleGroupKey(key);
+  }
+
+  isAttachmentGroup(key: string) {
+    return key === Constants.Resource.Groups.Images;
   }
 }

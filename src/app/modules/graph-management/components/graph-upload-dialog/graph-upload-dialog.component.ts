@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { GraphManagementApiService } from '../../services/graph-management-api.service';
+import { GraphManagementApiService } from 'src/app/core/http/graph-management-api.service';
 import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 import { NeptuneLoaderStatusReponse } from 'src/app/shared/models/graphs/neptune-loader-status-response';

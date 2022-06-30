@@ -6,7 +6,7 @@
       </div>
   
       <div class="d-flex col-12 justify-content-center mt-5 mx-auto p-0">
-        <button mat-raised-button class="d-flex mr-5 center-button" id="button-welcome-resource-new" *ngIf="hasCreatePrivilege | async" [routerLink]="'/resource/hierarchy'">
+        <button mat-raised-button class="d-flex mr-5 center-button" id="button-welcome-resource-new" *ngIf="hasCreatePrivilege$ | async" [routerLink]="'/resource/hierarchy'">
           Register a new resource
         </button>
   
@@ -15,14 +15,10 @@
         </button>
       </div>
   
-      <div class="mt-2" *ngIf="(welcomeMessage$ | async) as welcomeMessage">
+      <div class="mt-2 mr-4" *ngIf="(welcomeMessage$ | async) as welcomeMessage">
         <quill-view-html [content]="welcomeMessage.content" theme="snow"></quill-view-html>
       </div>
     </div>
-  </div>
-  
-  <div class="d-flex justify-content-center logo-footer">
-      <img src="assets/BAG-logo.svg" alt="Bayer AG" height="120em">
   </div>
 </div>
 
@@ -30,4 +26,8 @@
   <div style="font-size: 0.8em;">
     <app-support-feedback-bar></app-support-feedback-bar>
   </div>
+</div>
+  
+<div class=" d-none d-flex justify-content-center mt-3 mb-5">
+    <img src="assets/BAG-logo.svg" alt="Bayer AG" height="120em">
 </div>

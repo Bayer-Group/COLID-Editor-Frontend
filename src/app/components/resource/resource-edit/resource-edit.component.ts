@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LogService } from '../../../core/logging/log.service';
 import { AuthConsumerGroupService } from 'src/app/modules/authentication/services/auth-consumer-group.service';
 import { ClearActiveResource, FetchResource } from 'src/app/state/resource.state';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-resource-edit',
@@ -11,8 +12,6 @@ import { ClearActiveResource, FetchResource } from 'src/app/state/resource.state
   styleUrls: ['./resource-edit.component.css']
 })
 export class ResourceEditComponent implements OnInit {
-  validating = true;
-  authorized = false;
 
   constructor(
     private logger: LogService,
@@ -20,21 +19,21 @@ export class ResourceEditComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private authConsumerGroupService: AuthConsumerGroupService) { }
+   
+  get isAuthorizedToEdit$(): Observable<boolean> {
+    return this.authConsumerGroupService.IsAuthorizedToEdit();
+  }
 
   ngOnInit() {
     const resourcePidUri = this.route.snapshot.queryParamMap.get('pidUri');
-    this.logger.info('PID_RESOURCE_EDIT_OPENED', { 'resourcePidUri': resourcePidUri });
+    
+    const resourceTypeUri = this.route.snapshot.queryParamMap.get('typeUri');
 
+    this.logger.info('PID_RESOURCE_EDIT_OPENED', { 'resourcePidUri': resourcePidUri });
     if (resourcePidUri == null) {
       this.router.navigate(['resource', 'welcome']);
     }
-    this.store.dispatch([new ClearActiveResource(), new FetchResource(resourcePidUri, true)]).subscribe(() => { });
-
-    this.authConsumerGroupService.IsAuthorizedForEdit().subscribe(isAuthorized => {
-      this.authorized = isAuthorized;
-      if (isAuthorized !== null) {
-        this.validating = false;
-      }
-    });
+    
+    this.store.dispatch([new ClearActiveResource(), new FetchResource(resourcePidUri, true, null, resourceTypeUri)]).subscribe(() => {});
   }
 }

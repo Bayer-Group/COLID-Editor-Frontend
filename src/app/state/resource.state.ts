@@ -8,17 +8,20 @@ import { Resource } from '../shared/models/resources/resource';
 import { Entity } from '../shared/models/Entities/entity';
 import { ResourceOverviewCTO } from '../shared/models/resources/resource-overview-cto';
 import { ResourceSearchDTO } from '../shared/models/search/resource-search-dto';
-import { HistoricResourceOverviewDTO } from '../shared/models/resources/historic-resource-overview-dto';
+import { HistoricResourceOverviewDTO, ResourceRevisionHistoryUI, ResourcRevisionHistory } from '../shared/models/resources/historic-resource-overview-dto';
 import { Constants } from '../shared/constants';
 import { FetchSidebarResourceOverview } from './resource-overview.state';
-import { FetchMetadata, FetchMetadataRelease } from './meta-data.state';
+import { ClearActiveSecondMetaData, FetchMetadata, FetchMetadataRelease, FetchSecondMetadata } from './meta-data.state';
 import { forkJoin, of, pipe } from 'rxjs';
 import { ResourceExtension } from '../shared/extensions/resource.extension';
+import { FetchColidEntrySubscriptionNumbers } from './colid-entry-subcriber-count.state';
+import { LinkingMapping, LinkType } from '../shared/models/resources/linking-mapping';
+import { MetaDataProperty } from '../shared/models/metadata/meta-data-property';
 
 export class FetchResource {
   static readonly type = '[Resource] Fetch';
 
-  constructor(public pidUri: string, public latestMetadata: boolean) { }
+  constructor(public pidUri: string, public latestMetadata: boolean, public alternativeResourceType: string = null, public newMetadataTypeUri: string= null) { }
 }
 
 export class FetchPublishedResourceWithMetaData {
@@ -44,6 +47,11 @@ export class FetchResourceHistory {
   constructor(public pidUri: string) { }
 }
 
+export class FetchResourceRevisionHistory {
+  static readonly type = '[Resource] FetchResourceRevisionHistory';
+  constructor(public pidUri: string) { }
+}
+
 export class FetchHistoricResource {
   static readonly type = '[Resource] FetchHistoricResource';
   constructor(public historicResource: HistoricResourceOverviewDTO) { }
@@ -51,12 +59,12 @@ export class FetchHistoricResource {
 
 export class DeleteResource {
   static readonly type = '[Resource] Delete';
-  constructor(public payload: string) { }
+  constructor(public payload: string, public requester: string) { }
 }
 
 export class DeleteResources {
   static readonly type = '[Resources] Delete';
-  constructor(public payload: string[]) { }
+  constructor(public payload: string[], public requester: string) { }
 }
 
 export class MarkResourceAsDeleted {
@@ -79,6 +87,16 @@ export class UnlinkResource {
   constructor(public pidUri: string) { }
 }
 
+export class RemoveLink {
+  static readonly type = '[ResourceLink] Removed';
+  constructor(public linkKey: string , public pidUri: string, public isInbound: boolean, public requester: string) { }
+}
+
+export class AddLink {
+  static readonly type = '[ResourceLink] Added';
+  constructor(public linkType: string , public pidUri: string, public requester: string) { }
+}
+
 export class SetMainDistribution {
   static readonly type = '[Resource] SetMainDistribution';
 
@@ -97,6 +115,7 @@ export class ResourceStateModel {
   markedResource: ResourceOverviewCTO;
   activeMainDistribution: string;
   history: Array<HistoricResourceOverviewDTO>;
+  revisionHistory: Array<ResourcRevisionHistory>;
   historicResources: Map<string, Resource>;
   selectedHistoricResource: string;
 }
@@ -110,6 +129,7 @@ export class ResourceStateModel {
     loadingMarked: false,
     markedResource: null,
     history: null,
+    revisionHistory:null,
     selectedHistoricResource: null,
     historicResources: new Map<string, Resource>()
   }
@@ -150,6 +170,11 @@ export class ResourceState {
   }
 
   @Selector()
+  public static getResourceRevisionHistory(state: ResourceStateModel) {
+    return state.revisionHistory;
+  }
+
+  @Selector()
   public static getHistoricResources(state: ResourceStateModel) {
     return state.historicResources;
   }
@@ -176,13 +201,22 @@ export class ResourceState {
     ctx.dispatch(new ClearActiveResource());
     this.resourceService.getResourcesByPidUri(action.pidUri).subscribe(
       (res) => {
-        const resourceType = this.returnResourceTypeFromProperties(res.properties)[0];
+        const resourceType = action.alternativeResourceType != null ? action.alternativeResourceType : this.returnResourceTypeFromProperties(res.properties)[0];
         const resourceConfig = res.properties[Constants.Metadata.MetadataReleaseConfig][0];
 
         if (action.latestMetadata) {
           ctx.dispatch(new FetchMetadata(resourceType)).subscribe(() => {
             this.patchState(ctx, res);
           });
+          if (action.newMetadataTypeUri) {
+            // alert('dispatching FetchSecondMeta') // using this aleart => overriding meta data has empty meta data
+            res.properties[Constants.Metadata.EntityType][0] = action.newMetadataTypeUri;
+            ctx.dispatch(new FetchSecondMetadata(action.newMetadataTypeUri)).subscribe(() => {
+              this.patchState(ctx, res);
+            });
+          } else {
+            ctx.dispatch(new ClearActiveSecondMetaData());
+          }
         } else {
           ctx.dispatch(new FetchMetadataRelease(resourceType, resourceConfig)).subscribe(() => {
             this.patchState(ctx, res);
@@ -196,6 +230,7 @@ export class ResourceState {
         }
       }
     );
+    this.store.dispatch(new FetchColidEntrySubscriptionNumbers(action.pidUri))
   }
 
   @Action(FetchPublishedResourceWithMetaData)
@@ -254,6 +289,24 @@ export class ResourceState {
     });
   }
 
+  @Action(FetchResourceRevisionHistory)
+  FetchResourceRevisionHistory(ctx: StateContext<ResourceStateModel>, action: FetchResourceRevisionHistory) {
+    const state = ctx.getState();
+    ctx.patchState({
+      revisionHistory: null,
+      selectedHistoricResource: null
+    });
+
+    const activeResource = state.activeResource;
+    this.resourceService.getResourceRevisionHistory(activeResource.pidUri).subscribe(history => {
+    //process everything
+    ctx.patchState({
+      revisionHistory: history,
+      selectedHistoricResource: history.length === 0 ? null : ctx.getState().selectedHistoricResource
+    });
+  });
+  }
+
   @Action(FetchResourceHistory)
   fetchResourceHistory(ctx: StateContext<ResourceStateModel>, action: FetchResourceHistory) {
     const state = ctx.getState();
@@ -268,6 +321,7 @@ export class ResourceState {
     if (!activeResource || (activeResource && activeResource.publishedVersion)) {
       forkJoinObject['publishedResource'] = this.resourceService.getPublishedResourcesByPidUri(action.pidUri).pipe(catchError(error => of(null)));
     }
+
 
     forkJoinObject['history'] = this.resourceService.getResourceHistory(action.pidUri).pipe(catchError(error => of(null)));
 
@@ -292,7 +346,7 @@ export class ResourceState {
   @Action(FetchHistoricResource)
   fetchHistoricResource({ getState, patchState }: StateContext<ResourceStateModel>, action: FetchHistoricResource) {
     let historicResources = getState().historicResources;
-
+    console.log("historicResources",historicResources)
     patchState({
       selectedHistoricResource: action.historicResource.id
     });
@@ -367,13 +421,13 @@ export class ResourceState {
   }
 
   @Action(DeleteResource)
-  deleteResource({ patchState, dispatch }: StateContext<ResourceStateModel>, { payload }: DeleteResource) {
+  deleteResource({ patchState, dispatch }: StateContext<ResourceStateModel>, { payload,requester }: DeleteResource) {
     patchState({
       loadingMarked: true
     });
-    return this.resourceService.deleteResource(payload).pipe(
+    return this.resourceService.deleteResource(payload,requester).pipe(
       tap(
-        () => dispatch( [new FetchResourceMarkedAsDeleted(), new FetchSidebarResourceOverview()]),
+        () => dispatch([new FetchResourceMarkedAsDeleted(), new FetchSidebarResourceOverview()]),
         error => {
           patchState({
             loadingMarked: false
@@ -383,11 +437,11 @@ export class ResourceState {
   }
 
   @Action(DeleteResources)
-  deleteResources({ patchState, dispatch }: StateContext<ResourceStateModel>, { payload }: DeleteResources) {
+  deleteResources({ patchState, dispatch }: StateContext<ResourceStateModel>, { payload, requester }: DeleteResources) {
     patchState({
       loadingMarked: true
     });
-    return this.resourceService.deleteResources(payload).pipe(
+    return this.resourceService.deleteResources(payload, requester).pipe(
       tap(() => dispatch(
         [new FetchResourceMarkedAsDeleted(), new FetchSidebarResourceOverview()]))
     );
@@ -415,6 +469,40 @@ export class ResourceState {
       tap(() => dispatch(
         [new FetchResource(pidUri, false)]))
     );
+  }
+
+  @Action(RemoveLink)
+  removeLink({ getState, patchState }: StateContext<ResourceStateModel>, { linkKey,pidUri,isInbound,requester }: RemoveLink) {
+    const activeResource = getState().activeResource
+    if(isInbound){
+      this.resourceService.removeLink( pidUri,linkKey,activeResource.pidUri,true,requester).subscribe(
+        (aR) => {
+          patchState({
+            activeResource: aR
+          });
+        }
+      )
+    }else{
+      this.resourceService.removeLink(activeResource.pidUri,linkKey,pidUri,false,requester).subscribe(
+        (aR) => {
+          patchState({
+            activeResource: aR
+          });
+        }
+      )
+    }
+  }
+
+  @Action(AddLink)
+  addLink({ getState, patchState }: StateContext<ResourceStateModel>, { linkType,pidUri,requester}: AddLink) {
+    const activeResource = getState().activeResource
+    this.resourceService.createLink(activeResource.pidUri,linkType,pidUri,requester).subscribe(
+      (aR) => {
+          patchState({
+            activeResource: aR
+          });
+        }
+    )
   }
 
   @Action(SetMainDistribution)

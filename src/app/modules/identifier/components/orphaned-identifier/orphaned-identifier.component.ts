@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { ColidMatSnackBarService } from 'src/app/modules/colid-mat-snack-bar/colid-mat-snack-bar.service';
+import { EntityFormStatus } from 'src/app/shared/components/entity-form/entity-form-status';
 
 @Component({
   selector: 'app-oprhaned-identifier',
@@ -19,6 +20,9 @@ export class OrphanedIdentifierComponent implements OnInit, OnDestroy {
   @Select(IdentifierState.getIsLoading) loading$: Observable<boolean>;
   @Select(IdentifierState.getIdentifiers) identifiers$: Observable<IdentifierResultDTO[]>;
 
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+
   displayedColumns: string[] = ['identifierUri', 'delete'];
 
   dataSource: MatTableDataSource<IdentifierResultDTO>;
@@ -27,8 +31,13 @@ export class OrphanedIdentifierComponent implements OnInit, OnDestroy {
   sortChangeSubscription: Subscription;
   identifierSubscription: Subscription;
 
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  status: EntityFormStatus = EntityFormStatus.INITIAL;
+  entityFormStatus = EntityFormStatus;
+  selectedIdentifier: string;
+
+  get isLoading(): boolean {
+    return this.status === EntityFormStatus.LOADING || this.status === EntityFormStatus.RELOADING;
+  }
 
   constructor(private store: Store, public dialog: MatDialog, private snackBar: ColidMatSnackBarService) {
     this.dataSource = new MatTableDataSource([]);
@@ -41,7 +50,7 @@ export class OrphanedIdentifierComponent implements OnInit, OnDestroy {
     // If the user changes the sort order, reset back to the first page.
     this.sortChangeSubscription = this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 
-    this.loadingData();
+    this.loadData();
 
     this.identifierSubscription = this.identifiers$.subscribe(uris => {
       const data = uris == null ? [] : uris;
@@ -50,13 +59,14 @@ export class OrphanedIdentifierComponent implements OnInit, OnDestroy {
     })
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.sortChangeSubscription.unsubscribe();
     this.identifierSubscription.unsubscribe();
   }
 
-  loadingData() {
-    this.store.dispatch(new FetchOrphanedIdentifiers()).subscribe();
+  loadData() {
+    this.status = EntityFormStatus.RELOADING;
+    this.store.dispatch(new FetchOrphanedIdentifiers()).subscribe(res => this.status = EntityFormStatus.SUCCESS, error => this.status = EntityFormStatus.ERROR);
   }
 
   applyFilter(filterValue: string) {
@@ -64,6 +74,7 @@ export class OrphanedIdentifierComponent implements OnInit, OnDestroy {
   }
 
   deleteOrphanedIdentifier(identifierUri: string) {
+    this.selectedIdentifier = identifierUri;
     const dialogRef = this.dialog.open(DeleteItemDialogComponent, {
       data: {
         header: `Deleting Identifier`,
@@ -76,9 +87,14 @@ export class OrphanedIdentifierComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
 
       if (result) {
+        this.status = EntityFormStatus.LOADING;
+
         this.store.dispatch(new DeleteOrphanedIdentifier(identifierUri)).subscribe(res => {
           this.snackBar.success("Permanent Identifier", "Deleted successfully");
-          this.loadingData();
+          this.status = EntityFormStatus.SUCCESS;
+          this.loadData();
+        }, error => {
+          this.status = EntityFormStatus.ERROR;
         })
       }
     });

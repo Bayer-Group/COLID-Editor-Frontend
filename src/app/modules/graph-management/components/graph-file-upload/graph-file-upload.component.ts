@@ -25,10 +25,12 @@ export class GraphFileUploadComponent implements ControlValueAccessor {
   constructor() {
   }
 
-  writeValue(value: null) {
-    // clear file input
-    this.fileDropRef.nativeElement.value = '';
-    this.file = null;
+  writeValue(value: any) {
+    // clear file input after upload
+    if(this.fileDropRef != null && this.fileDropRef.nativeElement != null) {
+      this.fileDropRef.nativeElement.value = '';
+      this.file = null;
+    }
   }
 
   registerOnChange(fn) {
@@ -38,16 +40,11 @@ export class GraphFileUploadComponent implements ControlValueAccessor {
   registerOnTouched(fn) {
     this.onTouched = fn;
   }
-  /**
- * on file drop handler
- */
+
   onFileDropped($event) {
     this.prepareFilesList($event);
   }
 
-  /**
-   * handle file from browsing
-   */
   fileBrowseHandler(files) {
     this.prepareFilesList(files);
   }
@@ -58,6 +55,5 @@ export class GraphFileUploadComponent implements ControlValueAccessor {
       this.onChange(this.file);
       this.onTouched();
     }
-
   }
 }

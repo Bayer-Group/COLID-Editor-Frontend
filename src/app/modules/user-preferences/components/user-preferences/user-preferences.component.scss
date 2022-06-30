@@ -1,0 +1,6 @@
+@import "../../../../../styles.scss";
+
+.user-sidebar {
+    position: fixed;
+    margin-top: #{$mat-toolbar-height};
+}

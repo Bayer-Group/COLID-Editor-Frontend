@@ -34,6 +34,7 @@ import { CanDeactivateGuard } from './core/guards/can-deactivate/can-deactivate.
 import { AuthGuardSuperAdminService } from './modules/authentication/guards/auth-guard-super-admin.service';
 import { AuthGuardService } from './modules/authentication/guards/auth-guard.service';
 import { AuthGuardAdminService } from './modules/authentication/guards/auth-guard-admin.service';
+import { BroadcastMessageComponent } from './components/admin/admin-tasks/broadcast-message/broadcast-message.component';
 
 const resourceRoute = {
   path: 'resource', component: ResourceComponent, children: [
@@ -65,6 +66,10 @@ const adminRoute = {
         { path: 'edit', pathMatch: 'full', redirectTo: 'edit/editor' },
         { path: '', pathMatch: 'full', redirectTo: 'edit/editor' }
       ],
+      canActivate: [AuthGuardSuperAdminService]
+    },
+    {
+      path: 'broadcastMessage', component: BroadcastMessageComponent,
       canActivate: [AuthGuardSuperAdminService]
     },
     {

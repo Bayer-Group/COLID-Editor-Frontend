@@ -1,37 +1,36 @@
-<div class="container" *ngIf="resourceResult && metaData && (consumerGroup$ | async); else loading">
+<div class="container" *ngIf="resourceResult && metaData && (consumerGroup$ | async); else loadingTemplate">
   <div>
     <app-form [metaData]="metaData" [linkingMetadata]="linkingMetadata" [errors]="formErrors"
-      [entity]="{ id: resourceResult.id, properties: resourceResult.properties }" [isNew]="isNew"
-      [placeholder]="placeholder" [adminPrivilege]="authService.hasAdminPrivilege"
+      [entity]="resourceResult" [isNew]="isNew" [isTypeChanging]="isResourceChanging"
+      [placeholder]="placeholder" [adminPrivilege]="authService.hasAdminPrivilege$ | async"
+      [creationType]="creationType"
+      [formReadOnly]="isLoading"
       [hasPublishedVersion]="hasPublishedVersion" [pidUriTemplatesFetched]="pidUriTemplatesFetched$"
       [pidUriTemplateNames]="pidUriTemplateNames" [mainDistribution]="mainDistribution"
       (handleFormChanged)="handleFormChanged($event)">
     </app-form>
-    <div class="col-12">
+    <div class="col-12 mb-3">
       <div class="row justify-content-end">
         <button mat-raised-button class="ml-2" *ngIf="!isNew" [routerLink]="['/resource']"
           [queryParams]="{ pidUri: resourceResult.pidUri }">
           <mat-icon fontSet="material-icons-outlined">cancel</mat-icon>
           Cancel
         </button>
-        <button mat-raised-button class="ml-2" (click)="revert()" *ngIf="resourceResult.publishedVersion">
-          <mat-icon fontSet="material-icons-outlined">undo</mat-icon>
+        <!-- <action-button class="ml-2" color="info" (click)="revert()" *ngIf="resourceResult.publishedVersion" icon="undo" [disabled]="isLoading" [loading]="isLoading && currentOperation === operation.REVERT">
           Revert to published
-        </button>
-        <button mat-raised-button class="ml-2" id="saveButton" color="draft" (click)="save()">
-          <mat-icon fontSet="material-icons-outlined">save</mat-icon>
+        </action-button> -->
+        <action-button class="ml-2" id="saveButton" color="draft" (click)="save()" icon="save" [disabled]="isLoading" [loading]="isLoading && currentOperation === operation.SAVE">
           Save
-        </button>
-        <button mat-raised-button class="ml-2" id="publishButton" color="published" (click)="saveAndPublish()">
-          <mat-icon fontSet="material-icons-outlined">cloud_upload</mat-icon>
+        </action-button>
+        <action-button class="ml-2" id="publishButton" color="published" (click)="saveAndPublish()" icon="cloud_upload" [disabled]="isLoading" [loading]="isLoading && (currentOperation === operation.PUBLISH || currentOperation === operation.SAVEANDPUBLISH)">
           Publish
-        </button>
+        </action-button>
       </div>
     </div>
   </div>
   <br />
 </div>
-<ng-template #loading>
+<ng-template #loadingTemplate>
   <div class="row justify-content-center mt-4">
     <div class="col-auto">
       <app-colid-spinner></app-colid-spinner>

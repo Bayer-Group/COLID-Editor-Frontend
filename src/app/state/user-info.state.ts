@@ -8,6 +8,7 @@ import { of } from 'rxjs';
 import { ColidEntrySubscriptionDto } from '../shared/models/user/colid-entry-subscription-dto';
 import { ResourceOverviewState, SetSidebarSearch } from './resource-overview.state';
 import { MessageConfigDto } from '../shared/models/user/message-config-dto';
+import { FetchColidEntrySubscriptionNumbers } from './colid-entry-subcriber-count.state';
 
 export class FetchUser {
     static readonly type = '[User] Fetch User';
@@ -88,7 +89,7 @@ export class UserInfoState {
     public static getSelectedConsumerGroupId(state: UserInfoStateModel) {
         return state.selectedConsumerGroupId;
     }
-
+    
     @Selector()
     public static getDefaultConsumerGroup(state: UserInfoStateModel) {
         return state.user.defaultConsumerGroup;
@@ -130,7 +131,14 @@ export class UserInfoState {
                     patchState({
                         user: res
                     });
-                    dispatch([new SetSidebarSearch(res.searchFilterEditor.filterJson)]).subscribe();
+                    if (res.searchFilterEditor != null) {
+
+                        if(res.searchFilterEditor.filterJson.searchText != null || res.searchFilterEditor.filterJson.consumerGroup != null || res.searchFilterEditor.filterJson.lastChangeUser != null || res.searchFilterEditor.filterJson.published|| res.searchFilterEditor.filterJson.draft ){
+
+                            dispatch([new SetSidebarSearch(res.searchFilterEditor.filterJson)]).subscribe();
+                        }
+
+                    }
                 }),
                 catchError(err => {
                     if (err.status === 404) {
@@ -140,16 +148,14 @@ export class UserInfoState {
                             });
                         }))
                     }
-                    else {
-                        return of(null);
-                    }
+                    return of(null);
                 })
             );
     }
 
     @Action(ReloadUser)
     reloadUser(ctx: StateContext<UserInfoStateModel>, action: ReloadUser) {
-        const user = ctx.getState().user
+        const user = ctx.getState().user;
         ctx.dispatch(new FetchUser(user.id, user.emailAddress)).subscribe();
     }
 
@@ -159,10 +165,12 @@ export class UserInfoState {
         const loginDate = new Date();
         if (user != null) {
             return this.userInfoApiService.setLastLoginEditor(user.id, loginDate).pipe(
-                tap(res =>
+                tap(res => {
+                    user.lastLoginEditor = loginDate;
                     patchState({
-                        user: res
-                    }))
+                        user: user
+                    });
+                })
             );
         }
     }
@@ -206,8 +214,9 @@ export class UserInfoState {
     SetDefaultConsumerGroupForUser({ patchState, getState }: StateContext<UserInfoStateModel>, { selectedConsumerGroupId }: SetDefaultConsumerGroupForUser) {
         const user = getState().user;
         return this.userInfoApiService.setDefaultConsumerGroup(user.id, selectedConsumerGroupId).pipe(tap((res: UserDto) => {
+            user.defaultConsumerGroup = res.defaultConsumerGroup;
             patchState({
-                user: res
+                user: user
             });
         }));
     }
@@ -216,8 +225,9 @@ export class UserInfoState {
     SetMessageConfig({ patchState, getState }: StateContext<UserInfoStateModel>, { messageConfig }: SetMessageConfig) {
         const user = getState().user;
         return this.userInfoApiService.setMessageConfig(user.id, messageConfig).pipe(tap((res: UserDto) => {
+            user.messageConfig = res.messageConfig;
             patchState({
-                user: res
+                user: user
             });
         }));
     }
@@ -225,12 +235,13 @@ export class UserInfoState {
     @Action(SetSearchFilterEditor)
     SetSearchFilterEditorForUser({ patchState, getState }: StateContext<UserInfoStateModel>, {  }: SetSearchFilterEditor) {
         const user = getState().user;
-        let searchFilter = this.store.selectSnapshot(ResourceOverviewState.resourceOverviewSearch);
+        const searchFilter = this.store.selectSnapshot(ResourceOverviewState.resourceOverviewSearch);
         searchFilter.searchText = null;
 
         return this.userInfoApiService.setSearchFilterEditor(user.id, searchFilter).pipe(tap((res: UserDto) => {
+            user.searchFilterEditor = res.searchFilterEditor;
             patchState({
-                user: res
+                user: user
             });
         }));
     }
@@ -239,9 +250,11 @@ export class UserInfoState {
     AddColidEntrySubscription({ patchState, getState }: StateContext<UserInfoStateModel>, { colidEntrySubscriptionDto }: AddColidEntrySubscription) {
         const user = getState().user;
         return this.userInfoApiService.addColidEntrySubscription(user.id, colidEntrySubscriptionDto).pipe(tap((res: UserDto) => {
+            user.colidEntrySubscriptions = res.colidEntrySubscriptions;
             patchState({
-                user: res
+                user: user
             });
+            this.store.dispatch(new FetchColidEntrySubscriptionNumbers(colidEntrySubscriptionDto.colidPidUri))
         }));
     }
 
@@ -249,9 +262,11 @@ export class UserInfoState {
     RemoveColidEntrySubscription({ patchState, getState }: StateContext<UserInfoStateModel>, { colidEntrySubscriptionDto }: RemoveColidEntrySubscription) {
         const user = getState().user;
         return this.userInfoApiService.removeColidEntrySubscription(user.id, colidEntrySubscriptionDto).pipe(tap((res: UserDto) => {
+            user.colidEntrySubscriptions = res.colidEntrySubscriptions;
             patchState({
-                user: res
+                user: user
             });
+            this.store.dispatch(new FetchColidEntrySubscriptionNumbers(colidEntrySubscriptionDto.colidPidUri))
         }));
     }
 }

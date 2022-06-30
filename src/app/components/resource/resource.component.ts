@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { ResourceOverviewState } from '../../state/resource-overview.state';
 import { SidebarState, SetSidebarOpened } from 'src/app/state/sidebar.state';
 import { FetchWelcomeMessage } from 'src/app/state/welcome-message.state';
 import { FetchPidUriTemplates } from 'src/app/state/pid-uri-template.state';
@@ -12,7 +11,6 @@ import { FetchPidUriTemplates } from 'src/app/state/pid-uri-template.state';
     styleUrls: ['./resource.component.scss']
 })
 export class ResourceComponent implements OnInit {
-    @Select(ResourceOverviewState.resourceSidebarOverview) resourceOverview$: Observable<any>;
     @Select(SidebarState.sidebarOpened) sidebarOpened$: Observable<any>;
     @Select(SidebarState.sidebarMode) sidebarMode$: Observable<any>;
 

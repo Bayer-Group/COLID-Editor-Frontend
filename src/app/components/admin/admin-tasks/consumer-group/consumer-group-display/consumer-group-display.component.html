@@ -23,11 +23,13 @@
 
                         </app-entity-display>
                         <div class="d-flex" style="justify-content: flex-end;">
-                            <button mat-raised-button color="white" *ngIf="!isActive(consumerGroup)"
-                                (click)="reactivateConsumerGroup(consumerGroup)">
-                                <mat-icon fontSet="material-icons-outlined">replay</mat-icon>
+                            <action-button color="white" *ngIf="!isActive(consumerGroup)"
+                                (click)="reactivateConsumerGroup(consumerGroup)" [disabled]="isConsumerGroupReactivating != null" [loading]="isConsumerGroupReactivating?.id === consumerGroup.id"
+                                icon="replay">
                                 Reactivate
-                            </button>
+                            </action-button>
+
+
                             <a href routerLink="./edit" [queryParams]="{id: consumerGroup.id}" mat-raised-button
                                 color="white" *ngIf="isActive(consumerGroup)">
                                 <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
@@ -51,9 +53,5 @@
     </div>
 </div>
 <ng-template #loading>
-    <div class="row justify-content-center mt-4">
-        <div class="col-auto">
-            <app-colid-spinner></app-colid-spinner>
-        </div>
-    </div>
+    <app-colid-spinner></app-colid-spinner>
 </ng-template>

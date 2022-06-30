@@ -37,6 +37,7 @@ export class ResourceDisplayItemLinkingComponent implements OnInit {
     const resourceSearch = new ResourceSearchDTO();
     resourceSearch.pidUris = pidUris;
     resourceSearch.limit =  pidUris.length;
+    resourceSearch.published = true;
 
     this.fetching = true;
     this.resourceApiService.getFilteredResources(resourceSearch).subscribe(

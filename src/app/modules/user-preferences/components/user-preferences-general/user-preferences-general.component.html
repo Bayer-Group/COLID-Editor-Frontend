@@ -7,8 +7,10 @@
     <div class="col-12">
         <mat-card>
             <mat-card-title>Notifications</mat-card-title>
-            <mat-card-subtitle>Notifications inform users about current changes to subscribed COLID entries, as well as invalid users within entries. These notifications are sent by e-mail and are sent until the specified delete interval.</mat-card-subtitle>
-            <form [formGroup]="settingsForm" (ngSubmit)="onSubmit()">
+            <mat-card-subtitle>Notifications inform users about current changes to subscribed COLID entries, as well as
+                invalid users within entries. These notifications are sent by e-mail and are sent until the specified
+                delete interval.</mat-card-subtitle>
+            <form [formGroup]="settingsForm">
                 <div class="row">
                     <div class="col-4 d-flex align-items-center">
                         <b>Send Interval</b>
@@ -41,20 +43,19 @@
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
-                        <app-colid-spinner [diameter]="20" [strokeWidth]="2" *ngIf="selectedDeleteIntervalValue == null">
+                        <app-colid-spinner [diameter]="20" [strokeWidth]="2"
+                            *ngIf="selectedDeleteIntervalValue == null">
                         </app-colid-spinner>
                     </div>
                 </div>
                 <div class="row mt-4 justify-content-end">
-                    <div class="col-auto">
-                        <button mat-raised-button type="button" (click)="onReset()" class="mr-3">
-                            <mat-icon fontSet="material-icons-outlined">cancel</mat-icon>
+                    <div class="col-auto d-flex">
+                        <action-button class="mr-3" color="info" (click)="onReset()" icon="cancel">
                             Reset
-                        </button>
-                        <button mat-raised-button type="submit" color="primary">
-                            <mat-icon fontSet="material-icons-outlined">save</mat-icon>
+                        </action-button>
+                        <action-button color="primary" (click)="onSubmit()" [loading]="isLoading" icon="save">
                             Save
-                        </button>
+                        </action-button>
                     </div>
                 </div>
             </form>

@@ -14,7 +14,7 @@
     </div>
   </ng-container>
 </ng-container>
-<ng-container *ngIf="isDistribution || isLinking">
+<ng-container *ngIf="isDistribution">
   <div class="row mb-2">
     <div class="col-3 text-muted" *ngIf="!isHeader && !isSubHeader">
       {{groupLabel}}
@@ -25,6 +25,28 @@
           <ng-container *ngFor="let metadataProperty of groupedMetadata; let i = index">
             <ng-container *ngIf="entity.properties[metadataProperty.key] as entityProperty">
               <app-entity-display-item [expanded]="!hasMoreThanOneGroupValue"
+                [mainDistributionEndpoint]="constants.Metadata.MainDistribution === metadataProperty.key"
+                [entityProperty]="entityProperty" [metadataProperty]="metadataProperty">
+              </app-entity-display-item>
+            </ng-container>
+          </ng-container>
+        </mat-accordion>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="isLinking">
+  <div class="row mb-2">
+    <div class="col-3 text-muted" *ngIf="!isHeader && !isSubHeader">
+      {{groupLabel}}
+    </div>
+    <div class="col-9 pl-0">
+      <ng-container *ngIf="hasSomeGroupLinkValue">
+        <mat-accordion multi>
+          <ng-container *ngFor="let metadataProperty of groupedMetadata; let i = index">
+            <ng-container *ngIf="entity.links[metadataProperty.key] as entityProperty">
+              <app-entity-display-item [expanded]="!hasMoreThanOneLinkValue"
                 [mainDistributionEndpoint]="constants.Metadata.MainDistribution === metadataProperty.key"
                 [entityProperty]="entityProperty" [metadataProperty]="metadataProperty">
               </app-entity-display-item>

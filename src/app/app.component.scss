@@ -1,5 +1,12 @@
+@import "../styles.scss";
+
 img {
   margin-right: 10px;
+}
+
+.notification {
+  position: fixed;
+  margin-top: #{$mat-toolbar-height};
 }
 
 .btn-circle.btn-xl {

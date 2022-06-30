@@ -2,7 +2,8 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ColidMatSnackBarService } from 'src/app/modules/colid-mat-snack-bar/colid-mat-snack-bar.service';
 import { WelcomeMessage } from 'src/app/shared/models/welcome-message/welcome-message';
-import { QuillConfig } from 'ngx-quill';
+import { EntityFormStatus } from 'src/app/shared/components/entity-form/entity-form-status';
+import { QuillEditorConfig } from 'src/app/shared/constants';
 
 @Component({
   selector: 'welcome-message-form',
@@ -15,10 +16,12 @@ export class WelcomeMessageFormComponent implements OnInit {
   error_msg_reset = 'Message has been reset'
 
   editForm: FormGroup;
+  quillEditorConfig = QuillEditorConfig;
 
   _defaultMessage: WelcomeMessage;
 
   @Input() headerMessage: string;
+  @Input() status: EntityFormStatus = EntityFormStatus.INITIAL;
 
   @Input() set defaultMessage(value: WelcomeMessage) {
     this._defaultMessage = value;
@@ -26,25 +29,9 @@ export class WelcomeMessageFormComponent implements OnInit {
   }
   @Output() submitForm: EventEmitter<string> = new EventEmitter<string>();
 
-  // quill config for welcome messages
-  editorQuillConfig = {
-    toolbar: [
-      ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-      ['blockquote', 'code-block'],
-
-      [{ 'header': 1 }, { 'header': 2 }],               // custom button values
-      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-      [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
-      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-
-      [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-      [{ 'align': [] }],
-
-      ['clean'],                                         // remove formatting button
-
-      ['link']                                           // link 
-    ]
-  };
+  get isLoading(): boolean {
+    return this.status === EntityFormStatus.LOADING;
+  }
 
   constructor(private snackBar: ColidMatSnackBarService) { }
 

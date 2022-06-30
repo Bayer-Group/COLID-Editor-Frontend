@@ -22,7 +22,7 @@ export class MessageTemplateEditComponent implements OnInit {
     'ColidEntrySubscriptionUpdate': ['%COLID_LABEL%', '%COLID_PID_URI%'],
     'ColidEntrySubscriptionDelete': ['%COLID_LABEL%', '%COLID_PID_URI%'],
     'InvalidUserWarning': ['%COLID_LABEL%', '%COLID_PID_URI%', '%INVALID_USERS%'],
-    'StoredQueryResult': ['%QUERY_NAME%']
+    'StoredQueryResult': ['%SEARCH_NAME%','%UPDATED_RESOURCES%']
   };
 
   templateForm: FormGroup;

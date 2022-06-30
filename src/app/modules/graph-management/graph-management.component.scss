@@ -3,18 +3,9 @@
     align-items: center;
     justify-content: flex-end;
 
-    button[ngxClipboard] mat-icon {
+    button[cdkCopyToClipboard] mat-icon {
         font-size: 22px;
         height: 22px;
         width: 22px;
-    }
-
-    mat-icon:hover {
-        font-size: 27px !important;
-        height: 27px !important;
-        width: 27px !important;
-        -webkit-transition: all 0.1s ease;
-        -moz-transition: all 0.1s ease;
-        transition: all 0.1s ease;
     }
 }

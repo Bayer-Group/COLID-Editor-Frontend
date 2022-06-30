@@ -1,0 +1,24 @@
+<div class="modal-header justify-content-left">
+    <h2 class="mb-0 dialog-title">Incompatible Links</h2>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-12 text-left">
+            <p>
+                Please note the following incompatible links will be removed if you publish the resource!
+            </p>
+            <div *ngIf="!!data" class="link-data-container">
+                <div *ngFor="let ldata of data.linkData" class="link-element list-group-item">
+                    <div class="link-content link-title">{{ldata.type}}</div> 
+                    <div class="link-content">To: <span class="link-label">{{ldata.targetLabel}}</span> {{ldata.targetDefinition}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer justify-content-right">
+    <button mat-raised-button color="primary" class="mr-2" [mat-dialog-close]="true"> 
+        OK
+        <mat-icon fontSet="material-icons-outlined">arrow_right_alt</mat-icon>
+    </button>
+</div>

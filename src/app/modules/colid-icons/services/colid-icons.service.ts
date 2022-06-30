@@ -3,7 +3,7 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CustomMaterialIcon } from '../models/custom-material-icon';
 import { BehaviorSubject } from 'rxjs';
-import { environment } from 'src/environments/environment.docker';
+import { environment } from '../../../../environments/environment';
 
 declare const InstallTrigger: any;
 

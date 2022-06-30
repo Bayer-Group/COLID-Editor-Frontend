@@ -11,16 +11,21 @@ import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppMaterialModule } from './app-material.module';
 import { ColidSnackBarModule } from './modules/colid-mat-snack-bar/colid-mat-snack-bar.module';
+import { ColidIconsModule } from './modules/colid-icons/colid-icons.module';
+
 
 // External modules
+import { BrowserSupportModule } from './modules/browser-support/browser-support.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxsModule } from '@ngxs/store';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
-import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { NgxImageZoomModule } from 'ngx-image-zoom';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { QuillModule, QuillConfig } from 'ngx-quill';
+
 
 // Services
 import { LogService } from './core/logging/log.service';
@@ -32,6 +37,10 @@ import { WelcomeMessageApiService } from './core/http/welcome.message.api.servic
 import { EntityApiService } from './core/http/entity.api.service';
 import { GraphApiService } from './core/http/graph.api.service';
 import { MessageTemplateApiService } from './core/http/message.template.api.service';
+import { ColidEntryApiService } from './core/http/colid-entries.api.service';
+import { GraphManagementApiService } from 'src/app/core/http/graph-management-api.service';
+import { MessagesApiService } from './core/http/messages.api.service';
+
 
 // States
 import { ResourceOverviewState } from './state/resource-overview.state';
@@ -47,6 +56,7 @@ import { GraphState } from './components/admin/admin-tasks/graph/graph.state';
 import { ExtendedUriTemplateState } from './state/extended-uri-template.state';
 import { WelcomeMessageState } from './state/welcome-message.state';
 import { MessageTemplateState } from './state/message-template.state';
+import { ColidEntrySubscriberCountState} from './state/colid-entry-subcriber-count.state'
 
 // Config
 import { MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
@@ -92,6 +102,7 @@ import { SidebarFilterComponent } from './components/resource/sidebar/sidebar-fi
 import { ResourceDisplayItemComponent } from './components/resource/resource-display/resource-display-item/resource-display-item.component';
 import { FormComponent } from './components/form/form.component';
 import { FormItemInputNestedComponent } from './components/form-item/form-item-input/form-item-input-nested/form-item-input-nested.component';
+import { FormItemInputDistributionComponent } from './components/form-item/form-item-input/form-item-input-distribution/form-item-input-distribution.component';
 import { FormItemInputPidUriComponent } from './components/form-item/form-item-input/form-item-input-pid-uri/form-item-input-pid-uri.component';
 import { ResourceFormSecretDialogComponent } from './components/resource/resource-form/resource-form-secret-dialog/resource-form-secret-dialog.component';
 import { DeleteItemDialogComponent } from './shared/components/delete-item-dialog/delete-item-dialog.component';
@@ -100,6 +111,7 @@ import { FormItemInputLinkingDialogComponent } from './components/form-item/form
 import { ResourceDisplayItemLinkingComponent } from './components/resource/resource-display/resource-display-item/resource-display-item-linking/resource-display-item-linking.component';
 import { FormItemCreateLinkingComponent } from './components/form-item/form-item-create/form-item-create-linking/form-item-create-linking.component';
 import { FormItemCreateNestedComponent } from './components/form-item/form-item-create/form-item-create-nested/form-item-create-nested.component';
+import { FormItemCreateDistributionComponent } from './components/form-item/form-item-create/form-item-create-distribution/form-item-create-distribution.component';
 import { ExtendedUriTemplateComponent } from './components/admin/admin-tasks/extended-uri-template/extended-uri-template.component';
 import { ExtendedUriTemplateDisplayComponent } from './components/admin/admin-tasks/extended-uri-template/extended-uri-template-display/extended-uri-template-display.component';
 import { ExtendedUriTemplateEditComponent } from './components/admin/admin-tasks/extended-uri-template/extended-uri-template-edit/extended-uri-template-edit.component';
@@ -121,6 +133,7 @@ import { EntityDisplayItemTaxonomyComponent } from './shared/components/entity-d
 import { EntityDisplayGroupComponent } from './shared/components/entity-display/entity-display-group/entity-display-group.component';
 import { EntityHistoricComponent } from './shared/components/entity-historic/entity-historic.component';
 import { EntityDisplayItemVersioningComponent } from './shared/components/entity-display/entity-display-item-versioning/entity-display-item-versioning.component';
+import { EntityDisplayImageComponent } from './shared/components/entity-display/entity-display-image/entity-display-image.component';
 import { ResourceViewComponent } from './components/resource/resource-view/resource-view.component';
 import { ResourceHistoryComponent } from './components/resource/resource-history/resource-history.component';
 import { SharedModule } from './shared/shared.module';
@@ -129,7 +142,7 @@ import { FormItemInputTaxonomyComponent } from './components/form-item/form-item
 import { TaxonomyState } from './state/taxonomy.state';
 import { PidUriTemplateState } from './state/pid-uri-template.state';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
-import { MatFabMenuModule } from '@angular-material-extensions/fab-menu';
+import { TitleComponent } from './shared/components/title/title.component';
 import { WelcomeMessageComponent } from './components/admin/admin-tasks/welcome-message/welcome-message.component';
 import { WelcomeMessageEditorComponent } from './components/admin/admin-tasks/welcome-message/welcome-message-editor/welcome-message-editor.component';
 import { WelcomeMessageDataMarketplaceComponent } from './components/admin/admin-tasks/welcome-message/welcome-message-data-marketplace/welcome-message-data-marketplace.component';
@@ -141,14 +154,18 @@ import { ColidEntrySubscriptionsState } from './state/colid-entry-subscription.s
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { CheckForUpdateService } from './shared/services/update/check-for-update.service';
 import { PromptUpdateService } from './shared/services/update/prompt-update.service';
-import { BrowserSupportModule } from './modules/browser-support/browser-support.module';
-import { ColidIconsModule } from './modules/colid-icons/colid-icons.module';
 import { MessageTemplateComponent } from './components/admin/admin-tasks/message-template/message-template.component';
 import { MessageTemplateEditComponent } from './components/admin/admin-tasks/message-template/message-template-edit/message-template-edit.component';
-
 import { AuthenticationModule } from './modules/authentication/authentication.module';
-import { MsalInterceptor } from '@azure/msal-angular';
 import { NotificationModule } from './modules/notification/notification.module';
+import { SidebarContentItemComponent } from './components/resource/sidebar/sidebar-content-item/sidebar-content-item.component';
+import { FormItemInputAttachmentComponent } from './components/form-item/form-item-input/form-item-input-attachment/form-item-input-attachment.component';
+import { FormItemCreateAttachmentComponent } from './components/form-item/form-item-create/form-item-create-attachment/form-item-create-attachment.component';
+import { ImageViewerDialogComponent } from './shared/components/image-viewer-dialog/image-viewer-dialog.component';
+import { BroadcastMessageComponent } from './components/admin/admin-tasks/broadcast-message/broadcast-message.component';
+import { ResourceHistoricComponent } from './shared/components/resource-historic/resource-historic.component';
+import { ResourceFormIncompatibleLinksDialogComponent } from './components/resource/resource-form/resource-form-incompatible-links-dialog/resource-form-incompatible-links-dialog.component';
+
 
 // Global quill config for form items
 const globalQuillConfig: QuillConfig = {
@@ -163,11 +180,18 @@ const globalQuillConfig: QuillConfig = {
     ]
   }
 }
+declare module "@angular/core" {
+  interface ModuleWithProviders<T = any> {
+      ngModule: Type<T>;
+      providers?: Provider[];
+  }
+}
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
+    TitleComponent,
     ResourceHelpComponent,
     SidebarComponent,
     SidebarContentComponent,
@@ -207,8 +231,12 @@ const globalQuillConfig: QuillConfig = {
     ResourceDisplayItemComponent,
     FormComponent,
     FormItemInputNestedComponent,
+    FormItemInputDistributionComponent,
+    FormItemInputAttachmentComponent,
     FormItemInputPidUriComponent,
     FormItemCreateNestedComponent,
+    FormItemCreateAttachmentComponent,
+    FormItemCreateDistributionComponent,
     ResourceFormSecretDialogComponent,
     DeleteItemDialogComponent,
     FormItemInputLinkingComponent,
@@ -231,6 +259,7 @@ const globalQuillConfig: QuillConfig = {
     EntityDisplayItemComponent,
     EntityDisplayItemTaxonomyComponent,
     EntityDisplayItemVersioningComponent,
+    EntityDisplayImageComponent,
     EntityDisplayGroupComponent,
     EntityHistoricComponent,
     ResourceViewComponent,
@@ -243,7 +272,12 @@ const globalQuillConfig: QuillConfig = {
     FormItemInputPersonComponent,
     ResourceLockedDialogComponent,
     MessageTemplateComponent,
-    MessageTemplateEditComponent
+    MessageTemplateEditComponent,
+    SidebarContentItemComponent,
+    ImageViewerDialogComponent,
+    BroadcastMessageComponent,
+    ResourceHistoricComponent,
+    ResourceFormIncompatibleLinksDialogComponent
   ],
 
   imports: [
@@ -272,18 +306,19 @@ const globalQuillConfig: QuillConfig = {
       ExtendedUriTemplateState,
       TaxonomyState,
       ColidEntrySubscriptionsState,
-      MessageTemplateState
+      MessageTemplateState,
+      ColidEntrySubscriberCountState
     ]),
     NgxsRouterPluginModule.forRoot(),
     NgxsReduxDevtoolsPluginModule.forRoot(),
     NgxsLoggerPluginModule.forRoot(),
     AppMaterialModule,
     InfiniteScrollModule,
+    NgxImageZoomModule,
     BrowserSupportModule,
     ColidIconsModule.forRoot(),
     ColidSnackBarModule.forRoot(),
     SharedModule,
-    MatFabMenuModule,
     NotificationModule,
     QuillModule.forRoot(globalQuillConfig),
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
@@ -298,14 +333,17 @@ const globalQuillConfig: QuillConfig = {
     WelcomeMessageApiService,
     EntityApiService,
     GraphApiService,
+    ColidEntryApiService,
+    GraphManagementApiService,
     CheckForUpdateService,
     PromptUpdateService,
     MessageTemplateApiService,
+    MessagesApiService,
     { provide: HTTP_INTERCEPTORS, useClass: ColidDefaultInterceptor, multi: true },
     { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
     { provide: STEPPER_GLOBAL_OPTIONS, useValue: { displayDefaultIndicatorType: false } }
   ],
-  entryComponents: [ResourceFormSecretDialogComponent, DeleteItemDialogComponent, FormItemInputLinkingDialogComponent, ResourceLockedDialogComponent],
+  entryComponents: [ResourceFormSecretDialogComponent, DeleteItemDialogComponent, FormItemInputLinkingDialogComponent, ResourceLockedDialogComponent, ImageViewerDialogComponent,ResourceFormIncompatibleLinksDialogComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

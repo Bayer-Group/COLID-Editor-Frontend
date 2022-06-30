@@ -9,7 +9,6 @@ import { MatSpinner, MatProgressSpinnerModule } from '@angular/material/progress
 import { MatInputModule } from '@angular/material/input';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { ClipboardModule } from 'ngx-clipboard';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -21,6 +20,7 @@ import { GraphFileUploadComponent } from './components/graph-file-upload/graph-f
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import {ClipboardModule} from '@angular/cdk/clipboard';
 
 @NgModule({
   declarations: [GraphManagementComponent, GraphUploadDialogComponent, DndDirective, PrettySizePipe, GraphFileUploadComponent],

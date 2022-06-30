@@ -20,19 +20,24 @@ import { ColidTreeViewComponent } from './components/colid-tree-view/colid-tree-
 import { LoaderComponent } from './components/loader/loader.component';
 import { RemoveWhiteSpacesPipe } from './pipes/remove-white-spaces.pipe';
 import { LastIndexStringPipe } from './pipes/last-index-string.pipe';
-
+import { ActionButtonComponent } from './components/button/action-button/action-button.component';
+import { JoinPipe } from './pipes/join.pipe';
+import { MapPipe } from './pipes/map.pipe';
 
 @NgModule({
   declarations: [
     DebounceDirective,
     MetadataGroupByPipe,
     GroupByPipe,
+    JoinPipe,
+    MapPipe,
     ColidSpinnerComponent,
     ColidTreeViewComponent,
     ClickOutsideDirective,
     LoaderComponent,
     RemoveWhiteSpacesPipe,
-    LastIndexStringPipe
+    LastIndexStringPipe,
+    ActionButtonComponent
   ],
   imports: [
     CommonModule,
@@ -48,9 +53,12 @@ import { LastIndexStringPipe } from './pipes/last-index-string.pipe';
     DebounceDirective,
     MetadataGroupByPipe,
     GroupByPipe,
+    JoinPipe,
+    MapPipe,
     ColidSpinnerComponent,
     CommonModule,
     ColidTreeViewComponent,
+    ActionButtonComponent,
     ClickOutsideDirective,
     RemoveWhiteSpacesPipe,
     LastIndexStringPipe

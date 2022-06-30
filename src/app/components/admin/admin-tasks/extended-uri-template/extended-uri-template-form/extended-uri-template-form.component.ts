@@ -10,6 +10,7 @@ import { EntityBase } from 'src/app/shared/models/Entities/entity-base';
 import { ColidMatSnackBarService } from 'src/app/modules/colid-mat-snack-bar/colid-mat-snack-bar.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Constants } from 'src/app/shared/constants';
+import { EntityFormStatus } from 'src/app/shared/components/entity-form/entity-form-status';
 
 @Component({
   selector: 'app-extended-uri-template-form',
@@ -29,7 +30,7 @@ export class ExtendedUriTemplateFormComponent implements OnInit {
 
   label = 'extended URI template';
 
-  showOverlaySpinner = false;
+  formStatus: EntityFormStatus = EntityFormStatus.INITIAL;
 
   entityType = Constants.ResourceTypes.ExtendedUriTemplate;
 
@@ -53,10 +54,11 @@ export class ExtendedUriTemplateFormComponent implements OnInit {
   }
 
   handleCreateEntityEmitter(entity: EntityBase) {
-    console.log(entity);
+    this.formStatus = EntityFormStatus.LOADING;
+    
     this.store.dispatch(new CreateExtendedUriTemplate(entity)).subscribe(
       () => {
-        this.showOverlaySpinner = false;
+        this.formStatus = EntityFormStatus.SUCCESS;
         this.snackBar.success('Extended URI template', 'Created successfully');
         this.router.navigate([`admin/extendedUriTemplates`]);
       },
@@ -67,12 +69,14 @@ export class ExtendedUriTemplateFormComponent implements OnInit {
   }
 
   handleEditEntityEmitter(event: any) {
+    this.formStatus = EntityFormStatus.LOADING;
+
     const id = event.id;
     const entityBase = event.entity;
 
     this.store.dispatch(new EditExtendedUriTemplate(id, entityBase)).subscribe(
       () => {
-        this.showOverlaySpinner = false;
+        this.formStatus = EntityFormStatus.SUCCESS;
         this.snackBar.success('Extended URI template', 'Edited successfully');
         this.router.navigate([`admin/extendedUriTemplates`]);
       },
@@ -82,9 +86,11 @@ export class ExtendedUriTemplateFormComponent implements OnInit {
   }
 
   handleDeleteEntityEmitter(id: string) {
+    this.formStatus = EntityFormStatus.LOADING;
+
     this.store.dispatch(new DeleteExtendedUriTemplate(id)).subscribe(
       () => {
-        this.showOverlaySpinner = false;
+        this.formStatus = EntityFormStatus.SUCCESS;
         this.snackBar.success('Extended URI template', 'Deleted successfully');
         this.router.navigate(['admin', 'extendedUriTemplates']);
       },
@@ -94,16 +100,14 @@ export class ExtendedUriTemplateFormComponent implements OnInit {
     );
   }
 
-  handleShowOverlaySpinner(event) {
-    this.showOverlaySpinner = event;
-  }
-
   handleCancelEditEntityEmitter() {
+    this.formStatus = EntityFormStatus.INITIAL;
     this.router.navigate(['admin', 'extendedUriTemplates']);
   }
 
   handleResponseError(error: HttpErrorResponse) {
-    this.showOverlaySpinner = false;
+    this.formStatus = EntityFormStatus.ERROR;
+
     if (error.status === 400 && error.error && error.error.validationResult) {
       this.validationResult = error.error.validationResult;
     }

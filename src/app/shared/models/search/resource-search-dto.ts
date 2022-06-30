@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+
 export class ResourceSearchDTO {
     searchText: string;
     draft: boolean;

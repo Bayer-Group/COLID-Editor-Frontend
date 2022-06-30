@@ -1,5 +1,6 @@
 <quill-editor [attr.name]="name" id={{name}}
 #input [name]="name" [(ngModel)]="internalValue"
-(onContentChanged)="handleValueChanged(internalValue)"
-[readOnly]="readOnly" [styles]="{height: '200px'}"></quill-editor>
+[formats]="quillEditorConfig.Formats" [modules]="quillEditorConfig.Modules"
+[readOnly]="readOnly" [disabled]="readOnly" [styles]="{height: '200px'}"
+(onContentChanged)="handleBlankInput()"></quill-editor>
 

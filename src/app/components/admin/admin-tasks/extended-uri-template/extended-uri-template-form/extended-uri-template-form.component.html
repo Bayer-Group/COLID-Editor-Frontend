@@ -7,7 +7,7 @@
   [entity]="extendedUriTemplate$ | async"
   [isDeletable]="true"
   [validationResult]="validationResult"
-  (showOverlaySpinner)="handleShowOverlaySpinner($event)"
+  [status]="formStatus"
   (createEntityEmitter)="handleCreateEntityEmitter($event)"
   (deleteEntityEmitter)="handleDeleteEntityEmitter($event)"
   (editEntityEmitter)="handleEditEntityEmitter($event)"

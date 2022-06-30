@@ -1,0 +1,6 @@
+@import "../../../styles.scss";
+
+.admin-sidebar {
+    position: fixed;
+    margin-top: #{$mat-toolbar-height};
+}

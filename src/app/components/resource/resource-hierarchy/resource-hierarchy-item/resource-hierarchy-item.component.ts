@@ -9,33 +9,10 @@ import { EntityTypeDto } from 'src/app/shared/models/Entities/entity-type-dto';
 export class ResourceHierarchyItemComponent implements OnInit {
 
   @Input() item: EntityTypeDto;
-
-  @Input() marginPixel: number;
-
-  @Input() hidden: boolean;
-
-  @Input() activeItem: EntityTypeDto;
-
-  @Output() selectType = new EventEmitter<EntityTypeDto>();
-
-  isLeaf: boolean;
-
+  @Input() defaultItem: string;
+  
   constructor() { }
 
   ngOnInit() {
-    this.hidden = true;
-
-    this.isLeaf = !!this.item.subClasses.length;
-  }
-
-  select() {
-    if (this.item.subClasses.length) {
-      this.hidden = !this.hidden;
-    }
-    this.selectType.emit(this.item);
-  }
-
-  handleSelectType(item: EntityTypeDto) {
-    this.selectType.emit(item);
   }
 }

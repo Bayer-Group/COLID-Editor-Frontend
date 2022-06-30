@@ -56,15 +56,15 @@ export class FormItemInputMultiselectComponent extends FormItemInputBaseComponen
   }
 
   writeValue(value: any): void {
-
     if (value != null) {
-      this.internalValue = this.multiselectSettings.multiple ? value : value[0];
+      const valueList = Array.isArray(value) ? value : [value];
+      this.internalValue = this.multiselectSettings.multiple ? valueList : valueList[0];
     }
   }
 
   addTagPromise(name) {
     return new Promise((resolve) => {
-      if (this.range === Constants.ResourceTypes.Keyword) {
+      if (this.multiselectSettings.addTag) {
         this.loading = true;
         resolve(name);
         this.loading = false;

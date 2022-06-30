@@ -1,7 +1,8 @@
 <ng-container *ngIf="(graphMetadata$ | async) && (actualGraph$ | async); else loading">
   <app-entity-form [isNew]="true" [label]="" [metaData]="graphMetadata$ | async" [entity]="actualGraph$ | async"
     [entityType]="entityType" [isDeletable]="false" [validationResult]="validationResult"
-    (showOverlaySpinner)="handleShowOverlaySpinner($event)" (createEntityEmitter)="handleCreateEntityEmitter($event)"
+    [status]="formStatus"
+    (createEntityEmitter)="handleCreateEntityEmitter($event)"
     (cancelEditEntityEmitter)="handleCancelEditEntityEmitter()"></app-entity-form>
 </ng-container>
 <ng-template #loading>

@@ -3,6 +3,7 @@ import { StatisticsApiService } from '../core/http/statistics.api.service';
 import { Constants } from 'src/app/shared/constants';
 import { PropertyStatistics } from '../shared/models/statistics/property-statistics';
 import { PropertyCharacteristic } from '../shared/models/statistics/property-characteristic.mode';
+import { concatMap, tap } from 'rxjs/operators';
 
 export class FetchResourceStatistics {
     static readonly type = '[ResourceStatistics] Fetch resourceStatistics';
@@ -25,6 +26,7 @@ export class StatisticsStateModel {
     resourceTypeCharacteristics: PropertyCharacteristic[];
     consumerGroupCharacteristics: PropertyCharacteristic[];
     infromationClassificationCharacteristics: PropertyCharacteristic[];
+    lifecycleStatusCharacteristics: PropertyCharacteristic[];
 }
 
 @State<StatisticsStateModel>({
@@ -39,7 +41,8 @@ export class StatisticsStateModel {
         numberOfLinksOfResource: null,
         resourceTypeCharacteristics: null,
         consumerGroupCharacteristics: null,
-        infromationClassificationCharacteristics: null
+        infromationClassificationCharacteristics: null,
+        lifecycleStatusCharacteristics : null
     }
 })
 
@@ -96,6 +99,11 @@ export class StatisticsState {
         return state.loading;
     }
 
+    @Selector()
+    public static getLifecycleStatusCharacteristics(state: StatisticsStateModel) {
+        return state.lifecycleStatusCharacteristics;
+    }
+
     @Action(ResetResourceStatistics)
     ResethResourceStatistics({ patchState }: StateContext<StatisticsStateModel>, { }: ResetResourceStatistics) {
         patchState({
@@ -108,11 +116,12 @@ export class StatisticsState {
             resourceTypeCharacteristics: null,
             consumerGroupCharacteristics: null,
             infromationClassificationCharacteristics: null,
+            lifecycleStatusCharacteristics : null,
             loading: false
         });
     }
 
-    @Action(FetchResourceStatistics)
+  /*@Action(FetchResourceStatistics)
     FetchResourceStatistics({ patchState }: StateContext<StatisticsStateModel>, { }: FetchResourceStatistics) {
         this.statisticsApiService.getTotalNumberOfResources().subscribe(value => {
             patchState({
@@ -167,5 +176,121 @@ export class StatisticsState {
                 infromationClassificationCharacteristics: value
             });
         })
-    }
+        
+        this.statisticsApiService.getLifecycleStatusCharacteristics().subscribe(value => {
+            patchState({
+                lifecycleStatusCharacteristics: value
+            });
+        })
+    }*/
+  @Action(FetchResourceStatistics)
+  FetchResourceStatistics(
+    { patchState }: StateContext<StatisticsStateModel>,
+    {}: FetchResourceStatistics
+  ) {
+    const combinedStatistics = this.statisticsApiService
+      .getTotalNumberOfResources()
+      .pipe(
+        // concatMap((totalNumberOfResources) =>
+        //   this.statisticsApiService.getNumberOfProperties().pipe(
+            // concatMap((totalNumberOfResources) =>
+            //   this.statisticsApiService
+            //     .getNumberOfResourcesInRelationToPropertyLength(
+            //       Constants.Metadata.HasLabel,
+            //       5
+            //     )
+            //     .pipe(
+            //       concatMap((labelLengthStatistic) =>
+            //         this.statisticsApiService
+            //           .getNumberOfResourcesInRelationToPropertyLength(
+            //             Constants.Metadata.HasResourceDefinition,
+            //             10
+            //           )
+            //           .pipe(
+                        concatMap((totalNumberOfResources) =>
+                          this.statisticsApiService
+                            .getNumberOfVersionsOfResources(1)
+                            .pipe(
+                              // concatMap((numberOfVersionsOfResources) =>
+                              //   this.statisticsApiService
+                              //     .getNumberOfPropertyUsageByGroupOfResource(
+                              //       Constants.Resource.Groups.LinkTypes
+                              //     )
+                              //     .pipe(
+                                    concatMap((numberOfVersionsOfResources) =>
+                                      this.statisticsApiService
+                                        .getResourceTypeCharacteristics()
+                                        .pipe(
+                                          concatMap(
+                                            (resourceTypeCharacteristics) =>
+                                              this.statisticsApiService
+                                                .getConsumerGroupCharacteristics()
+                                                .pipe(
+                                                  concatMap(
+                                                    (
+                                                      consumerGroupCharacteristics
+                                                    ) =>
+                                                      this.statisticsApiService
+                                                        .getInformationClassificationCharacteristics()
+                                                        .pipe(
+                                                          concatMap(
+                                                            (
+                                                              infromationClassificationCharacteristics
+                                                            ) =>
+                                                              this.statisticsApiService
+                                                                .getLifecycleStatusCharacteristics()
+                                                                .pipe(
+                                                                  tap(
+                                                                    (
+                                                                      lifecycleStatusCharacteristics
+                                                                    ) => {
+                                                                      patchState(
+                                                                        {
+                                                                          totalNumberOfResources:
+                                                                            totalNumberOfResources,
+                                                                        //   numberOfProperties:
+                                                                        //     numberOfProperties,
+                                                                          // labelLengthStatistic:
+                                                                          //   labelLengthStatistic,
+                                                                          // definitionLengthStatistic:
+                                                                          //   definitionLengthStatistic,
+                                                                          numberOfVersionsOfResources:
+                                                                            numberOfVersionsOfResources,
+                                                                          // numberOfLinksOfResource:
+                                                                          //   numberOfLinksOfResource,
+                                                                          resourceTypeCharacteristics:
+                                                                            resourceTypeCharacteristics,
+                                                                          consumerGroupCharacteristics:
+                                                                            consumerGroupCharacteristics,
+                                                                          infromationClassificationCharacteristics:
+                                                                            infromationClassificationCharacteristics,
+                                                                          lifecycleStatusCharacteristics:
+                                                                            lifecycleStatusCharacteristics,
+                                                                        }
+                                                                      );
+                                                                    }
+                                                                  )
+                                                                )
+                                                          )
+                                                        )
+                                                  )
+                                                )
+                                          )
+                                        )
+                                    )
+                                  )
+                              )
+                            )
+          //               )
+          //             )
+          //         )
+          //       )
+          //   )
+          // )
+        // )
+    //   )
+      .subscribe((value) => {
+        console.log("state value: ", value);
+      });
+  }
 }

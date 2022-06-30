@@ -16,6 +16,8 @@ export class ConsumerGroupDisplayComponent implements OnInit {
   @Select(ConsumerGroupState.getConsumerGroups) consumerGroups$: Observable<Array<ConsumerGroupResultDTO>>;
   @Select(ConsumerGroupState.getConsumerGroupMetadata) metadata$: Observable<Array<MetaDataProperty>>;
 
+  isConsumerGroupReactivating: ConsumerGroupResultDTO;
+
   lifecycleStatusMapping = {
     'https://pid.bayer.com/kos/19050/active': 'Active',
     'https://pid.bayer.com/kos/19050/deprecated': 'Deprecated'
@@ -36,7 +38,12 @@ export class ConsumerGroupDisplayComponent implements OnInit {
   }
 
   reactivateConsumerGroup(consumerGroup: ConsumerGroupResultDTO) {
-    this.store.dispatch(new ReactivateConsumerGroup(consumerGroup.id)).subscribe();
+    this.isConsumerGroupReactivating = consumerGroup;
+    this.store.dispatch(new ReactivateConsumerGroup(consumerGroup.id)).subscribe(() => {
+      this.isConsumerGroupReactivating = null;
+    }, error => {
+      this.isConsumerGroupReactivating = null;
+    });
   }
 
   isActive(consumerGroup: ConsumerGroupResultDTO) {

@@ -1,7 +1,7 @@
 <h1 class="mat-headline pt-2 pl-3">Administration</h1>
 <mat-nav-list>
 
-    <ng-container *ngIf="hasSuperAdminPrivilege">
+    <ng-container *ngIf="hasSuperAdminPrivilege$ | async">
         <h1 matSubheader>General</h1>
         <mat-list-item routerLink="messageTemplates" (click)="linkClicked()" routerLinkActive="active">
             <mat-icon class="mr-1" fontSet="material-icons-outlined">ballot</mat-icon>
@@ -10,6 +10,10 @@
         <mat-list-item routerLink="welcomeMessage" (click)="linkClicked()" routerLinkActive="active">
             <mat-icon class="mr-1" fontSet="material-icons">picture_in_picture_alt</mat-icon>
             <a>Welcome Messages</a>
+        </mat-list-item>
+        <mat-list-item routerLink="broadcastMessage" (click)="linkClicked()" routerLinkActive="active">
+            <mat-icon class="mr-1" fontSet="material-icons-outlined">message</mat-icon>
+            <a>Broadcast Message</a>
         </mat-list-item>
 
         <h1 matSubheader>Graph Management</h1>
@@ -43,7 +47,7 @@
         <mat-icon class="mr-1" fontSet="material-icons-outlined">delete_sweep</mat-icon>
         <a>Deletion Requests</a>
     </mat-list-item>
-    <mat-list-item *ngIf="hasSuperAdminPrivilege" routerLink="orphanedIdentifiers" (click)="linkClicked()"
+    <mat-list-item *ngIf="hasSuperAdminPrivilege$ | async" routerLink="orphanedIdentifiers" (click)="linkClicked()"
         routerLinkActive="active">
         <mat-icon class="mr-1" fontSet="material-icons-outlined">scatter_plot</mat-icon>
         <a>Orphaned Identifiers</a>

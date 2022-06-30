@@ -9,26 +9,22 @@ import { AuthService } from '../services/auth.service';
 })
 export class AuthGuardService implements CanActivate {
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(protected authService: AuthService, protected router: Router) {
+
+  }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    return this.authService.isLoggedIn$.pipe(map(isLoggedIn => this.processLoggedIn(isLoggedIn, route)));
+  }
 
-    if (!this.authService.isLoggedIn) {
+  protected processLoggedIn(isLoggedIn: boolean, route: ActivatedRouteSnapshot): boolean {
+    if (!isLoggedIn) {
       if (!this.authService.loginInProgress) {
         RouteExtension.SetRouteInStorage(route);
       }
       this.router.navigate(['/login-in-progress']);
       return false;
     }
-
-    return this.authService.isAuthorized.pipe(map(isAuthorized => {
-      if (isAuthorized) {
-        return true;
-      } else {
-        this.router.navigate(['/login-in-progress']);
-        return false;
-      }
-    }));
+    return true;
   }
-
 }

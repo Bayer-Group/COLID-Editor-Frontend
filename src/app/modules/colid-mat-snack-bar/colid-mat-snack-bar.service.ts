@@ -15,20 +15,20 @@ export class ColidMatSnackBarService {
     this.snackbar.dismiss();
   }
 
-  error(header: string, message: string, data: any = null) {
-    this.openSnackbar(header, message, data, 'error-snackbar', ColidMatSnackBarType.ERROR, 8000);
+  error(header: string, message: string, data: any = null, duration: number = 8000) {
+    this.openSnackbar(header, message, data, 'error-snackbar', ColidMatSnackBarType.ERROR, duration);
   }
 
-  warning(header: string, message: string, data: any = null) {
-    this.openSnackbar(header, message, data, 'warning-snackbar', ColidMatSnackBarType.WARNING, 4000);
+  warning(header: string, message: string, data: any = null, duration: number = 4000) {
+    this.openSnackbar(header, message, data, 'warning-snackbar', ColidMatSnackBarType.WARNING, duration);
   }
 
-  success(header: string, message: string, data: any = null) {
-    this.openSnackbar(header, message, data, 'success-snackbar', ColidMatSnackBarType.SUCCESS, 2000);
+  success(header: string, message: string, data: any = null, duration: number = 2000) {
+    this.openSnackbar(header, message, data, 'success-snackbar', ColidMatSnackBarType.SUCCESS, duration);
   }
 
-  info(header: string, message: string, data: any = null) {
-    this.openSnackbar(header, message, data, 'info-snackbar', ColidMatSnackBarType.INFO,2000);
+  info(header: string, message: string, data: any = null, duration: number = 2000) {
+    this.openSnackbar(header, message, data, 'info-snackbar', ColidMatSnackBarType.INFO, duration);
   }
 
   private openSnackbar(header: string, message: string, data: any, panelClass: string, type: ColidMatSnackBarType, duration: number = undefined) {

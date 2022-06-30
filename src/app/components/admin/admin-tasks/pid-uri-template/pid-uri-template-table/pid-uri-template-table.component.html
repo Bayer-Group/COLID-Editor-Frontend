@@ -30,24 +30,13 @@
           </td>
           <td class="no-wrap" style="font-size: 1rem; cursor: pointer;">
             <div class="text-right" *ngIf="p !== selectedForEdit">
-              <button mat-icon-button color="primary" class="mr-2" (click)="selectForEdit(p)"
-                *ngIf="!isTemplateDeprecated(p)" matTooltip="Edit template">
-                <mat-icon>edit</mat-icon>
-              </button>
-              <button mat-icon-button color="primary" (click)="confirmAndDelete(p)" *ngIf="!isTemplateDeprecated(p)" matTooltip="Delete template">
-                <mat-icon>delete_forever</mat-icon>
-              </button>
-              <button mat-icon-button color="primary" (click)="reactivate(p)" *ngIf="isTemplateDeprecated(p)" matTooltip="Reactivate template">
-                <mat-icon>replay</mat-icon>
-              </button>
+              <action-button type="mat-icon-button" class="mr-2" color="primary" (click)="selectForEdit(p)" *ngIf="!isTemplateDeprecated(p)" matTooltip="Edit template" [disabled]="isLoading" [loading]="isCurrentEntity(p)" icon="edit"></action-button>
+              <action-button type="mat-icon-button" color="primary" (click)="confirmAndDelete(p)" *ngIf="!isTemplateDeprecated(p)" matTooltip="Delete template" [disabled]="isLoading" [loading]="isCurrentEntity(p, 'delete')" icon="delete_forever"></action-button>
+              <action-button type="mat-icon-button" color="primary" (click)="reactivate(p)" *ngIf="isTemplateDeprecated(p)" matTooltip="Reactivate template" [disabled]="isLoading" [loading]="isCurrentEntity(p, 'reactivate')" icon="replay"></action-button>
             </div>
             <div *ngIf="p === selectedForEdit">
-              <button mat-icon-button color="primary" class="mr-2" (click)="cancelEditing()">
-                <mat-icon>cancel</mat-icon>
-              </button>
-              <button mat-icon-button color="primary" (click)="editPidUriTemplate()">
-                <mat-icon>save</mat-icon>
-              </button>
+              <action-button type="mat-icon-button" class="mr-2"  color="primary" (click)="cancelEditing()" matTooltip="Cancel editing" icon="cancel" [disabled]="isLoading"></action-button>
+              <action-button type="mat-icon-button" color="primary" (click)="editPidUriTemplate()" matTooltip="Save template" [disabled]="isLoading" [loading]="isCurrentEntity(p, 'save')" icon="save"></action-button>
             </div>
           </td>
         </tr>
@@ -59,10 +48,11 @@
               [errors]="f[m.properties[pidUriConstant]].errors" [formItemSettings]="formItemSettings"></app-form-item>
           </td>
           <td class="no-wrap" style="font-size: 1.2rem; cursor: pointer;">
-            <button mat-raised-button color="primary" (click)="create()">
-              <mat-icon fontSet="material-icons-outlined">create</mat-icon>
+            <action-button color="primary" (click)="create()"
+              [disabled]="isLoading"
+              [loading]="isCurrentEntity(null, 'create')" icon="create">
               Create
-            </button>
+            </action-button>
           </td>
         </tr>
       </tbody>

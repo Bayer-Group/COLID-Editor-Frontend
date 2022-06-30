@@ -10,6 +10,7 @@ import { GraphState, FetchGraph, CreateGraph, FetchGraphMetadata } from '../grap
 import { MetaDataProperty } from 'src/app/shared/models/metadata/meta-data-property';
 import { EntityBase } from 'src/app/shared/models/Entities/entity-base';
 import { Constants } from 'src/app/shared/constants';
+import { EntityFormStatus } from 'src/app/shared/components/entity-form/entity-form-status';
 
 @Component({
   selector: 'app-graph-form',
@@ -20,10 +21,8 @@ export class GraphFormComponent implements OnInit {
   @Select(GraphState.getActualGraph) actualGraph$: Observable<GraphResultDTO>;
   @Select(GraphState.getGraphMetadata) graphMetadata$: Observable<Array<MetaDataProperty>>;
 
-
-  showOverlaySpinner = false;
-
   validationResult: ValidationResult;
+  formStatus: EntityFormStatus;
 
   entityType = Constants.ResourceTypes.MetadataGraphConfiguration;
 
@@ -32,10 +31,12 @@ export class GraphFormComponent implements OnInit {
   ngOnInit() { }
 
   handleCreateEntityEmitter(entityBase: EntityBase) {
+    this.formStatus = EntityFormStatus.LOADING;
+
     this.store.dispatch(new CreateGraph(entityBase)).subscribe(
       () => {
+        this.formStatus = EntityFormStatus.SUCCESS;
         this.store.dispatch(new FetchGraph());
-        this.showOverlaySpinner = false;
         this.snackbar.success('Created', 'New metadata graph configuration created successfully');
       },
       error => {
@@ -43,19 +44,15 @@ export class GraphFormComponent implements OnInit {
       });
   }
 
-  handleShowOverlaySpinner(event) {
-    this.showOverlaySpinner = event;
-  }
-
   handleResponseError(error: HttpErrorResponse) {
-    this.showOverlaySpinner = false;
+    this.formStatus = EntityFormStatus.ERROR;
+
     if (error.status === 400 && error.error && error.error.validationResult) {
       this.validationResult = error.error.validationResult;
     }
   }
 
   handleCancelEditEntityEmitter() {
-    this.showOverlaySpinner = true;
     this.store.dispatch([new FetchGraphMetadata(), new FetchGraph()]).subscribe();
   }
 }

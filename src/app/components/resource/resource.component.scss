@@ -1,3 +1,11 @@
 mat-sidenav {
   max-width: 500px;
 }
+
+mat-sidenav-content {
+  overflow: hidden;
+}
+
+.resource-sidebar {
+  position: fixed;
+}

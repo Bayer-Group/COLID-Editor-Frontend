@@ -62,7 +62,7 @@ export class ColidTreeViewComponent implements OnInit {
     this.checklistSelection = new SelectionModel<TaxonomyResultDTO>(!this.singleSelection /* multiple */);
     this.dataSource.data = this.TREE_DATA;
 
-    this.checklistSelection.onChange.subscribe(c => {
+    this.checklistSelection.changed.subscribe(c => {
       this.allSelected = this.TREE_DATA.every(t => this.checklistSelection.isSelected(t));
     });
 

@@ -1,14 +1,24 @@
-import { State, Action, StateContext, Selector, Store } from '@ngxs/store';
-import { ResourceApiService } from '../core/http/resource.api.service';
+import { State, Action, StateContext, Selector, Store, Actions, ofAction, ofActionDispatched } from '@ngxs/store';
 import { ResourceSearchDTO } from '../shared/models/search/resource-search-dto';
-import { ResourceOverviewCTO } from '../shared/models/resources/resource-overview-cto';
+import { SearchService } from '../core/http/search.service';
+import { SearchResult } from '../shared/models/search/search-result';
+import { takeUntil } from 'rxjs/operators';
 
 export class FetchSidebarResourceOverview {
   static readonly type = '[ResourcesOverview] Fetch';
+
+  constructor(public payload : boolean = false ) { }
+
 }
 
 export class SetSidebarSearch {
   static readonly type = '[ResourcesOverview] SetSidebarSearch';
+
+  constructor(public payload: ResourceSearchDTO) { }
+}
+
+export class SetInitialSidebarSearch {
+  static readonly type = '[ResourcesOverview] SetInitialSidebarSearch';
 
   constructor(public payload: ResourceSearchDTO) { }
 }
@@ -22,7 +32,7 @@ export class FetchNextResourceBatch {
 export class ResourceOverviewStateModel {
   loading: boolean;
   resourceOverviewSearch: ResourceSearchDTO;
-  resourceSidebarOverview: ResourceOverviewCTO;
+  searchResult: SearchResult;
 }
 
 @State<ResourceOverviewStateModel>({
@@ -30,17 +40,17 @@ export class ResourceOverviewStateModel {
   defaults: {
     loading: true,
     resourceOverviewSearch: null,
-    resourceSidebarOverview: new ResourceOverviewCTO(),
+    searchResult: new SearchResult(),
   }
 })
 
 export class ResourceOverviewState {
 
-  constructor(private resourceService: ResourceApiService, private store: Store) { }
+  constructor(private actions$: Actions, private store: Store, private searchService: SearchService) { }
 
   @Selector()
-  public static resourceSidebarOverview(state: ResourceOverviewStateModel) {
-    return state.resourceSidebarOverview;
+  public static searchResult(state: ResourceOverviewStateModel): SearchResult {
+    return state.searchResult;
   }
 
   @Selector()
@@ -53,20 +63,22 @@ export class ResourceOverviewState {
     return state.resourceOverviewSearch;
   }
 
-  @Action(FetchSidebarResourceOverview)
-  fetchSidebarResourcesOverview({ getState, patchState }: StateContext<ResourceOverviewStateModel>, { }: FetchSidebarResourceOverview) {
+  @Action(FetchSidebarResourceOverview, { cancelUncompleted: true })
+  fetchSidebarResourcesOverview({ getState, patchState }: StateContext<ResourceOverviewStateModel>, {payload}: FetchSidebarResourceOverview) {
     const state = getState();
     patchState({
       loading: true
     });
-
     if (state.resourceOverviewSearch !== null) {
       const newResourceOverviewSearch = state.resourceOverviewSearch;
       newResourceOverviewSearch.limit = state.resourceOverviewSearch.limit + state.resourceOverviewSearch.offset;
       newResourceOverviewSearch.offset = 0;
-      this.resourceService.getFilteredResources(newResourceOverviewSearch).subscribe(res => {
+
+      return this.searchService.search(newResourceOverviewSearch,payload,false ).pipe(
+        takeUntil(this.actions$.pipe(ofActionDispatched(FetchSidebarResourceOverview)))
+      ).subscribe(res => {
         patchState({
-          resourceSidebarOverview: res,
+          searchResult: res,
           loading: false
         });
       });
@@ -90,16 +102,15 @@ export class ResourceOverviewState {
       loading: true
     });
 
-    this.resourceService.getFilteredResources(state.resourceOverviewSearch).subscribe(res => {
-      if (state.resourceOverviewSearch.offset >= state.resourceSidebarOverview.items.length) {
+    this.searchService.search(state.resourceOverviewSearch).subscribe(searchResult => {
+      if (state.resourceOverviewSearch.offset >= state.searchResult.hits.hits.length) {
 
-        const mergedState = state.resourceSidebarOverview;
-        mergedState.items = [...state.resourceSidebarOverview.items, ...res.items];
+        searchResult.hits.hits = [...state.searchResult.hits.hits, ...searchResult.hits.hits]
 
         patchState({
           loading: false,
           resourceOverviewSearch: searchFilters,
-          resourceSidebarOverview: { ...mergedState }
+          searchResult: searchResult
         });
       }
     });
@@ -111,7 +122,17 @@ export class ResourceOverviewState {
     patchState({
       resourceOverviewSearch: payload
     });
-
     this.store.dispatch(new FetchSidebarResourceOverview()).subscribe();
   }
+  
+  @Action(SetInitialSidebarSearch)
+  setInitialSidebarSearch({ patchState }: StateContext<ResourceOverviewStateModel>, { payload }: SetSidebarSearch) {
+  patchState({
+    resourceOverviewSearch: payload, //null
+    loading: false, //first time false
+    searchResult: new SearchResult(), //first time empty
+  });
+  //this.store.dispatch(new FetchSidebarResourceOverview()).subscribe();
 }
+}
+

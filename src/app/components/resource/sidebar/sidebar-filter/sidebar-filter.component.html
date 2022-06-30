@@ -1,6 +1,6 @@
 <div class="d-flex flex-column search-field px-1 pt-1">
   <mat-form-field appearance="outline">
-    <mat-label>Search</mat-label>
+    <mat-label>Please enter a search term to begin your search</mat-label>
     <input matInput id="input-sidebar-resource-filter" [(ngModel)]="filters.searchText" [debounce]="320"
       (onDebounce)="filter()" placeholder="Enter the title, parts of description, PID URI, or Base URI">
   </mat-form-field>
@@ -20,7 +20,7 @@
 <div class="px-1">
   <div class="d-flex justify-content-between align-items-center">
     <div class="d-flex pl-2">
-      <span>Total {{(resourceOverviewState | async)?.total}}</span>
+      <span>Total {{(searchResultState | async)?.hits.total}}</span>
     </div>
     <div class="d-flex justify-content-end align-items-center sidebar-select-form-field">
       <mat-form-field>

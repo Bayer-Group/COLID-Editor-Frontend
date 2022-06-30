@@ -1,6 +1,6 @@
 import { Component, OnInit, forwardRef, Input, Output, EventEmitter } from '@angular/core';
 import { FormItemInputBaseComponent } from '../form-item-input-base/form-item-input-base.component';
-import { NG_VALUE_ACCESSOR, FormGroup } from '@angular/forms';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Metadata } from 'src/app/shared/models/metadata/meta-data';
 import { Entity } from 'src/app/shared/models/Entities/entity';
 import { FormItemChangedDTO } from 'src/app/shared/models/form/form-item-changed-dto';
@@ -12,8 +12,6 @@ import { PidUriTemplateResultDTO } from 'src/app/shared/models/pidUriTemplates/p
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteItemDialogComponent } from 'src/app/shared/components/delete-item-dialog/delete-item-dialog.component';
 import { MetaDataProperty } from 'src/app/shared/models/metadata/meta-data-property';
-import { Select } from '@ngxs/store';
-import { MetaDataState } from 'src/app/state/meta-data.state';
 
 @Component({
   selector: 'app-form-item-input-nested',
@@ -28,7 +26,6 @@ import { MetaDataState } from 'src/app/state/meta-data.state';
   ]
 })
 export class FormItemInputNestedComponent extends FormItemInputBaseComponent implements OnInit {
-  @Select(MetaDataState.actualMetadataHasMainDistributionEndpoint) hasMainDistributionProperty$: Observable<boolean>
   @Input() newNestedEntities: string[];
   @Input() errors: any;
   @Input() metaData: Metadata[];
@@ -36,21 +33,14 @@ export class FormItemInputNestedComponent extends FormItemInputBaseComponent imp
   @Input() fetched: boolean;
   @Input() presets: Observable<Array<PidUriTemplateResultDTO>>;
   @Input() indexerNested: number;
-
-  _isMainDistribution: boolean;
-
-  @Input() set mainDistribution(value) {
-    setTimeout(() => this._isMainDistribution = value, 100);
-  }
+  @Input() formReadOnly: boolean = false;
 
   nestedObjects: Entity[];
   nestedTypesVisible = false;
   selectedNestedType: Metadata = null;
 
-
   constants = Constants;
   @Output() removeFormItem: EventEmitter<any> = new EventEmitter<any>();
-  @Output() mainDistributionChanged: EventEmitter<any> = new EventEmitter<any>();
 
   get fetched$() {
     return of(this.fetched);
@@ -94,10 +84,6 @@ export class FormItemInputNestedComponent extends FormItemInputBaseComponent imp
     });
   }
 
-  changeMainDistribution() {
-    this.mainDistributionChanged.emit();
-  }
-
   handleInputChange(event: FormItemChangedDTO) {
     this.handleValueChanged(event.value);
 
@@ -125,5 +111,4 @@ export class FormItemInputNestedComponent extends FormItemInputBaseComponent imp
   get isNewEntity() {
     return this.internalValue == null ? false : this.newNestedEntities.includes(this.internalValue.id);
   }
-
 }

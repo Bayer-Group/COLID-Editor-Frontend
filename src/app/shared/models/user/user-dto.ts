@@ -6,6 +6,7 @@ import { MessageConfigDto } from './message-config-dto';
 export class UserDto {
   id: string;
   emailAddress: string;
+  lastLoginEditor: Date;
   defaultConsumerGroup: DefaultConsumerGroupDto;
   searchFilterEditor: SearchFilterEditor;
   colidEntrySubscriptions: ColidEntrySubscriptionDto[];

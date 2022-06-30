@@ -6,6 +6,7 @@ import { MessageConfigDto } from 'src/app/shared/models/user/message-config-dto'
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ColidMatSnackBarService } from 'src/app/modules/colid-mat-snack-bar/colid-mat-snack-bar.service';
 import { catchError } from 'rxjs/operators';
+import { EntityFormStatus } from 'src/app/shared/components/entity-form/entity-form-status';
 
 @Component({
   selector: 'app-user-preferences-general',
@@ -25,6 +26,8 @@ export class UserPreferencesGeneralComponent implements OnInit, OnDestroy {
 
   sendIntervals: string[] = ['Immediately', 'Daily', 'Weekly', 'Monthly', 'Never'];
   deleteIntervals: string[] = ['Weekly', 'Monthly', 'Quarterly'];
+
+  status: EntityFormStatus = EntityFormStatus.INITIAL;
 
   @Input() set defaultSettings(value: MessageConfigDto) {
     this.savedSettings = value;
@@ -94,6 +97,10 @@ export class UserPreferencesGeneralComponent implements OnInit, OnDestroy {
       || (del === 'Monthly' && (send === 'Monthly')));
   }
 
+  get isLoading(): boolean {
+    return this.status === EntityFormStatus.LOADING;
+  }
+
   onSubmit() {
     if (!this.valuesChanged) {
       this.snackbar.warning('Settings unchanged', 'The settings hasn\'t been changed.');
@@ -106,8 +113,14 @@ export class UserPreferencesGeneralComponent implements OnInit, OnDestroy {
       this.savedSettings.sendInterval = this.settingsForm.controls['sendInterval'].value;
       this.savedSettings.deleteInterval = this.settingsForm.controls['deleteInterval'].value;
 
+      this.status = EntityFormStatus.LOADING;
       this.store.dispatch(new SetMessageConfig(this.savedSettings))
-        .subscribe(res => this.snackbar.success('Settings saved', 'The changes has been saved.'));
+        .subscribe(
+          res => {
+            this.snackbar.success('Settings saved', 'The changes has been saved.');
+            this.status = EntityFormStatus.SUCCESS;
+          },
+          error => this.status = EntityFormStatus.ERROR);
     }
   }
 }

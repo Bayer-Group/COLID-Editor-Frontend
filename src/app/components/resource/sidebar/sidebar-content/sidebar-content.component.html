@@ -1,36 +1,10 @@
 <mat-progress-bar [hidden]="!(loadingState | async)" mode="indeterminate"></mat-progress-bar>
 
-<mat-list id="list-sidebar-resources" *ngIf="(resourceOverviewState | async)?.items as resources"
-  class="search-results px-1" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50"
-  [scrollWindow]="false" (scrolled)="nextBatch($event, (resources.length))" #results>
-  <mat-list-item class="mat-list-item-focus" [ngClass]="isActive(resource) ? 'active' : ''"
-    *ngFor="let resource of resources; let i = index" (click)="selectResource(resource)">
-    <ds-icon mat-list-icon class="mr-2" iconType="S3" [tooltipDisabled]="false" [delay]="300"
-      [icon]="resource.resourceType"></ds-icon>
-    <h3 mat-line id="item-sidebar-resource-{{i}}-name">
-      <div class="d-flex justify-content-between">
-        <div class="truncate resource-name" id="{{currentPageStatus}}_{{resource.name | removeWhiteSpaces}}" matTooltip="{{resource.name}}">{{resource.name}}</div>
-        <mat-chip-list>
-          <mat-chip selected color="deleted"
-            *ngIf="resource.lifeCycleStatus === constants.Resource.LifeCycleStatus.MarkedDeletion">
-            <ds-icon iconType="Mapping" [tooltipDisabled]="false" [delay]="300" [icon]="resource.lifeCycleStatus">
-            </ds-icon>
-          </mat-chip>
-          <mat-chip selected color="draft"
-            *ngIf="resource.lifeCycleStatus === constants.Resource.LifeCycleStatus.Draft">
-            <ds-icon iconType="Mapping" [tooltipDisabled]="false" [delay]="300" [icon]="resource.lifeCycleStatus">
-            </ds-icon>
-          </mat-chip>
-          <mat-chip selected color="published"
-            *ngIf="resource.lifeCycleStatus === constants.Resource.LifeCycleStatus.MarkedDeletion || resource.lifeCycleStatus === constants.Resource.LifeCycleStatus.Published || resource.publishedVersion">
-            <ds-icon iconType="Mapping" [tooltipDisabled]="false" [delay]="300"
-              [icon]="constants.Resource.LifeCycleStatus.Published"></ds-icon>
-          </mat-chip>
-        </mat-chip-list>
-      </div>
-    </h3>
-    <div mat-line class="resource-definition" matTooltip="{{getStrippedHtml(resource.definition)}}">{{getStrippedHtml(resource.definition)}}</div>
-  </mat-list-item>
+<mat-list id="list-sidebar-resources" *ngIf="(searchResultState | async)?.hits as hits" class="search-results px-1"
+  infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" [scrollWindow]="false"
+  (scrolled)="nextBatch($event, (hits.hits.length))" #results>
+  <app-sidebar-content-item *ngFor="let hit of hits.hits; let i = index" (select)="selectResource($event)" [hit]="hit"
+    [selectedResourcePidUri]="selectedResourcePidUri" [index]="i" [currentPageStatus]="currentPageStatus"></app-sidebar-content-item>
 </mat-list>
 
 <ng-template #loading>

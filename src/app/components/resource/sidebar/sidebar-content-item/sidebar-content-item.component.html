@@ -1,0 +1,31 @@
+<mat-list-item class="mat-list-item-focus click-cursor" [ngClass]="isActive ? 'active' : ''" (click)="selectResource()">
+    <ds-icon mat-list-icon class="mr-2" iconType="S3" [tooltipDisabled]="false" [delay]="300"
+        [icon]="resourceType"></ds-icon>
+    <h3 mat-line id="item-sidebar-resource-{{index}}-name">
+        <div class="d-flex justify-content-between">
+            <div class="truncate resource-name" id="{{currentPageStatus}}_{{label | removeWhiteSpaces}}"
+                matTooltip="{{label}}">{{label}}</div>
+            <mat-chip-list>
+                <mat-chip selected color="deleted"
+                    *ngIf="hasMarkedDeletionVersion">
+                    <ds-icon iconType="Mapping" [tooltipDisabled]="false" [delay]="300"
+                        [icon]="lifeCycleStatus">
+                    </ds-icon>
+                </mat-chip>
+                <mat-chip selected color="draft"
+                    *ngIf="hasDraftVersion">
+                    <ds-icon iconType="Mapping" [tooltipDisabled]="false" [delay]="300"
+                        [icon]="lifeCycleStatus">
+                    </ds-icon>
+                </mat-chip>
+                <mat-chip selected color="published"
+                    *ngIf="hasPublishedVersion">
+                    <ds-icon iconType="Mapping" [tooltipDisabled]="false" [delay]="300"
+                        [icon]="constants.Resource.LifeCycleStatus.Published"></ds-icon>
+                </mat-chip>
+            </mat-chip-list>
+        </div>
+    </h3>
+    <div mat-line class="resource-definition" matTooltipClass="tooltip" [matTooltip]="getTooltipContent(strippedDefinition)">
+       <span [innerHTML]="strippedDefinition"></span></div>
+</mat-list-item>
