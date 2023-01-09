@@ -5,7 +5,7 @@
       <mat-expansion-panel   *ngIf="linkEntityExist(link.pidUri)" [expanded]="true">
           <mat-expansion-panel-header >
             <mat-panel-title>
-              <ds-icon class="mr-1" iconType="S3" [tooltipDisabled]="true" [icon]="getLinkedEntityResourceType(link.pidUri)">
+              <ds-icon class="me-1" iconType="S3" [tooltipDisabled]="true" [icon]="getLinkedEntityResourceType(link.pidUri)">
               </ds-icon>
               <span *ngIf="getLinktype(link) == 'Inbound'" class="badge badge-primary mx-1">Inbound</span>
             {{label}}

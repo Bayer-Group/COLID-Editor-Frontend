@@ -51,6 +51,8 @@ export class EntityDisplayItemTaxonomyComponent implements OnInit {
         newList = newList.concat(nestedList);
       }
     });
+    //removing duplicates
+    newList = (newList !== null || newList !== undefined) ? Object.values(newList.reduce((o, t) => ({ ...o, [t.id]: t }), {})) : newList
     return newList;
   }
 }

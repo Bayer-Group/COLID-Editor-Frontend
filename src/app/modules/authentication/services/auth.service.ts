@@ -83,23 +83,26 @@ export class AuthService {
   }
 
   get accessToken(): string {
-    return localStorage.getItem('msal.idtoken')
+    return localStorage.getItem('msal.idtoken');
   }
 
   subscribeCheckAccount(): Subscription {
     return this.isLoggedIn$.subscribe(val => {
+      console.log("Subscribe check account", val, this.loginInProgress);
       if (!val && !this.loginInProgress) {
-        this.login()
+        console.log("Login ready");
+        this.login();
       } else {
-        this.redirect()
+        console.log("Redirecting");
+        this.redirect();
       }
     })
   }
 
   redirect() {
 
-    const redirectPathString = window.sessionStorage.getItem('url');
-    const queryParamString = window.sessionStorage.getItem('queryParams');
+    const redirectPathString = window.localStorage.getItem('url');
+    const queryParamString = window.localStorage.getItem('queryParams');
       
     if (redirectPathString == null && queryParamString == null) {
       this.router.navigate(['resource', 'welcome']);
@@ -112,7 +115,6 @@ export class AuthService {
   }
 
   login() {
-    console.log("login")
     this.identityProvider.login();
   }
 

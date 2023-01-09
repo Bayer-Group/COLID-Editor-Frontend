@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { EntityDisplayItemTaxonomyComponent } from './entity-display-item-taxonomy.component';
 
@@ -6,7 +6,7 @@ describe('EntityDisplayItemTaxonomyComponent', () => {
   let component: EntityDisplayItemTaxonomyComponent;
   let fixture: ComponentFixture<EntityDisplayItemTaxonomyComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ EntityDisplayItemTaxonomyComponent ]
     })

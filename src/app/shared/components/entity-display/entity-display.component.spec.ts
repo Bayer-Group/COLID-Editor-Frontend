@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { EntityDisplayComponent } from './entity-display.component';
 
@@ -6,7 +6,7 @@ describe('EntityDisplayComponent', () => {
   let component: EntityDisplayComponent;
   let fixture: ComponentFixture<EntityDisplayComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ EntityDisplayComponent ]
     })

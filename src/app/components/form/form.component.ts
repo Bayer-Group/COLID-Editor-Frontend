@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl, FormArray, AbstractControl } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, UntypedFormArray, AbstractControl } from '@angular/forms';
 import { MetaDataProperty } from 'src/app/shared/models/metadata/meta-data-property';
 import { MetaDataPropertyIdentifier } from '../resource/resource-form/resource-form.constants';
 import { FormItemSettings } from 'src/app/shared/models/form/form-item-settings';
@@ -18,7 +18,6 @@ import { MetadataExtension } from 'src/app/shared/extensions/metadata.extension'
 import { ResourceCreationType as EntityCreationType } from 'src/app/shared/models/resources/resource-creation-type';
 import { AttachmentUploadedDto } from 'src/app/shared/models/attachment/attachment-uploaded-dto';
 import { Resource } from 'src/app/shared/models/resources/resource';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { LinkingMapping } from 'src/app/shared/models/resources/linking-mapping';
 import { getConstantValue } from 'typescript';
 
@@ -65,6 +64,7 @@ export class FormComponent implements OnInit {
     if (this.ontologyForm != null) {
       this.fillForm();
     }
+    this.buildForm(); //building the form again due to distribution spinner issue
   }
   _entity: Entity;
   _links :  Map<string, LinkingMapping[]>;
@@ -97,7 +97,7 @@ export class FormComponent implements OnInit {
   distributionConstant = Constants.Metadata.Distribution;
   attachmentConstant = Constants.Metadata.HasAttachment;
 
-  ontologyForm: FormGroup = null;
+  ontologyForm: UntypedFormGroup = null;
 
   newNestedEntities = new Array<string>();
   formItemSettings: FormItemSettings = {
@@ -153,7 +153,7 @@ export class FormComponent implements OnInit {
     return this.isNew && this.creationType === EntityCreationType.NEW;
   }
 
-  constructor(private formBuilder: FormBuilder, private store: Store
+  constructor(private formBuilder: UntypedFormBuilder, private store: Store
   ) { }
 
   ngOnInit() {
@@ -169,7 +169,7 @@ export class FormComponent implements OnInit {
           continue;
         }
         if (m.nestedMetadata.length !== 0) {
-          formBuilderGroup[m.properties[this.pidUriConstant]] = new FormArray([]);
+          formBuilderGroup[m.properties[this.pidUriConstant]] = new UntypedFormArray([]);
         } else {
           const customPlaceholder = this.placeholder[m.properties[this.pidUriConstant]];
           const shaclPlaceholder = m.properties[Constants.Shacl.DefaultValue];
@@ -194,11 +194,11 @@ export class FormComponent implements OnInit {
       Object.keys(this._entity.properties).forEach(key => { 
         const formItem = this.ontologyForm.controls[key];
         const value = this._entity.properties[key];
-        if (formItem && formItem instanceof FormControl) {
+        if (formItem && formItem instanceof UntypedFormControl) {
            formItem.setValue(value);
         }
 
-        if (formItem && formItem instanceof FormArray) {
+        if (formItem && formItem instanceof UntypedFormArray) {
           if (Array.isArray(value)) {
             formItem.controls.splice(0, formItem.controls.length);
              value.forEach(entity => {
@@ -212,16 +212,14 @@ export class FormComponent implements OnInit {
       });
 
       if (!this.nestedForm) {
-        // console.log('handleFormChanged fillForm')
         this.handleFormChanged.emit(new FormChangedDTO(null, null, this.ontologyForm.value, true, true));
-        // console.log('handleFormChanged fillFormEnd')
       }
     }
   }
 
   handleCreateNestedEntity(formControlKey: string, entity: Entity) {
     const formItem = this.ontologyForm.controls[formControlKey];
-    if (formItem && formItem instanceof FormArray) {
+    if (formItem && formItem instanceof UntypedFormArray) {
       formItem.push(this.formBuilder.control(entity));
       this.newNestedEntities.push(entity.id);
       this.handleFormChanged.emit(new FormChangedDTO(formControlKey, entity, this.ontologyForm.value, true));
@@ -230,13 +228,13 @@ export class FormComponent implements OnInit {
 
   handleRemoveFormItem(formControlKey: string, index: number) {
     const formArray = this.ontologyForm.controls[formControlKey];
-    if (formArray && formArray instanceof FormArray) {
+    if (formArray && formArray instanceof UntypedFormArray) {
       formArray.removeAt(index);
     }
     this.handleFormChanged.emit(new FormChangedDTO(formControlKey, null, this.ontologyForm.value, true));
   }
 
-  handleMainDistributionChanged(control: FormControl) {
+  handleMainDistributionChanged(control: UntypedFormControl) {
     this.store.dispatch(new SetMainDistribution(control.value.id)).subscribe();
   }
 
@@ -268,8 +266,6 @@ export class FormComponent implements OnInit {
   }
 
   handleResourceFormItemChange(event: FormItemChangedDTO, main: boolean) {
-    console.log('status:', this.ontologyForm);
-    // console.log(event.created)
     this.handleFormChanged.emit(new FormChangedDTO(event.id, event.value, this.ontologyForm.value, true, false, event.created));
   }
 
@@ -283,7 +279,7 @@ export class FormComponent implements OnInit {
         formArray.setErrors(null);
       }
 
-      if (formArray instanceof FormArray) {
+      if (formArray instanceof UntypedFormArray) {
         Object.keys(formArray.controls).forEach(key2 => {
           const formItem = formArray.controls[key2];
           const formItemError: ValidationResultProperty = formItem.getError('result');
@@ -305,9 +301,9 @@ export class FormComponent implements OnInit {
       } else {
         Object.keys(this.ontologyForm.controls).forEach(key => {
           const formArray = this.ontologyForm.controls[key];
-          if (formArray instanceof FormArray) {
+          if (formArray instanceof UntypedFormArray) {
             Object.keys(formArray.controls).forEach(key2 => {
-              const formItem: FormArray = formArray.controls[key2];
+              const formItem: UntypedFormArray = formArray.controls[key2];
               if (formItem.value != null && formItem.value.id != null && formItem.value.id === result.node) {
                 setTimeout(() => {
                   formItem.setErrors({ incorrect: false, result: [result] });

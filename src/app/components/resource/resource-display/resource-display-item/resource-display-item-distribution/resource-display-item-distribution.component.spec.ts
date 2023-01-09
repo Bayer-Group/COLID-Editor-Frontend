@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ResourceDisplayItemDistributionComponent } from './resource-display-item-distribution.component';
 
@@ -6,7 +6,7 @@ describe('ResourceDisplayItemDistributionComponent', () => {
   let component: ResourceDisplayItemDistributionComponent;
   let fixture: ComponentFixture<ResourceDisplayItemDistributionComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ResourceDisplayItemDistributionComponent ]
     })

@@ -24,9 +24,13 @@
           <a class="wordbreak" [href]="value?.id" target="_blank" rel="noopener noreferrer">{{value?.id}}</a>
         </ng-container>
         <ng-container *ngSwitchCase="'email'">
-          <a class="wordbreak mr-2" [href]="'mailto:' + value">{{value}}</a>
+          <a class="wordbreak me-2" [href]="'mailto:' + value">{{value}}</a>
         </ng-container>
         <ng-container *ngSwitchCase="'html'">
+          <!-- <div class="ql-snow">
+            <span class="ql-editor" [innerHTML]="value | bypassSanitizer">
+            </span>
+          </div> -->
           <quill-view-html [content]="value" theme="snow"></quill-view-html>
         </ng-container>
         <ng-container *ngSwitchCase="'distribution'">

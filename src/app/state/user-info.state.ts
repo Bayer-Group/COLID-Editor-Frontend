@@ -9,6 +9,8 @@ import { ColidEntrySubscriptionDto } from '../shared/models/user/colid-entry-sub
 import { ResourceOverviewState, SetSidebarSearch } from './resource-overview.state';
 import { MessageConfigDto } from '../shared/models/user/message-config-dto';
 import { FetchColidEntrySubscriptionNumbers } from './colid-entry-subcriber-count.state';
+import { Injectable } from '@angular/core';
+import { Constants } from '../shared/constants';
 
 export class FetchUser {
     static readonly type = '[User] Fetch User';
@@ -32,7 +34,7 @@ export class FetchConsumerGroupsByUser {
 
 export class SelectConsumerGroup {
     static readonly type = '[User] Select consumerGroup';
-    constructor(public consumerGroupId: string) { }
+    constructor(public consumerGroupId: string, public consumerGroupDefaulReviewCyclePolicy?: string) { }
 }
 
 export class SetDefaultConsumerGroupForUser {
@@ -64,6 +66,7 @@ export class UserInfoStateModel {
     user: UserDto;
     consumerGroups: ConsumerGroupResultDTO[];
     selectedConsumerGroupId: string;
+    selectedConsumerGroupDefaultReviewCyclePolicy: string;
     fetched: boolean;
 }
 
@@ -73,10 +76,11 @@ export class UserInfoStateModel {
         user: null,
         consumerGroups: null,
         selectedConsumerGroupId: null,
+        selectedConsumerGroupDefaultReviewCyclePolicy: null,
         fetched: false
     }
 })
-
+@Injectable()
 export class UserInfoState {
     constructor(private store: Store, private userInfoApiService: UserInfoApiService, private consumerGroupService: ConsumerGroupApiService) { }
 
@@ -88,6 +92,11 @@ export class UserInfoState {
     @Selector()
     public static getSelectedConsumerGroupId(state: UserInfoStateModel) {
         return state.selectedConsumerGroupId;
+    }
+
+    @Selector()
+    public static getSelectedConsumerGroupDefaultReviewCyclePolicy(state: UserInfoStateModel) {
+        return state.selectedConsumerGroupDefaultReviewCyclePolicy;
     }
     
     @Selector()
@@ -135,7 +144,7 @@ export class UserInfoState {
 
                         if(res.searchFilterEditor.filterJson.searchText != null || res.searchFilterEditor.filterJson.consumerGroup != null || res.searchFilterEditor.filterJson.lastChangeUser != null || res.searchFilterEditor.filterJson.published|| res.searchFilterEditor.filterJson.draft ){
 
-                            dispatch([new SetSidebarSearch(res.searchFilterEditor.filterJson)]).subscribe();
+                            // dispatch([new SetSidebarSearch(res.searchFilterEditor.filterJson)]).subscribe();
                         }
 
                     }
@@ -179,6 +188,7 @@ export class UserInfoState {
     fetchConsumerGroupsByUser({ patchState, getState }: StateContext<UserInfoStateModel>, { }: FetchConsumerGroupsByUser) {
         return this.consumerGroupService.getActiveEntities().pipe(tap((activeConsumerGroups: ConsumerGroupResultDTO[]) => {
             let selectedConsumerGroupId = getState().selectedConsumerGroupId;
+            let selectedConsumerGroupDefaultReviewCyclePolicy = getState().selectedConsumerGroupDefaultReviewCyclePolicy;
 
             if (activeConsumerGroups.length > 0) {
                 // Use the first consumer group as the selected one, if it has not been set yet (e.g. through from the default consumer group)
@@ -186,11 +196,21 @@ export class UserInfoState {
                 // The consumer group could be inactive or have been deleted, whiel the user had it selected as the default consumer group
                 if (selectedConsumerGroupId == null) {
                     selectedConsumerGroupId = activeConsumerGroups[0].id;
+                    selectedConsumerGroupDefaultReviewCyclePolicy = activeConsumerGroups[0].properties[Constants.ConsumerGroup.HasDefaultReviewCyclePolicy]
+                        ? activeConsumerGroups[0].properties[Constants.ConsumerGroup.HasDefaultReviewCyclePolicy][0]
+                        : null;
                 } else {
                     const activeSelectedCG = activeConsumerGroups.find(acg => acg.id === selectedConsumerGroupId);
 
                     if (activeSelectedCG == null) {
                         selectedConsumerGroupId = activeConsumerGroups[0].id;
+                        selectedConsumerGroupDefaultReviewCyclePolicy = activeConsumerGroups[0].properties[Constants.ConsumerGroup.HasDefaultReviewCyclePolicy]
+                        ? activeConsumerGroups[0].properties[Constants.ConsumerGroup.HasDefaultReviewCyclePolicy][0]
+                        : null;
+                    } else {
+                        selectedConsumerGroupDefaultReviewCyclePolicy = activeSelectedCG.properties[Constants.ConsumerGroup.HasDefaultReviewCyclePolicy]
+                            ? activeSelectedCG.properties[Constants.ConsumerGroup.HasDefaultReviewCyclePolicy][0]
+                            : null;
                     }
                 }
             }
@@ -198,15 +218,17 @@ export class UserInfoState {
             patchState({
                 fetched: true,
                 consumerGroups: activeConsumerGroups,
-                selectedConsumerGroupId: selectedConsumerGroupId
+                selectedConsumerGroupId: selectedConsumerGroupId,
+                selectedConsumerGroupDefaultReviewCyclePolicy: selectedConsumerGroupDefaultReviewCyclePolicy
             });
         }));
     }
 
     @Action(SelectConsumerGroup)
-    SelectConsumerGroup({ patchState }: StateContext<UserInfoStateModel>, { consumerGroupId }: SelectConsumerGroup) {
+    SelectConsumerGroup({ patchState }: StateContext<UserInfoStateModel>, { consumerGroupId, consumerGroupDefaulReviewCyclePolicy }: SelectConsumerGroup) {
         patchState({
-            selectedConsumerGroupId: consumerGroupId
+            selectedConsumerGroupId: consumerGroupId,
+            selectedConsumerGroupDefaultReviewCyclePolicy: consumerGroupDefaulReviewCyclePolicy
         });
     }
 

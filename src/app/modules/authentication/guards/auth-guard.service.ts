@@ -14,12 +14,14 @@ export class AuthGuardService implements CanActivate {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    console.log("im in canactivate/auth-guard", route, state);
     return this.authService.isLoggedIn$.pipe(map(isLoggedIn => this.processLoggedIn(isLoggedIn, route)));
   }
 
   protected processLoggedIn(isLoggedIn: boolean, route: ActivatedRouteSnapshot): boolean {
     if (!isLoggedIn) {
       if (!this.authService.loginInProgress) {
+        console.log("in process loggedIn/ auth-guard",route);
         RouteExtension.SetRouteInStorage(route);
       }
       this.router.navigate(['/login-in-progress']);

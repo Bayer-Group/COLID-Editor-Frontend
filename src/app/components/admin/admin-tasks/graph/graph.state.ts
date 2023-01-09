@@ -7,6 +7,7 @@ import { MetaDataProperty } from 'src/app/shared/models/metadata/meta-data-prope
 import { GraphRequestDTO } from 'src/app/shared/models/graphs/graph-request-dto';
 import { MetaDataApiService } from 'src/app/core/http/meta-data.api.service';
 import { Constants } from 'src/app/shared/constants';
+import { Injectable } from '@angular/core';
 
 export class FetchGraph {
   static readonly type = '[Graph] Fetch graph';
@@ -56,6 +57,7 @@ export class GraphStateModel {
     metadata: null
   }
 })
+@Injectable()
 export class GraphState {
   constructor(private graphApiService: GraphApiService, private metadataService: MetaDataApiService) { }
 

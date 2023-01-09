@@ -3,7 +3,7 @@
   <app-sidebar-filter [searchResultState]="searchResult$"
     (resourceSearchEvent)="handleResourceSearchChanged($event)">
   </app-sidebar-filter>
-  <app-sidebar-content class="pt-1" [searchResultState]="searchResult$" [loadingState]="loading$"
+  <app-sidebar-content class="pt-1" [searchResultState]="searchResult$" [loadingState]="loading$" [resetScrolling]="resetScrolling$"
     [selectedResourcePidUri]="selectedResourcePidUri" (nextResourceBatchEvent)="handleNextResourceBatch($event)"
     (resourceSelectedEvent)="handleResourceSelectionChanged($event)" [currentPageStatus]="currentPageStatus">
   </app-sidebar-content>

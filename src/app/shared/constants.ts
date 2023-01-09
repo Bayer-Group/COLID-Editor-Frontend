@@ -40,8 +40,12 @@ export const Constants = {
     HasBaseUri: 'https://pid.bayer.com/kos/19050/hasBaseURI',
     DateCreated: 'https://pid.bayer.com/kos/19050/dateCreated',
     LastChangeDateTime: 'https://pid.bayer.com/kos/19050/lastChangeDateTime',
+    LastReviewDateTime: 'https://pid.bayer.com/kos/19050/hasLastReviewDate',
     HasConsumerGroup: 'https://pid.bayer.com/kos/19050#hasConsumerGroup',
     HasLastChangeUser: 'https://pid.bayer.com/kos/19050/lastChangeUser',
+    HasLastReviewer: 'https://pid.bayer.com/kos/19050/hasLastReviewer',    
+    HasResourceReviewCyclePolicy:'https://pid.bayer.com/kos/19050/hasResourceReviewCyclePolicy',
+    HasNextReviewDueDate:'https://pid.bayer.com/kos/19050/hasNextReviewDueDate',
     HasVersion: 'https://pid.bayer.com/kos/19050/hasVersion',
     HasPidUri: 'http://pid.bayer.com/kos/19014/hasPID',
     HasTargetUri: 'http://pid.bayer.com/kos/19014/hasNetworkAddress',
@@ -128,6 +132,7 @@ export const Constants = {
   ConsumerGroup: {
     HasPidUriTemplate: 'https://pid.bayer.com/kos/19050#hasPidUriTemplate',
     HasDefaultPidUriTemplate: 'https://pid.bayer.com/kos/19050/hasDefaultPidUriTemplate',
+    HasDefaultReviewCyclePolicy: 'https://pid.bayer.com/kos/19050/hasDefaultReviewCyclePolicy',
     HasConsumerGroupLifecycleStatus: 'https://pid.bayer.com/kos/19050/hasConsumerGroupLifecycleStatus',
     LifecycleStatus: {
       Active: 'https://pid.bayer.com/kos/19050/active',

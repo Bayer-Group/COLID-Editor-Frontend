@@ -6,7 +6,7 @@
       </div>
   
       <div class="d-flex col-12 justify-content-center mt-5 mx-auto p-0">
-        <button mat-raised-button class="d-flex mr-5 center-button" id="button-welcome-resource-new" *ngIf="hasCreatePrivilege$ | async" [routerLink]="'/resource/hierarchy'">
+        <button mat-raised-button class="d-flex me-5 center-button" id="button-welcome-resource-new" *ngIf="hasCreatePrivilege$ | async" [routerLink]="'/resource/hierarchy'">
           Register a new resource
         </button>
   
@@ -15,7 +15,7 @@
         </button>
       </div>
   
-      <div class="mt-2 mr-4" *ngIf="(welcomeMessage$ | async) as welcomeMessage">
+      <div class="mt-2 me-4" *ngIf="(welcomeMessage$ | async) as welcomeMessage">
         <quill-view-html [content]="welcomeMessage.content" theme="snow"></quill-view-html>
       </div>
     </div>

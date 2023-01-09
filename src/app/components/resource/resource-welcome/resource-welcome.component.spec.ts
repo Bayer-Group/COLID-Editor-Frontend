@@ -1,11 +1,11 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ResourceWelcomeComponent } from './resource-welcome.component';
 
 describe('ResourceWelcomeComponent', () => {
   let component: ResourceWelcomeComponent;
   let fixture: ComponentFixture<ResourceWelcomeComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ResourceWelcomeComponent]
     })

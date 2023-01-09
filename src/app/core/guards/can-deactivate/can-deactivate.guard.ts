@@ -17,7 +17,6 @@ export class CanDeactivateGuard implements CanDeactivate<any> {
     }
 
     canDeactivate()  {
-        console.log('canDeactivate ');
         return this.touched$.pipe(switchMap(dirty => {
             if (dirty) {
                 if (confirm('You have unsaved changes! If you leave, your changes will be lost.')) {

@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import { Selector, State, StateContext, Action } from '@ngxs/store';
 import { tap } from 'rxjs/operators';
 import { MessageTemplateApiService } from '../core/http/message.template.api.service';
@@ -23,7 +24,7 @@ export class MessageTemplateStateModel {
         messageTemplates: null
     }
 })
-
+@Injectable()
 export class MessageTemplateState {
 
     constructor(private messageTemplateApiService: MessageTemplateApiService) { }

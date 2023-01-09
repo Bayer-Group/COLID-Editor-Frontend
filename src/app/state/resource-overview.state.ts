@@ -2,23 +2,16 @@ import { State, Action, StateContext, Selector, Store, Actions, ofAction, ofActi
 import { ResourceSearchDTO } from '../shared/models/search/resource-search-dto';
 import { SearchService } from '../core/http/search.service';
 import { SearchResult } from '../shared/models/search/search-result';
-import { takeUntil } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
 
 export class FetchSidebarResourceOverview {
   static readonly type = '[ResourcesOverview] Fetch';
-
   constructor(public payload : boolean = false ) { }
-
 }
 
 export class SetSidebarSearch {
   static readonly type = '[ResourcesOverview] SetSidebarSearch';
-
-  constructor(public payload: ResourceSearchDTO) { }
-}
-
-export class SetInitialSidebarSearch {
-  static readonly type = '[ResourcesOverview] SetInitialSidebarSearch';
 
   constructor(public payload: ResourceSearchDTO) { }
 }
@@ -43,7 +36,7 @@ export class ResourceOverviewStateModel {
     searchResult: new SearchResult(),
   }
 })
-
+@Injectable()
 export class ResourceOverviewState {
 
   constructor(private actions$: Actions, private store: Store, private searchService: SearchService) { }
@@ -70,18 +63,14 @@ export class ResourceOverviewState {
       loading: true
     });
     if (state.resourceOverviewSearch !== null) {
-      const newResourceOverviewSearch = state.resourceOverviewSearch;
-      newResourceOverviewSearch.limit = state.resourceOverviewSearch.limit + state.resourceOverviewSearch.offset;
-      newResourceOverviewSearch.offset = 0;
-
-      return this.searchService.search(newResourceOverviewSearch,payload,false ).pipe(
-        takeUntil(this.actions$.pipe(ofActionDispatched(FetchSidebarResourceOverview)))
-      ).subscribe(res => {
-        patchState({
-          searchResult: res,
-          loading: false
-        });
-      });
+      return this.searchService.search(state.resourceOverviewSearch,payload,false ).pipe(
+        tap(res => {
+          patchState({
+            searchResult: res,
+            loading: false
+          })
+        })
+      );
     }
   }
 
@@ -125,14 +114,5 @@ export class ResourceOverviewState {
     this.store.dispatch(new FetchSidebarResourceOverview()).subscribe();
   }
   
-  @Action(SetInitialSidebarSearch)
-  setInitialSidebarSearch({ patchState }: StateContext<ResourceOverviewStateModel>, { payload }: SetSidebarSearch) {
-  patchState({
-    resourceOverviewSearch: payload, //null
-    loading: false, //first time false
-    searchResult: new SearchResult(), //first time empty
-  });
-  //this.store.dispatch(new FetchSidebarResourceOverview()).subscribe();
-}
 }
 

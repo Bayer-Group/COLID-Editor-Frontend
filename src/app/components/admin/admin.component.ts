@@ -18,7 +18,7 @@ export class AdminComponent implements OnInit {
   ngOnInit() {}
 
   setSidebarOpened(event) {
-    this.store.dispatch(new SetSidebarOpened(event)).subscribe();
+    this.store.dispatch(new SetSidebarOpened(event));
 }
 
 }

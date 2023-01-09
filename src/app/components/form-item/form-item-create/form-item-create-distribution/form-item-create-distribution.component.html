@@ -14,10 +14,10 @@
           <small class="m-0">{{m.description}}</small>
         </button>
       </div>
-      <div class="row justify-content-end mr-1">
+      <div class="d-flex justify-content-end me-1">
         <button mat-raised-button color="accent" (click)="hideDistributionTypes()"
           [disabled]="disabled">Cancel</button>
-        <button mat-raised-button color="primary" id='btnCreateDistributionEntity' class="ml-2"
+        <button mat-raised-button color="primary" id='btnCreateDistributionEntity' class="ms-2"
           [disabled]="selectedDistributionType == null || disabled" (click)="addDistributionEntity()">
           <mat-icon fontSet="material-icons-outlined">add</mat-icon>
           Create

@@ -42,7 +42,6 @@ export class ResourceApiService {
   getFilteredResources(resourceSearchObject: ResourceSearchDTO): Observable<ResourceOverviewCTO> {
     const url = environment.colidApiUrl + '/resource/search';
     resourceSearchObject.author = resourceSearchObject.author == "" ? null : resourceSearchObject.author;
-    console.log(resourceSearchObject.pidUris)
     return this.httpClient.post<ResourceOverviewCTO>(
       url,
       JSON.stringify(resourceSearchObject) 

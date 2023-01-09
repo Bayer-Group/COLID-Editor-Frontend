@@ -9,15 +9,14 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
 
 
 @NgModule({
-  declarations: [ColidMatSnackBarComponent],
-  imports: [
-    CommonModule,
-    MatSnackBarModule,
-    MatButtonModule,
-    MatIconModule,
-    ClipboardModule
-  ],
-  entryComponents: [ColidMatSnackBarComponent]
+    declarations: [ColidMatSnackBarComponent],
+    imports: [
+        CommonModule,
+        MatSnackBarModule,
+        MatButtonModule,
+        MatIconModule,
+        ClipboardModule
+    ]
 })
 export class ColidSnackBarModule {
   static forRoot(): ModuleWithProviders<ColidSnackBarModule> {

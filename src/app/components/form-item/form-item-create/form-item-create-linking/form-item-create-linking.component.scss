@@ -1,12 +1,10 @@
-@import '../../../../../styles.scss';
-
 .list-group {
   margin-bottom: 10px;
 }
 
 .list-group-item.active {
-    background-color: $bayer-dark-blue !important;
-    border-color: $bayer-dark-blue !important;
+    background-color: var(--bayer-dark-blue) !important;
+    border-color: var(--bayer-dark-blue) !important;
     background-image: none;
 }
 

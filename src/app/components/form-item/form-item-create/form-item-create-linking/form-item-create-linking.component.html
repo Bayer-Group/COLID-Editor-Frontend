@@ -18,13 +18,13 @@
           <small class="m-0">{{m.properties[constants.Metadata.Comment]}}</small>
         </button>
       </div>
-      <div class="row justify-content-end mr-1">
+      <div class="row justify-content-end me-1">
         <button mat-raised-button color="white" id='btnCancelLinkResource' (click)="hideLinkingTypes()"
           [disabled]="disabled">
           <mat-icon fontSet="material-icons-outlined">cancel</mat-icon>
           Cancel
         </button>
-        <button mat-raised-button color="primary" id='btnCreateLinkResource' class="ml-2"
+        <button mat-raised-button color="primary" id='btnCreateLinkResource' class="ms-2"
           [disabled]="selectedLinkingType == null || disabled" (click)="addLinking()" [disabled]="disabled">
           <mat-icon fontSet="material-icons-outlined">add</mat-icon>
           Create

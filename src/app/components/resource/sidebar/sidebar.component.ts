@@ -1,13 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Store, Select } from '@ngxs/store';
 import { LogService } from 'src/app/core/logging/log.service';
 import { Router } from '@angular/router';
 import { ResourceSearchDTO } from 'src/app/shared/models/search/resource-search-dto';
-import { ResourceOverviewState, FetchNextResourceBatch, SetSidebarSearch, SetInitialSidebarSearch } from 'src/app/state/resource-overview.state';
-import { Observable } from 'rxjs';
-import { ResourceOverviewCTO } from 'src/app/shared/models/resources/resource-overview-cto';
+import { ResourceOverviewState, FetchNextResourceBatch, SetSidebarSearch } from 'src/app/state/resource-overview.state';
+import { Observable, Subject } from 'rxjs';
 import { SidebarState, ClickedSidebarLink } from 'src/app/state/sidebar.state';
-import { ResourceOverviewDTO } from 'src/app/shared/models/resources/resource-overview-dto';
 import { SearchResult } from 'src/app/shared/models/search/search-result';
 
 @Component({
@@ -16,9 +14,10 @@ import { SearchResult } from 'src/app/shared/models/search/search-result';
     styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit {
-
     @Select(ResourceOverviewState.searchResult) searchResult$: Observable<SearchResult>;
     @Select(ResourceOverviewState.loading) loading$: Observable<boolean>;
+    resetScrolling = new Subject<void>();
+    resetScrolling$ = this.resetScrolling.asObservable();
 
     @Select(SidebarState.sidebarMode) sidebarMode$: Observable<string>;
     currentPageStatus: string;
@@ -40,13 +39,13 @@ export class SidebarComponent implements OnInit {
                     this.selectedResourcePidUri = selectedResourcePidUri;
         }
             });
-
         window.scrollTo(0, 0);
 
         this.store.dispatch(new ClickedSidebarLink()).subscribe();
     }
 
     handleResourceSearchChanged(resourceSearchObject: ResourceSearchDTO) {
+        this.resetScrolling.next();
         this.store.dispatch(new SetSidebarSearch(resourceSearchObject)).subscribe();         
     }
 

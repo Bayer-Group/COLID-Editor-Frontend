@@ -4,7 +4,7 @@
 <ng-template #raisedButton>
     <button action mat-raised-button [color]="color" [disabled]="loading || disabled">
         <div>
-            <mat-icon class="mr-1" [fontSet]="fontSet" *ngIf="!loading && icon != null">
+            <mat-icon class="me-1" [fontSet]="fontSet" *ngIf="!loading && icon != null">
                 {{icon}}
             </mat-icon>
             <ng-content></ng-content>

@@ -4,9 +4,12 @@
       <thead>
         <tr>
           <th></th>
-          <th scope="col" *ngFor="let m of metaData">{{m.properties[constants.Metadata.Name]}}
-            <mat-icon fontSet="material-icons-outlined" [inline]="true"
+          <th scope="col" *ngFor="let m of metaData">
+            <div class="d-flex">
+              {{m.properties[constants.Metadata.Name]}}
+              <mat-icon class="ms-2" fontSet="material-icons-outlined" [inline]="true"
               matTooltip="{{m.properties[constants.Metadata.Comment]}}">info</mat-icon>
+            </div>
           </th>
           <th class="no-wrap"></th>
         </tr>
@@ -29,12 +32,12 @@
             </div>
           </td>
           <td class="no-wrap" style="font-size: 1rem; cursor: pointer;">
-            <div class="text-right" *ngIf="p !== selectedForEdit">
+            <div class="text-right d-flex" *ngIf="p !== selectedForEdit">
               <action-button type="mat-icon-button" class="mr-2" color="primary" (click)="selectForEdit(p)" *ngIf="!isTemplateDeprecated(p)" matTooltip="Edit template" [disabled]="isLoading" [loading]="isCurrentEntity(p)" icon="edit"></action-button>
               <action-button type="mat-icon-button" color="primary" (click)="confirmAndDelete(p)" *ngIf="!isTemplateDeprecated(p)" matTooltip="Delete template" [disabled]="isLoading" [loading]="isCurrentEntity(p, 'delete')" icon="delete_forever"></action-button>
               <action-button type="mat-icon-button" color="primary" (click)="reactivate(p)" *ngIf="isTemplateDeprecated(p)" matTooltip="Reactivate template" [disabled]="isLoading" [loading]="isCurrentEntity(p, 'reactivate')" icon="replay"></action-button>
             </div>
-            <div *ngIf="p === selectedForEdit">
+            <div *ngIf="p === selectedForEdit" class="d-flex">
               <action-button type="mat-icon-button" class="mr-2"  color="primary" (click)="cancelEditing()" matTooltip="Cancel editing" icon="cancel" [disabled]="isLoading"></action-button>
               <action-button type="mat-icon-button" color="primary" (click)="editPidUriTemplate()" matTooltip="Save template" [disabled]="isLoading" [loading]="isCurrentEntity(p, 'save')" icon="save"></action-button>
             </div>

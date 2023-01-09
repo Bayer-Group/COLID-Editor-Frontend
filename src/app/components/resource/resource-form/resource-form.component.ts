@@ -50,7 +50,7 @@ import { ResourceOverviewDTO } from 'src/app/shared/models/resources/resource-ov
   templateUrl: './resource-form.component.html',
   styleUrls: ['./resource-form.component.css']
 })
-export class ResourceFormComponent extends ComponentCanDeactivate implements OnInit, OnDestroy {
+export class ResourceFormComponent extends ComponentCanDeactivate  {
   @Select(ResourceState.activeResource) activeResource$: Observable<Resource>;
   @Select(ResourceState.getActiveMainDistribution) activeMainDistribution$: Observable<string>;
 
@@ -416,6 +416,7 @@ export class ResourceFormComponent extends ComponentCanDeactivate implements OnI
     this.placeholder[Constants.Metadata.DateCreated] = new Date().toISOString();
     this.placeholder[Constants.Metadata.LastChangeDateTime] = new Date().toISOString();
     this.placeholder[Constants.Metadata.HasConsumerGroup] = this.resourceFormService.SelectedConsumerGroup;
+    this.placeholder[Constants.Metadata.HasResourceReviewCyclePolicy] = this.resourceFormService.SelectedConsumerGroupDefaultReviewCyclePolicy;
     this.placeholder[Constants.Metadata.EntityType] = null;
     this.placeholder[Constants.Metadata.HasVersion] = '1';
     this.placeholder[Constants.Metadata.LifeCycleStatus] = Constants.Resource.LifeCycleStatus.Draft;
@@ -545,12 +546,10 @@ export class ResourceFormComponent extends ComponentCanDeactivate implements OnI
 
   handleFormChanged(event: FormChangedDTO) {
     if (event.initialBuild) {
-      console.log("Initial form build:", event);
       this.ontologyFormValues = event.formValue;
       return;
     }
 
-    console.log("Form changed:", event);
     const id = event.id;
     this.ontologyFormValues = event.formValue;
 

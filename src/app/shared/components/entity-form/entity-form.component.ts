@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { MetaDataProperty } from 'src/app/shared/models/metadata/meta-data-property';
 import { Constants } from 'src/app/shared/constants';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { FormItemSettings } from 'src/app/shared/models/form/form-item-settings';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteItemDialogComponent } from '../delete-item-dialog/delete-item-dialog.component';
@@ -64,7 +64,7 @@ export class EntityFormComponent implements OnInit {
 
   constants = Constants;
 
-  entityForm: FormGroup = null;
+  entityForm: UntypedFormGroup = null;
   currentAction: EntityFormAction;
 
   get actionButtonDisabled(): boolean {
@@ -86,7 +86,7 @@ export class EntityFormComponent implements OnInit {
   get f() { return this.entityForm.controls; }
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private entityFormService: EntityFormService,
     public dialog: MatDialog) { }
 

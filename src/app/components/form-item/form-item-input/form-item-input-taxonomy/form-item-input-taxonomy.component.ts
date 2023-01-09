@@ -79,9 +79,47 @@ export class FormItemInputTaxonomyComponent extends FormItemInputBaseComponent {
   }
 
   removeTaxonomy(taxonomy: TaxonomyResultDTO) {
-    this.handleSelectionChanged({ initialChange: false, values: this._internalValue.filter(t => t.id !== taxonomy.id) });
+    //remove the X'ed ID.
+    var selectedValues: TaxonomyResultDTO[] = this._internalValue.filter(t => t.id !== taxonomy.id);
+    //remove all the children if any.
+    taxonomy.children.map(t=>t.id).forEach(idToDelete => {
+      const index = selectedValues.findIndex(({ id }) => id === idToDelete);
+      selectedValues.splice(index, 1);
+    });
+    //remove all the parents and grandparents from selection if any.
+    if(taxonomy.hasParent)
+    { 
+      /* Bug Fix 
+        this recursive function returns true for parents & grandparents of the X'd taxonomyID
+        and thus those parent entities could be removed from selection because
+        entire parent shouldn't be shown as selected if "at the least" a single child is removed (X'd) */
+      selectedValues.forEach(item=>{
+        this.removeParentsAndGrandparents(item,taxonomy.id) ? selectedValues = selectedValues.filter(t => t.id !== item.id) : selectedValues
+        }
+      )
+    }
+    this.handleSelectionChanged({ initialChange: false, values: selectedValues });
   }
 
+  removeParentsAndGrandparents(taxonomyList:TaxonomyResultDTO,taxonomyID:string){
+    try {
+      if(taxonomyList.children.some(x=>x.id == taxonomyID))
+      {
+      return true
+      }
+    else if (taxonomyList.children.length>0) {
+      for (var i = 0; i < taxonomyList.children.length; i++) {
+       return this.removeParentsAndGrandparents(taxonomyList.children[i],taxonomyID)
+      }
+    }
+    else{
+    return false
+    }
+  } 
+  catch (error) {
+    console.log(error)
+  }
+  }
   handleMenuOpened() {
     this.taxonomyMenuOpened = true;
   }

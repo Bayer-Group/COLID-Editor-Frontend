@@ -67,12 +67,10 @@ export class EntityHistoricComponent implements OnInit, OnDestroy {
   }
 
   handleSelectionChanged(event: StepperSelectionEvent) {
-    console.log("Stepper selection changes", event);
     this.selectionChange.emit(this.entities[event.selectedIndex]);
   }
 
   handleVersionClick($event) {
-    console.log("Handle version click:", $event);
     this.versionClick.emit($event);
   }
 }

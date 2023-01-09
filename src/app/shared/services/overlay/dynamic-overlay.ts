@@ -3,7 +3,8 @@ import {
     OverlayKeyboardDispatcher,
     OverlayPositionBuilder,
     ScrollStrategyOptions,
-    OverlayRef
+    OverlayRef,
+    OverlayOutsideClickDispatcher
   } from '@angular/cdk/overlay';
   import {
     ComponentFactoryResolver,
@@ -16,7 +17,7 @@ import {
   } from '@angular/core';
   import { DynamicOverlayContainer } from './dynamic-overlay-container.service';
   import { Directionality } from '@angular/cdk/bidi';
-  import { DOCUMENT } from '@angular/common';
+  import { DOCUMENT,Location } from '@angular/common';
   
   @Injectable({
     providedIn: 'root'
@@ -35,7 +36,9 @@ import {
       _ngZone: NgZone,
       @Inject(DOCUMENT) _document: any,
       _directionality: Directionality,
-      rendererFactory: RendererFactory2
+      rendererFactory: RendererFactory2,
+      _location:Location,
+      outsideClickDispatcher: OverlayOutsideClickDispatcher
     ) {
       super(
         scrollStrategies,
@@ -46,19 +49,21 @@ import {
         _injector,
         _ngZone,
         _document,
-        _directionality
+        _directionality,
+        _location,
+        outsideClickDispatcher
       );
       this.renderer = rendererFactory.createRenderer(null, null);
   
       this._dynamicOverlayContainer = _overlayContainer;
     }
   
-    private setContainerElement(containerElement: HTMLElement): void {
+     setContainerElement(containerElement: HTMLElement): void {
       this.renderer.setStyle(containerElement, 'transform', 'translateZ(0)');
       this._dynamicOverlayContainer.setContainerElement(containerElement);
     }
   
-    public createWithDefaultConfig(containerElement: HTMLElement): OverlayRef {
+    createWithDefaultConfig(containerElement: HTMLElement): OverlayRef {
       this.setContainerElement(containerElement);
       return super.create({
         positionStrategy: this.position()
@@ -69,3 +74,7 @@ import {
       });
     }
   }
+
+function outsideClickDispatcher(scrollStrategies: ScrollStrategyOptions, _overlayContainer: DynamicOverlayContainer, _componentFactoryResolver: ComponentFactoryResolver, _positionBuilder: OverlayPositionBuilder, _keyboardDispatcher: OverlayKeyboardDispatcher, _injector: Injector, _ngZone: NgZone, _document: any, _directionality: Directionality, location: Location, outsideClickDispatcher: any) {
+  throw new Error('Function not implemented.');
+}

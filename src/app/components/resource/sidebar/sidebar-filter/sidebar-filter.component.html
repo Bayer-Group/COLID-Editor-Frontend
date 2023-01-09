@@ -24,7 +24,7 @@
     </div>
     <div class="d-flex justify-content-end align-items-center sidebar-select-form-field">
       <mat-form-field>
-        <mat-select [(ngModel)]='orderSelected.value'>
+        <mat-select [value]='orderSelected.value'>
           <mat-option *ngFor="let ov of orderVocabulary" [value]="ov.value" (click)="orderSelected = ov; filter()">
             {{ov.value}}
           </mat-option>

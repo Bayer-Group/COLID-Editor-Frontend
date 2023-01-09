@@ -15,12 +15,12 @@
         </h3>
       </mat-checkbox>
       <div>
-        <action-button class="ml-2" color="info" (click)="reject()" [disabled]="selectedDeletionRequests.length === 0 || isLoading"
+        <action-button class="ms-2" color="info" (click)="reject()" [disabled]="selectedDeletionRequests.length === 0 || isLoading"
           [loading]="isLoading && action === 'reject'">
           Reject
         </action-button>
 
-        <action-button class="ml-2" color="warn" (click)="delete()" [disabled]="selectedDeletionRequests.length === 0 || isLoading"
+        <action-button class="ms-2" color="warn" (click)="delete()" [disabled]="selectedDeletionRequests.length === 0 || isLoading"
           [loading]="isLoading && action === 'deletion'">
           Delete
         </action-button>
@@ -62,9 +62,9 @@
   </div>
 
   <ng-template #emptyResults>
-    <div class="col-12">
+    <div>
       <div class="mt-4 text-center">
-        <mat-icon style="font-size: 5rem;" [inline]="true">done</mat-icon>
+        <mat-icon style="font-size: 5rem; overflow: unset;" [inline]="true">done</mat-icon>
         <h4>There are currently no requests to delete a resource.</h4>
       </div>
     </div>

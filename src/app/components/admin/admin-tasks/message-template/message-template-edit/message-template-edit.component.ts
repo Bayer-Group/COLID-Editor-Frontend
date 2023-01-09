@@ -3,7 +3,7 @@ import { take } from 'rxjs/operators';
 import { ColidMatSnackBarService } from 'src/app/modules/colid-mat-snack-bar/colid-mat-snack-bar.service';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { MessageTemplate } from 'src/app/shared/models/message-template/message-template';
-import { FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
+import { UntypedFormGroup, Validators, UntypedFormControl, AbstractControl } from '@angular/forms';
 import { Store } from '@ngxs/store';
 import { UpdateMessageTemplate } from 'src/app/state/message-template.state';
 
@@ -12,11 +12,11 @@ import { UpdateMessageTemplate } from 'src/app/state/message-template.state';
   templateUrl: './message-template-edit.component.html',
   styleUrls: ['./message-template-edit.component.css']
 })
-export class MessageTemplateEditComponent implements OnInit {
+export class MessageTemplateEditComponent  {
 
   @Input() messageTemplate: MessageTemplate;
 
-  @ViewChild('autosize', null) autosize: CdkTextareaAutosize;
+  @ViewChild('autosize',{static:false}) autosize: CdkTextareaAutosize;
 
   placeholders = {
     'ColidEntrySubscriptionUpdate': ['%COLID_LABEL%', '%COLID_PID_URI%'],
@@ -25,7 +25,7 @@ export class MessageTemplateEditComponent implements OnInit {
     'StoredQueryResult': ['%SEARCH_NAME%','%UPDATED_RESOURCES%']
   };
 
-  templateForm: FormGroup;
+  templateForm: UntypedFormGroup;
   activeControl: AbstractControl; // to append placeholder values
 
   get f() {
@@ -35,9 +35,9 @@ export class MessageTemplateEditComponent implements OnInit {
   constructor(private store: Store, private snackbar: ColidMatSnackBarService, private _ngZone: NgZone) { }
 
   ngOnInit() {
-    this.templateForm = new FormGroup({
-      subjectControl: new FormControl('', Validators.required),
-      bodyControl: new FormControl('', Validators.required)
+    this.templateForm = new UntypedFormGroup({
+      subjectControl: new UntypedFormControl('', Validators.required),
+      bodyControl: new UntypedFormControl('', Validators.required)
     });
     this.fillFormControl();
   }
@@ -65,7 +65,6 @@ export class MessageTemplateEditComponent implements OnInit {
   }
 
   onFocus(controlName: string) {
-    console.log(controlName)
     this.activeControl = this.templateForm.controls[controlName];
   }
 

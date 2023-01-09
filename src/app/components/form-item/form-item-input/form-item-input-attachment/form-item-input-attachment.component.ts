@@ -87,7 +87,6 @@ export class FormItemInputAttachmentComponent extends FormItemInputBaseComponent
         header: `Deleting ${this.label.toLowerCase()}`,
         body: `Are you sure you want to delete this ${this.label.toLowerCase()}?`
       },
-      width: 'auto',
       disableClose: true
     });
 

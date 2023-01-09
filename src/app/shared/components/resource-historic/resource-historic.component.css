@@ -41,11 +41,6 @@ app-entity-display-group {
   font-size: medium;
 }
 
-::ng-deep .mat-expansion-panel-header-title, .mat-expansion-panel-header-description{
-  display: grid !important;
-  
-}
-
 .iconOpen{
   background-color: #002e46;
     color: white;
@@ -73,7 +68,6 @@ app-entity-display-group {
 }
 .latest{
   color: #66b512;
-  margin-top: 12px;
 }
 
 mat-panel-description.right-aligned {

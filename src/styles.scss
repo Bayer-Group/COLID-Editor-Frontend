@@ -1,39 +1,60 @@
 // Change of the global font size base for Bootstrap (needs to be set before importing bootstrap dependencies)
+@use '@angular/material' as mat;
 $font-size-base: 0.85rem;
 
 @import "../node_modules/bootstrap/scss/functions";
 @import "../node_modules/bootstrap/scss/variables";
 @import "../node_modules/bootstrap/scss/mixins";
+@import "../node_modules/bootstrap/scss/maps";
 
 @import "../node_modules/bootstrap/scss/root";
 @import "../node_modules/bootstrap/scss/reboot";
 @import "../node_modules/bootstrap/scss/type";
-@import "../node_modules/bootstrap/scss/code";
+// @import "../node_modules/bootstrap/scss/code";
 @import "../node_modules/bootstrap/scss/grid";
 @import "../node_modules/bootstrap/scss/tables";
 @import "../node_modules/bootstrap/scss/forms";
-@import "../node_modules/bootstrap/scss/input-group";
-@import "../node_modules/bootstrap/scss/custom-forms";
+// @import "../node_modules/bootstrap/scss/input-group";
+// @import "../node_modules/bootstrap/scss/custom-forms";
 @import "../node_modules/bootstrap/scss/badge";
 @import "../node_modules/bootstrap/scss/list-group";
 @import "../node_modules/bootstrap/scss/modal";
 @import "../node_modules/bootstrap/scss/utilities";
 
 @import "~@ng-select/ng-select/themes/default.theme.css";
-//@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+//@import "@angular/material/prebuilt-themes/indigo-pink.css";
 // Below code was added during addition of Material dependency.
 
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
-@import "~@angular/material/theming";
+@import "@angular/material/theming";
 // Plus imports for other components in your app.
 
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
 // Be sure that you only ever include this mixin once!
-@include mat-core();
+@include mat.core();
 
 /* For use in src/lib/core/theming/_palette.scss */
+:root {
+  --bayer-dark-blue: rgb(16, 56, 79);
+  --bayer-dark-green: rgb(0, 68, 34);
+  --bayer-dark-purple: rgb(68, 50, 71);
+  --bayer-mid-blue: rgb(0, 97, 127);
+  --bayer-mid-green: rgb(43, 102, 54);
+  --bayer-mid-purple: rgb(98, 73, 99);
+  --bayer-blue: rgb(0, 145, 223);
+  --bayer-green: rgb(102, 181, 18);
+  --bayer-raspberry: rgb(211, 15, 75);
+  --bayer-bright-blue: rgb(0, 188, 255);
+  --bayer-bright-green: rgb(137, 211, 41);
+  --bayer-fuchsia: rgb(255, 49, 98);
+  --bayer-blue-text: rgb(0, 117, 166);
+  --bayer-green-text: rgb(16, 128, 0);
+  --bayer-purple-text: rgb(106, 76, 114);
+  --bayer-raspberry-text: rgb(222, 0, 67);
+};
+
 $md-bayerbrightblue: (
   50: #e0f7fd,
   100: #b3eafa,
@@ -433,15 +454,15 @@ $md-bayerdarkpurple: (
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$colid-editor-frontend-primary: mat-palette($md-bayerdarkblue, 500, 50, 900);
+$colid-editor-frontend-primary: mat.define-palette($md-bayerdarkblue, 500, 50, 900);
 
-$colid-editor-frontend-accent: mat-palette($md-bayerraspberry, 500, 50, 900);
+$colid-editor-frontend-accent: mat.define-palette($md-bayerraspberry, 500, 50, 900);
 
 // The warn palette is optional (defaults to red).
-$colid-editor-frontend-warn: mat-palette($md-bayerfuchsia);
+$colid-editor-frontend-warn: mat.define-palette($md-bayerfuchsia);
 
 // Create the theme object (a Sass map containing all of the palettes).
-$colid-editor-frontend-theme: mat-light-theme(
+$colid-editor-frontend-theme: mat.define-light-theme(
   $colid-editor-frontend-primary,
   $colid-editor-frontend-accent,
   $colid-editor-frontend-warn
@@ -450,46 +471,46 @@ $colid-editor-frontend-theme: mat-light-theme(
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-@include angular-material-theme($colid-editor-frontend-theme);
+@include mat.all-component-themes($colid-editor-frontend-theme);
 
 // Define a custom typography config that overrides the font-family as well as the
 // `headlines` and `body-1` levels.
-$colid-typography: mat-typography-config(
+$colid-typography: mat.define-typography-config(
   $font-family: 'Roboto, "Helvetica Neue", sans-serif'
     /*// Large, one-off header, usually at the top of the page (e.g. a hero header).
-  $display-4:     mat-typography-level(110px, 110px, 300, $letter-spacing: -0.05em),
+  $display-4:     mat.define-typography-level(110px, 110px, 300, $letter-spacing: -0.05em),
   // Large, one-off header, usually at the top of the page (e.g. a hero header).
-  $display-3:     mat-typography-level(54px, 54px, 400, $letter-spacing: -0.02em),
+  $display-3:     mat.define-typography-level(54px, 54px, 400, $letter-spacing: -0.02em),
   // Large, one-off header, usually at the top of the page (e.g. a hero header).
-  $display-2:     mat-typography-level(43px, 43px, 400, $letter-spacing: -0.005em),
+  $display-2:     mat.define-typography-level(43px, 43px, 400, $letter-spacing: -0.005em),
   // Large, one-off header, usually at the top of the page (e.g. a hero header).
-  $display-1:     mat-typography-level(32px, 38px, 400),
+  $display-1:     mat.define-typography-level(32px, 38px, 400),
   // Section heading corresponding to the <h1> tag.
-  $headline:      mat-typography-level(22px, 30px, 400),
+  $headline:      mat.define-typography-level(22px, 30px, 400),
   // Section heading corresponding to the <h2> tag.
-  $title:         mat-typography-level(18px, 30px, 500),
+  $title:         mat.define-typography-level(18px, 30px, 500),
   // Section heading corresponding to the <h3> tag.
-  $subheading-2:  mat-typography-level(14px, 26px, 400),
+  $subheading-2:  mat.define-typography-level(14px, 26px, 400),
   // Section heading corresponding to the <h4> tag.
-  $subheading-1:  mat-typography-level(13px, 22px, 400),
+  $subheading-1:  mat.define-typography-level(13px, 22px, 400),
   // Bolder body text.
-  $body-2:        mat-typography-level(12px, 22px, 500),
+  $body-2:        mat.define-typography-level(12px, 22px, 500),
   // Base body text.
-  $body-1:        mat-typography-level(12px, 18px, 400),
+  $body-1:        mat.define-typography-level(12px, 18px, 400),
   // Smaller body and hint text.
-  $caption:       mat-typography-level(10px, 18px, 400),
+  $caption:       mat.define-typography-level(10px, 18px, 400),
   // Buttons and anchors.
-  $button:        mat-typography-level(12px, 12px, 500),
+  $button:        mat.define-typography-level(12px, 12px, 500),
   // Line-height must be unit-less fraction of the font-size.
   // Form input fields.
-  $input:         mat-typography-level(inherit, 1.125, 400)*/,
+  $input:         mat.define-typography-level(inherit, 1.125, 400)*/,
 );
 
-@include mat-base-typography($colid-typography);
+@include mat.typography-hierarchy($colid-typography);
 
-@include angular-material-typography($colid-typography);
+@include mat.all-component-typographies($colid-typography);
 // Override the typography in the core CSS.
-@include mat-core($colid-typography);
+@include mat.core($colid-typography);
 
 /* You can add global styles to this file, and also import other style files */
 
@@ -542,8 +563,7 @@ $mat-toolbar-height: 64px;
 }
 
 .mat-toolbar {
-  position: sticky;
-  position: -webkit-sticky; /* For macOS/iOS Safari */
+  position: fixed;
   top: 0; /* Sets the sticky toolbar to be on top */
   z-index: 1000; /* Ensure that your app's content doesn't overlap the toolbar */
 }
@@ -556,7 +576,7 @@ $mat-toolbar-height: 64px;
   height: 95% !important;
 }
 
-/deep/ .mat-tooltip {
+::ng-deep .mat-tooltip {
   font-size: 12px;
 }
 
@@ -590,10 +610,6 @@ button.active:focus {
 
 .mat-drawer-container {
   background-color: white;
-}
-
-.mat-dialog-container {
-  padding: 0 !important;
 }
 
 mat-button-toggle-group {
@@ -696,6 +712,19 @@ mat-icon.error {
 
 .ng-select.ng-select-disabled > .ng-select-container {
   background-color: #e9ecef;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-control:disabled, .form-control[readonly] {
+  background-color: #e9ecef !important;
+  opacity: 1;
+}
+
+.font-weight-bold {
+  font-weight: 700 !important;
 }
 
 :host ::ng-deep quill-editor {

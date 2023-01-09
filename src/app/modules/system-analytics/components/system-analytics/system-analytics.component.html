@@ -4,7 +4,7 @@
             <h1 class="display-2">System Analytics</h1>
         </div>
         <div class="col-auto">
-            <button mat-raised-button color="primary" class="ml-2" type="button" (click)="loadData()">
+            <button mat-raised-button color="primary" class="ms-2" type="button" (click)="loadData()">
                 <mat-icon fontSet="material-icons-outlined">refresh</mat-icon>
                 Refresh
             </button>
@@ -49,18 +49,18 @@
                 </app-system-analytics-chart>
             </div>
         </div>
-        <!-- <div class="row mt-2">
+        <div class="row mt-2">
             <div class="col-12" *ngFor="let chart of normalizedChartData | keyvalue">
-                <app-system-analytics-chart [chart]="normalizedChartData.get(chart.key)" [toggleChartTypes]="[]">
+                <app-system-analytics-chart [chart]="normalizedChartData.get(chart.key)">
                 </app-system-analytics-chart>
             </div>
-        </div> -->
-        <!-- <div class="row mt-3" *ngFor="let chart of graphData | keyvalue">
+        </div>
+        <div class="row mt-3" *ngFor="let chart of graphData | keyvalue">
             <div class="col-12">
-                <app-system-analytics-chart class="w-100" [chart]="graphData.get(chart.key)" [toggleChartTypes]="[]">
+                <app-system-analytics-chart class="w-100" [chart]="graphData.get(chart.key)">
                 </app-system-analytics-chart>
             </div>
-        </div> -->
+        </div>
     </ng-container>
 </div>
 

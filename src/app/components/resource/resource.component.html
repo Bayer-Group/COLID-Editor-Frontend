@@ -1,10 +1,10 @@
 <div [class.is-mobile]="(sidebarMode$ | async) === 'over'">
   <mat-sidenav-container class="sidenav-container" autosize>
     <mat-sidenav class="resource-sidebar col-4 p-0" #sidenav [opened]="sidebarOpened$ | async" (closed)="setSidebarOpened(false)"
-      [mode]="sidebarMode$ | async" [fixedInViewport]="(sidebarMode$ | async) === 'over'" fixedTopGap="54">
+      [mode]="sidebarMode$ | async" [fixedInViewport]="(sidebarMode$ | async) === 'over'" fixedTopGap="64">
       <app-sidebar></app-sidebar>
     </mat-sidenav>
-    <mat-sidenav-content>
+    <mat-sidenav-content style="margin-top: 64px;">
       <div class="m-0 justify-content-center">
           <router-outlet></router-outlet>
       </div>

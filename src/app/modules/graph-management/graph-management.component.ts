@@ -9,7 +9,7 @@ import { DeleteItemDialogComponent } from 'src/app/shared/components/delete-item
 import { MatDialog } from '@angular/material/dialog';
 import { GraphUploadDialogComponent } from './components/graph-upload-dialog/graph-upload-dialog.component';
 import { GraphManagementApiService } from 'src/app/core/http/graph-management-api.service';
-import * as fileSaver from 'file-saver';
+import { saveAs } from 'file-saver-es';
 import { EntityFormStatus } from 'src/app/shared/components/entity-form/entity-form-status';
 
 
@@ -108,7 +108,7 @@ export class GraphManagementComponent implements OnInit, OnDestroy {
     this.downloadingGraphs.push(namedGraph)
 
     this.graphApiService.downloadGraph(namedGraph).subscribe(blob => {
-      fileSaver.saveAs(blob, this.getFileName(namedGraph));
+      saveAs(blob, this.getFileName(namedGraph));
       this.downloadingGraphs = this.downloadingGraphs.filter(x => x !== namedGraph)
       this.loadingStatus = EntityFormStatus.SUCCESS;
     }, error => {

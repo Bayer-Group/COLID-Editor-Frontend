@@ -35,9 +35,9 @@
 </div>
 
 <div class="col-12 text-right">
-  <div class="row justify-content-end">
-    <button mat-raised-button class="ml-2" color="accent" [disabled]="isUploadInProgress  || formReadOnly" (click)="confirmAndRemoveAttachment()">Remove</button>
-    <button mat-raised-button class="ml-2" color="primary" [disabled]="!isUploadable || isUploadInProgress  || formReadOnly" (click)="uploadAttachment()">
+  <div class="d-flex justify-content-end">
+    <button mat-raised-button class="ms-2" color="accent" [disabled]="isUploadInProgress  || formReadOnly" (click)="confirmAndRemoveAttachment()">Remove</button>
+    <button mat-raised-button class="ms-2" color="primary" [disabled]="!isUploadable || isUploadInProgress  || formReadOnly" (click)="uploadAttachment()">
       <ng-container *ngIf="!isUploadInProgress">
         Upload 
       </ng-container>

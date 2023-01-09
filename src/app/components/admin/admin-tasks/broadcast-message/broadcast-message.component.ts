@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MessagesApiService } from 'src/app/core/http/messages.api.service';
 import { ColidMatSnackBarService } from 'src/app/modules/colid-mat-snack-bar/colid-mat-snack-bar.service';
@@ -20,7 +20,7 @@ export class BroadcastMessageComponent implements OnInit {
 
   @Input() headerMessage: string;
 
-  editForm: FormGroup = null;
+  editForm: UntypedFormGroup = null;
   quillEditorConfig = QuillEditorConfig;
 
   status: EntityFormStatus = EntityFormStatus.INITIAL;
@@ -32,13 +32,13 @@ export class BroadcastMessageComponent implements OnInit {
   constructor(private messagesApiService: MessagesApiService, public dialog: MatDialog, private snackBar: ColidMatSnackBarService) { }
 
   ngOnInit() {
-    this.editForm = new FormGroup({
-      subjectControl: new FormControl('', [Validators.required, this.noWhitespaceValidator]),
-      bodyControl: new FormControl('', [Validators.required, this.noWhitespaceValidator])
+    this.editForm = new UntypedFormGroup({
+      subjectControl: new UntypedFormControl('', [Validators.required, this.noWhitespaceValidator]),
+      bodyControl: new UntypedFormControl('', [Validators.required, this.noWhitespaceValidator])
     });
   }
 
-  noWhitespaceValidator(control: FormControl) {
+  noWhitespaceValidator(control: UntypedFormControl) {
     const isWhitespace = (control.value || '').trim().length === 0;
     const isValid = !isWhitespace;
     return isValid ? null : { 'whitespace': true };
