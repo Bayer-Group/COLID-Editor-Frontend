@@ -4,6 +4,7 @@ import { MetaDataApiService } from '../core/http/meta-data.api.service';
 import { Constants } from '../shared/constants';
 import { EntityTypeDto } from '../shared/models/Entities/entity-type-dto';
 import { ResourceApiService } from '../core/http/resource.api.service';
+import { Injectable } from '@angular/core';
 
 export class ClearMetaData {
   static readonly type = '[MetaData] Clear';
@@ -62,6 +63,7 @@ export class MetaDataStateModel {
     secondMetadata: new Map<string, Array<MetaDataProperty>>()
   }
 })
+@Injectable()
 export class MetaDataState {
 
   constructor(private metaDataApiService: MetaDataApiService, private resourceApiService: ResourceApiService) { }

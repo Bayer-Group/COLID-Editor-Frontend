@@ -10,11 +10,11 @@
     <mat-expansion-panel *ngFor="let value of entityProperty; let i = index" [expanded]="expanded">
       <mat-expansion-panel-header>
         <mat-panel-title class="mat-expansion-panel-title">
-          <ds-icon class="mr-1" iconType="S3" [tooltipDisabled]="false" [icon]="value.properties[constants.Metadata.EntityType][0]">
+          <ds-icon class="me-1" iconType="S3" [tooltipDisabled]="false" [icon]="value.properties[constants.Metadata.EntityType][0]">
           </ds-icon>
           <app-entity-display-item-taxonomy [range]="constants.OWL.Class" [values]="value.properties[constants.Metadata.EntityType]">
           </app-entity-display-item-taxonomy>:
-          <span class="ml-1" [innerHTML]="getEndpointLabel(value)"></span>
+          <span class="ms-1" [innerHTML]="getEndpointLabel(value)"></span>
         </mat-panel-title>
       </mat-expansion-panel-header>
       <app-entity-display [entity]="value" [metadata]="nestedMetdata(value)"></app-entity-display>
@@ -35,12 +35,12 @@
         <mat-expansion-panel-header>
           <mat-panel-title>
              
-            <ds-icon class="mr-1" iconType="S3" [tooltipDisabled]="false" [icon]="getLinkedEntityResourceType(value.pidUri)">
+            <ds-icon class="me-1" iconType="S3" [tooltipDisabled]="false" [icon]="getLinkedEntityResourceType(value.pidUri)">
             </ds-icon> 
             <span *ngIf="getLinktype(value) == 'Inbound'" class="badge badge-primary mx-1">Inbound</span>
             
             {{metadataProperty.properties[constants.Metadata.Name] | titlecase }}:
-            <span class="ml-1" [innerHTML]="getLinkedEntityLabel(value.pidUri)"></span>
+            <span class="ms-1" [innerHTML]="getLinkedEntityLabel(value.pidUri)"></span>
           </mat-panel-title>
         </mat-expansion-panel-header>
         <div class="row d-flex" *ngIf="!isLoading; else loading">
@@ -62,8 +62,8 @@
   </ng-container>
 
 
-  <div class="col" *ngIf="displayType !== 'taxonomy' && displayType !== 'distribution' && displayType !== 'linking'">
-    <span class="row" *ngFor="let value of entityProperty; let i = index">
+  <div class="d-flex" *ngIf="displayType !== 'taxonomy' && displayType !== 'distribution' && displayType !== 'linking'">
+    <span *ngFor="let value of entityProperty; let i = index">
       <ng-container [ngSwitch]="displayType">
         <ng-container *ngSwitchCase="'datetime'">
           <span>{{value | date:'yyyy-MM-dd HH:mm'}}</span>
@@ -82,11 +82,12 @@
           <a class="wordbreak" [href]="value?.id" target="_blank" rel="noopener noreferrer">{{value?.id}}</a>
         </ng-container>
         <ng-container *ngSwitchCase="'email'">
-          <a class="wordbreak mr-2" [href]="'mailto:' + value">{{value}}</a>
+          <a class="wordbreak me-2" [href]="'mailto:' + value">{{value}}</a>
         </ng-container>
         <ng-container *ngSwitchCase="'html'">
-          <div class="ql-editor-parent w-100">
-            <quill-view-html [content]="replaceSpecialCharacterFromText(value)" theme="default"></quill-view-html>
+          <div class="ql-editor-parent w-100 ql-snow">
+            <span class="ql-editor" [innerHTML]="value | bypassSanitizer">
+            </span>
           </div>
         </ng-container>
         <ng-container *ngSwitchDefault>

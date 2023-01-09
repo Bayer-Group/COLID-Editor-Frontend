@@ -6,6 +6,7 @@ import {PidUriTemplateApiService} from '../core/http/pid-uri-template.api.servic
 import { MetaDataApiService } from '../core/http/meta-data.api.service';
 import { Constants } from '../shared/constants';
 import { PidUriTemplateRequestDTO } from '../shared/models/pidUriTemplates/pid-uri-template-request-dto';
+import { Injectable } from '@angular/core';
 
 export class FetchPidUriTemplates {
   static readonly type = '[PidUriTemplate] Fetch PidUriTemplates';
@@ -64,7 +65,7 @@ export class PidUriTemplateStateModel {
     metadata: null
   }
 })
-
+@Injectable()
 export class PidUriTemplateState {
   constructor(private pidUriTemplateApiService: PidUriTemplateApiService, private metadataService: MetaDataApiService) {
   }

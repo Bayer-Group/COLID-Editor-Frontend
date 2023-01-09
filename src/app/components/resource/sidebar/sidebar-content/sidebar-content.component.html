@@ -2,7 +2,7 @@
 
 <mat-list id="list-sidebar-resources" *ngIf="(searchResultState | async)?.hits as hits" class="search-results px-1"
   infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50" [scrollWindow]="false"
-  (scrolled)="nextBatch($event, (hits.hits.length))" #results>
+  (scrolled)="nextBatch(hits.hits.length)" #results>
   <app-sidebar-content-item *ngFor="let hit of hits.hits; let i = index" (select)="selectResource($event)" [hit]="hit"
     [selectedResourcePidUri]="selectedResourcePidUri" [index]="i" [currentPageStatus]="currentPageStatus"></app-sidebar-content-item>
 </mat-list>

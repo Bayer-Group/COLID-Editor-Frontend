@@ -1,4 +1,3 @@
-import { send } from 'process';
 
 export class MessageConfigDto {
     sendInterval: string;

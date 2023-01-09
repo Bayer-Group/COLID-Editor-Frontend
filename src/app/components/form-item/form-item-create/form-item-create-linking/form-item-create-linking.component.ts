@@ -62,8 +62,6 @@ export class FormItemCreateLinkingComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log('Emit linkingEvent', result);
-
         this.authService.currentEmail$.pipe(map(currentEmail$ =>
           this.store.dispatch(new AddLink(this.selectedLinkingType.properties[Constants.Metadata.HasPidUri] , result,currentEmail$))
             )).subscribe(() => {

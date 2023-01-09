@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ExtendedUriTemplateEditComponent } from './extended-uri-template-edit.component';
 
@@ -6,7 +6,7 @@ describe('ExtendedUriTemplateEditComponent', () => {
   let component: ExtendedUriTemplateEditComponent;
   let fixture: ComponentFixture<ExtendedUriTemplateEditComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ExtendedUriTemplateEditComponent ]
     })

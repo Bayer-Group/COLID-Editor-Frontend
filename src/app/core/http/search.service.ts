@@ -31,6 +31,7 @@ export class SearchService {
     const url = environment.searchApiUrl + '/search';
 
     const aggregationFilters = {};
+    let searchIndices = "all"
      if(resourceLinkTypes.length > 0 && resourceLinkTypes!= null  && links)
     { 
       aggregationFilters[Constants.Metadata.EntityType] = resourceLinkTypes 
@@ -55,6 +56,7 @@ export class SearchService {
     }
     if (resourceSearchObject.published) {
       status.push("Published")
+      searchIndices = "published"
     }
     if (resourceSearchObject.markedForDeletion) {
       status.push("Marked for deletion")
@@ -79,13 +81,12 @@ export class SearchService {
         Constants.Metadata.HasPidUri,
         'resourceLinkedLifecycleStatus',
       ],
-      searchIndex: 'all',
+      searchIndex: searchIndices, //'all',
       order: resourceSearchObject.sequence,
       orderField: resourceSearchObject.orderPredicate,
       apiCallTime: (new Date).toUTCString(), 
       delay: delay
     };
-    console.log("searchRequestObject KANWAL",searchRequestObject)
 
     return this.httpClient.post<SearchResult>(url, searchRequestObject);
   }

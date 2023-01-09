@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { FormItemCreateDistributionComponent } from './form-item-create-distribution.component';
 
@@ -6,7 +6,7 @@ describe('FormItemCreateDistributionComponent', () => {
   let component: FormItemCreateDistributionComponent;
   let fixture: ComponentFixture<FormItemCreateDistributionComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ FormItemCreateDistributionComponent ]
     })

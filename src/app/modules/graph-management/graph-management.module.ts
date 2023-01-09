@@ -23,25 +23,24 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import {ClipboardModule} from '@angular/cdk/clipboard';
 
 @NgModule({
-  declarations: [GraphManagementComponent, GraphUploadDialogComponent, DndDirective, PrettySizePipe, GraphFileUploadComponent],
-  imports: [
-    CommonModule,
-    SharedModule,
-    MatIconModule,
-    MatButtonModule,
-    ReactiveFormsModule,
-    MatTableModule,
-    MatInputModule,
-    MatSortModule,
-    MatProgressBarModule,
-    MatPaginatorModule,
-    MatCheckboxModule,
-    MatProgressSpinnerModule,
-    MatTooltipModule,
-    ClipboardModule,
-    MatDialogModule,
-    GraphManagementRoutingModule
-  ],
-  entryComponents: [GraphUploadDialogComponent]
+    declarations: [GraphManagementComponent, GraphUploadDialogComponent, DndDirective, PrettySizePipe, GraphFileUploadComponent],
+    imports: [
+        CommonModule,
+        SharedModule,
+        MatIconModule,
+        MatButtonModule,
+        ReactiveFormsModule,
+        MatTableModule,
+        MatInputModule,
+        MatSortModule,
+        MatProgressBarModule,
+        MatPaginatorModule,
+        MatCheckboxModule,
+        MatProgressSpinnerModule,
+        MatTooltipModule,
+        ClipboardModule,
+        MatDialogModule,
+        GraphManagementRoutingModule
+    ]
 })
 export class GraphManagementModule { }

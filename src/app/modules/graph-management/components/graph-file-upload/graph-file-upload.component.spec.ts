@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { GraphFileUploadComponent } from './graph-file-upload.component';
 
@@ -6,7 +6,7 @@ describe('GraphFileUploadComponent', () => {
   let component: GraphFileUploadComponent;
   let fixture: ComponentFixture<GraphFileUploadComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ GraphFileUploadComponent ]
     })

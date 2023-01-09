@@ -24,11 +24,13 @@ export class SidebarContentComponent implements OnInit, OnDestroy {
   @Input() searchResultState: Observable<SearchResult>;
   @Input() loadingState: Observable<boolean>;
   @Input() currentPageStatus: string
+  @Input() resetScrolling: Observable<boolean>;
 
-  @ViewChild('results', { static: false }) results: ElementRef;
+  @ViewChild('results', { static: false }) results;
 
   activeResourceSubscription: Subscription;
   resourceOverviewStateSubscription: Subscription;
+  resetScrollingSubscription: Subscription;
 
   constructor() {
     this.activeResourceSubscription = this.activeResource$.subscribe(res => {
@@ -47,28 +49,28 @@ export class SidebarContentComponent implements OnInit, OnDestroy {
 
         setTimeout(() => {
           if (this.results != null && this.results.nativeElement != null && this.results.nativeElement.scrollHeight <= this.results.nativeElement.offsetHeight) {
-            this.nextBatch(null, res.hits.hits.length);
+            this.nextBatch(res.hits.hits.length);
           }
         }, 100);
       }
     });
 
-
+    this.resetScrollingSubscription = this.resetScrolling.subscribe(_ => this.results._elementRef.nativeElement.scrollTop = 0)
   }
 
   ngOnDestroy() {
     this.activeResourceSubscription.unsubscribe();
     this.resourceOverviewStateSubscription.unsubscribe();
+    this.resetScrollingSubscription.unsubscribe();
   }
 
   selectResource(resourcePidUri: string) {
     this.resourceSelectedEvent.emit(resourcePidUri);
   }
 
-  nextBatch(currIndex: number, offset: number) {
+  nextBatch(offset: number) {
     if (this.totalResources <= offset) { return; }
 
-    console.log('sidebarIndex', currIndex);
     this.nextResourceBatchEvent.emit(offset);
   }
 }

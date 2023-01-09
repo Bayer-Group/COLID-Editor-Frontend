@@ -5,18 +5,10 @@
       <mat-expansion-panel *ngFor="let entity of historyEntity; let i = index;" (opened)="openPanel(entity)"
       (closed)="closedPanel(entity)">
         <mat-expansion-panel-header>
-          <mat-panel-title>
-            <span>
-              
-                <mat-icon fontSet="material-icons-outlined" class="iconClose" inline="true" *ngIf="!entity.isExpanded" >history</mat-icon>
-             <mat-icon *ngIf="entity.isExpanded" class="iconOpen" inline="true">arrow_right_alt</mat-icon>
-              
-              
-             
-              &nbsp;
-            <span>{{entity.lastchangedByDateTime | date:'yyyy-MM-dd HH:mm'}}
-          </span>
-          </span>
+          <mat-panel-title style="gap: 10px">
+            <mat-icon fontSet="material-icons-outlined" class="iconClose" inline="true" *ngIf="!entity.isExpanded" >history</mat-icon>
+            <mat-icon *ngIf="entity.isExpanded" class="iconOpen" inline="true">arrow_right_alt</mat-icon> 
+            <span>{{entity.lastchangedByDateTime | date:'yyyy-MM-dd HH:mm'}}</span>
             <small>{{getLastChangeUser(entity,i)}}</small>
           </mat-panel-title>
           <mat-panel-description class="right-aligned">

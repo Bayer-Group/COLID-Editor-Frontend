@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { FormItemInputNumberComponent } from './form-item-input-number.component';
 
@@ -6,7 +6,7 @@ describe('FormItemInputNumberComponent', () => {
   let component: FormItemInputNumberComponent;
   let fixture: ComponentFixture<FormItemInputNumberComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ FormItemInputNumberComponent ]
     })

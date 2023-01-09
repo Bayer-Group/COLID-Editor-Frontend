@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { FormItemInputPidUriComponent } from './form-item-input-pid-uri.component';
 
@@ -6,7 +6,7 @@ describe('FormItemInputPidUriComponent', () => {
   let component: FormItemInputPidUriComponent;
   let fixture: ComponentFixture<FormItemInputPidUriComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ FormItemInputPidUriComponent ]
     })

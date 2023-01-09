@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ResourceFormIncompatibleLinksDialogComponent } from './resource-form-incompatible-links-dialog.component';
 
@@ -6,7 +6,7 @@ describe('ResourceFormIncompatibleLinksDialogComponent', () => {
   let component: ResourceFormIncompatibleLinksDialogComponent;
   let fixture: ComponentFixture<ResourceFormIncompatibleLinksDialogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ResourceFormIncompatibleLinksDialogComponent ]
     })

@@ -17,24 +17,23 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @NgModule({
-  declarations: [NotificationComponent, TimeAgoPipe, NotificationDialogComponent],
-  imports: [
-    CommonModule,
-    HttpClientModule,
-    MatIconModule,
-    MatChipsModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatTooltipModule,
-    MatProgressSpinnerModule,
-    NgxsModule.forFeature([NotificationState])
-  ],
-  providers: [
-    NotificationService
-  ],
-  exports: [
-    NotificationComponent,
-  ],
-  entryComponents: [NotificationDialogComponent]
+    declarations: [NotificationComponent, TimeAgoPipe, NotificationDialogComponent],
+    imports: [
+        CommonModule,
+        HttpClientModule,
+        MatIconModule,
+        MatChipsModule,
+        MatDialogModule,
+        MatButtonModule,
+        MatTooltipModule,
+        MatProgressSpinnerModule,
+        NgxsModule.forFeature([NotificationState])
+    ],
+    providers: [
+        NotificationService
+    ],
+    exports: [
+        NotificationComponent,
+    ]
 })
 export class NotificationModule {}

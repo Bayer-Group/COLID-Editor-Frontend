@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { isError } from 'util';
 
-declare const InstallTrigger: any;
+
 
 @Injectable({
   providedIn: 'root'

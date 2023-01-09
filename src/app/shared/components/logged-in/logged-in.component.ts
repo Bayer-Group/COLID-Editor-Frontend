@@ -17,7 +17,7 @@ export class LoggedInComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     if(this.isBrowserSupported){
-       this.checkAccountSubscribtion = this.authService.subscribeCheckAccount()
+       this.checkAccountSubscribtion = this.authService.subscribeCheckAccount();
     }
   }
 

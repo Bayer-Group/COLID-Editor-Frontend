@@ -3,6 +3,7 @@ import { ColidEntrySubscriptionDto } from '../shared/models/user/colid-entry-sub
 import { LogService } from '../core/logging/log.service';
 import { ColidEntryApiService } from '../core/http/colid-entries.api.service';
 import { Router } from '@angular/router';
+import { Injectable } from '@angular/core';
   
 export class FetchColidEntrySubscriptionNumbers {
     static readonly type = '[ColidEntrySubscriptionNumbers] Fetch FetchColidEntrySubscriptionNumbers';
@@ -22,7 +23,7 @@ export class ColidEntrySubscriberCountStateModel {
         colidEntrySubscriptions: null
     }
 })
-
+@Injectable()
 export class ColidEntrySubscriberCountState {
     constructor(private logger: LogService, private colidEntrieService: ColidEntryApiService, private store: Store, private router: Router) {
     

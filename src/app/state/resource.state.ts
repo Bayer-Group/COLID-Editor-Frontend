@@ -17,6 +17,7 @@ import { ResourceExtension } from '../shared/extensions/resource.extension';
 import { FetchColidEntrySubscriptionNumbers } from './colid-entry-subcriber-count.state';
 import { LinkingMapping, LinkType } from '../shared/models/resources/linking-mapping';
 import { MetaDataProperty } from '../shared/models/metadata/meta-data-property';
+import { Injectable } from '@angular/core';
 
 export class FetchResource {
   static readonly type = '[Resource] Fetch';
@@ -134,7 +135,7 @@ export class ResourceStateModel {
     historicResources: new Map<string, Resource>()
   }
 })
-
+@Injectable()
 export class ResourceState {
   constructor(private logger: LogService, private resourceService: ResourceApiService, private store: Store, private router: Router) {
   }
@@ -346,7 +347,6 @@ export class ResourceState {
   @Action(FetchHistoricResource)
   fetchHistoricResource({ getState, patchState }: StateContext<ResourceStateModel>, action: FetchHistoricResource) {
     let historicResources = getState().historicResources;
-    console.log("historicResources",historicResources)
     patchState({
       selectedHistoricResource: action.historicResource.id
     });

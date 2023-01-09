@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { FormItemInputLinkingDialogComponent } from './form-item-input-linking-dialog.component';
 
@@ -6,7 +6,7 @@ describe('FormItemInputLinkingDialogComponent', () => {
   let component: FormItemInputLinkingDialogComponent;
   let fixture: ComponentFixture<FormItemInputLinkingDialogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ FormItemInputLinkingDialogComponent ]
     })

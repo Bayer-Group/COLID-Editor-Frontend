@@ -173,7 +173,12 @@ export class ResourceHistoricComponent implements OnInit, OnChanges {
   }
 
   getLastChangeDateTime(entity){
-    return entity.additionals[Constants.Metadata.LastChangeDateTime][0];
+    if (entity.additionals[Constants.Metadata.LastChangeDateTime]){
+      return entity.additionals[Constants.Metadata.LastChangeDateTime][0]
+    }
+    else{
+      return entity.additionals[Constants.Metadata.LastReviewDateTime][0]
+    }
   }
   
   sortHistory(unSortedHistory:HistoryEntity[]){
@@ -183,7 +188,6 @@ export class ResourceHistoricComponent implements OnInit, OnChanges {
       return dateB-dateA;
   });
   this.historyEntity=sortedActivities;
-  console.log(sortedActivities);
   }
   openPanel(enitiy:HistoryEntity){
     enitiy.isExpanded=true;
@@ -192,7 +196,10 @@ export class ResourceHistoricComponent implements OnInit, OnChanges {
   getLastChangeUser(enitiy:HistoryEntity,index):string{
     if(enitiy.additions.entity.additionals[Constants.Metadata.HasLastChangeUser]){
       return enitiy.additions.entity.additionals[Constants.Metadata.HasLastChangeUser]
-    }else{
+    }else if(enitiy.additions.entity.additionals[Constants.Metadata.HasLastReviewer]){
+      return enitiy.additions.entity.additionals[Constants.Metadata.HasLastReviewer]
+    }
+    else{
       var i = this.entities.length-1-index
  
       return this.getPreLastchangeUser(i)

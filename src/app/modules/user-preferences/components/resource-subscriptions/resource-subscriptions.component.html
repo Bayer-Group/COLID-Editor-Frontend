@@ -12,7 +12,7 @@
     <div class="col-12" *ngIf="!loading; else spinner">
         <mat-list *ngIf="colidEntrySubscriptions?.size > 0; else emptyResults">
             <mat-list-item *ngFor="let colidEntrySubscription of colidEntrySubscriptions | keyvalue">
-                <ds-icon mat-list-icon class="mr-2" iconType="S3" [tooltipDisabled]="false" [delay]="300"
+                <ds-icon mat-list-icon class="me-2" iconType="S3" [tooltipDisabled]="false" [delay]="300"
                     [icon]="colidEntrySubscription.value.resourceType"></ds-icon>
                 <a mat-line class="d-flex justify-content-between" routerLink="/resource"
                     [queryParams]="{ pidUri: colidEntrySubscription.key }" target="_blank" style="width: fit-content;">

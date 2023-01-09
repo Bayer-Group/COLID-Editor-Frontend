@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { ColidMatSnackBarService } from 'src/app/modules/colid-mat-snack-bar/colid-mat-snack-bar.service';
 import { WelcomeMessage } from 'src/app/shared/models/welcome-message/welcome-message';
 import { EntityFormStatus } from 'src/app/shared/components/entity-form/entity-form-status';
@@ -15,7 +15,7 @@ export class WelcomeMessageFormComponent implements OnInit {
   error_msg_not_changed = 'Message has not been changed'
   error_msg_reset = 'Message has been reset'
 
-  editForm: FormGroup;
+  editForm: UntypedFormGroup;
   quillEditorConfig = QuillEditorConfig;
 
   _defaultMessage: WelcomeMessage;
@@ -36,8 +36,8 @@ export class WelcomeMessageFormComponent implements OnInit {
   constructor(private snackBar: ColidMatSnackBarService) { }
 
   ngOnInit() {
-    this.editForm = new FormGroup({
-      editControl: new FormControl('', Validators.required)
+    this.editForm = new UntypedFormGroup({
+      editControl: new UntypedFormControl('', Validators.required)
     });
     this.fillFormControl();
   }

@@ -52,10 +52,13 @@ export class FormItemComponent implements OnInit, ControlValueAccessor {
   @Input() indexerNested: number;
   @Input() mainDistribution: boolean;
 
-  @Input('readOnly')
-  set readOnly(value: boolean) {
-    this.setReadOnly(value);
-  }
+  @Input('readOnly') readOnly :boolean;
+  // set readOnly(value: boolean) {
+  //   if(this.setReadOnly===undefined){
+  //     return;
+  //   }
+  //   this.setReadOnly(value);
+  // }
 
   @Output() removeFormItem: EventEmitter<any> = new EventEmitter<any>();
   @Output() mainDistributionChanged: EventEmitter<any> = new EventEmitter<any>();
@@ -78,6 +81,7 @@ export class FormItemComponent implements OnInit, ControlValueAccessor {
       addTag: this.fieldType === 'extendableList',
       hideSelected: true
     };
+    this.setReadOnly(this.readOnly)
   }
 
   get limitSelection() {
@@ -94,7 +98,10 @@ export class FormItemComponent implements OnInit, ControlValueAccessor {
     return this.metaData.properties[Constants.Metadata.MaxCount] === '1';
   }
 
-  setReadOnly(readOnly: boolean) {
+  async setReadOnly(readOnly: boolean) {
+    if(this.metaData===undefined){
+      return;
+    }
     if (this.metaData.key === Constants.Metadata.EntityType) {
       this.readonly = true;
       return;
@@ -130,7 +137,6 @@ export class FormItemComponent implements OnInit, ControlValueAccessor {
     this.onChange(this.internalValue);
     this.onTouched();
     event.created = this.created;
-    console.log(event.created)
     this.valueChanged.emit(event);
     this.created = false;
   }

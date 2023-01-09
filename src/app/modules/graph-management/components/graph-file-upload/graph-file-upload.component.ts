@@ -15,7 +15,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 })
 export class GraphFileUploadComponent implements ControlValueAccessor {
 
-  @ViewChild('fileDropRef', null) fileDropRef: ElementRef;
+  @ViewChild('fileDropRef', {static:false}) fileDropRef: ElementRef;
 
   onChange: any = () => { };
   onTouched: any = () => { };

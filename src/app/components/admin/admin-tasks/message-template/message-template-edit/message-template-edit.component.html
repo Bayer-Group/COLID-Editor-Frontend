@@ -1,6 +1,6 @@
 <form class="message-template-form" [formGroup]="templateForm" (ngSubmit)="onSubmit()">
 
-    <div class="row ml-1">
+    <div class="row ms-1">
         <div class="col-3 text-muted d-flex align-items-center">Subject:</div>
         <div class="col-9">
             <mat-form-field class="w-100 subject-form-field">
@@ -13,7 +13,7 @@
         </div>
     </div>
 
-    <div class="row mt-3 ml-1">
+    <div class="row mt-3 ms-1">
         <div class="col-3 text-muted message-template-body">Body:</div>
         <div class="col-9">
             <mat-form-field class="w-100 body-form-field">
@@ -25,7 +25,7 @@
             </mat-form-field>
         </div>
     </div>
-    <div class="row mt-3 ml-1" *ngIf="placeholders[messageTemplate.type]">
+    <div class="row mt-3 ms-1" *ngIf="placeholders[messageTemplate.type]">
         <div class="col-3 text-muted d-flex align-items-center">Placeholders:</div>
         <div class="col-9">
             <mat-chip-list>
@@ -39,7 +39,7 @@
 
     <div class="row mt-4 justify-content-end">
         <div class="col-auto">
-            <button mat-raised-button type="button" (click)="onReset()" class="mr-3">
+            <button mat-raised-button type="button" (click)="onReset()" class="me-3">
                 <mat-icon fontSet="material-icons-outlined">cancel</mat-icon>
                 Reset
             </button>

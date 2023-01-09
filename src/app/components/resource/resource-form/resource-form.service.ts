@@ -82,6 +82,16 @@ export class ResourceFormService {
     return null;
   }
 
+  get SelectedConsumerGroupDefaultReviewCyclePolicy() {
+    const userInfoState: UserInfoStateModel = this.store.selectSnapshot(state => state).UserInfo;
+
+    if (userInfoState !== null) {
+      return userInfoState.selectedConsumerGroupDefaultReviewCyclePolicy;
+    }
+
+    return null;
+  }
+
   get DefaultPidUriTemplateKey() {
     const userInfoState: UserInfoStateModel = this.store.selectSnapshot(state => state).UserInfo;
 

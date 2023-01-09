@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { FormItemInputNestedComponent } from './form-item-input-nested.component';
 
@@ -6,7 +6,7 @@ describe('FormItemInputNestedComponent', () => {
   let component: FormItemInputNestedComponent;
   let fixture: ComponentFixture<FormItemInputNestedComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ FormItemInputNestedComponent ]
     })

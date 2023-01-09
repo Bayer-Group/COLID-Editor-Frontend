@@ -14,7 +14,7 @@
                 <div class="notification-item mb-2" [class.new]="!notification.readOn"
                     *ngFor="let notification of notifications">
                     <div class="d-flex justify-content-between">
-                        <span class="mr-1" *ngIf="!notification.readOn">
+                        <span class="me-1" *ngIf="!notification.readOn">
                             <mat-chip color="draft" disableRipple style="display: inline-block;" matTooltip="New notification">NEW</mat-chip>
                         </span>
                         <span class="header flex-grow-1" [innerHTML]="notification.subject"

@@ -1,5 +1,5 @@
 <div class="row mb-1" *ngFor="let entity of internalValue; let i = index; trackBy: trackByIdx">
-    <div class="col-10 pr-0">
+    <div class="col-10 pe-0">
         <input type="text" class="form-control" id={{name}} [readonly]="readOnly" #input [name]="name"
             [(ngModel)]="internalValue[i]" [debounce]="debounceTime" (onDebounce)="handleValueChanged(internalValue)"
             [attr.name]="name" />

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { OrphanedIdentifierComponent } from './orphaned-identifier.component';
 
@@ -6,7 +6,7 @@ describe('OrphanedIdentifierComponent', () => {
   let component: OrphanedIdentifierComponent;
   let fixture: ComponentFixture<OrphanedIdentifierComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ OrphanedIdentifierComponent ]
     })

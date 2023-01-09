@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { FormItemInputGeneralComponent } from './form-item-input-general.component';
 
@@ -6,7 +6,7 @@ describe('FormItemInputGeneralComponent', () => {
   let component: FormItemInputGeneralComponent;
   let fixture: ComponentFixture<FormItemInputGeneralComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ FormItemInputGeneralComponent ]
     })

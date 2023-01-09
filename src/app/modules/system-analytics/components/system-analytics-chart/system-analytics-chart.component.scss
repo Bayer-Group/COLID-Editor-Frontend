@@ -1,8 +1,11 @@
 .chart-wrapper {
   display: block;
-  min-height: 300px;
+  min-height: 300px; 
+ 
 }
 
-iframe {
-  border-width: 1px;
+::ng-deep ngx-charts-bar-horizontal-normalized {
+display: block;
+min-height: 1600px;
+max-height: 20000px;
 }

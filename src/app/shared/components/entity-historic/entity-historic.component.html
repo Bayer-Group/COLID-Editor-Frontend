@@ -14,7 +14,7 @@
         <mat-step *ngFor="let entity of entities; let i = index" completed="false" [state]="getState(entity)">
           <ng-template matStepLabel>
             <span>{{getHeader(entity) | date:'yyyy-MM-dd HH:mm'}}
-              <span class="badge badge-pill badge-primary ml-1" *ngIf="getState(entity) === 'published'">
+              <span class="badge badge-pill badge-primary ms-1" *ngIf="getState(entity) === 'published'">
                 <ds-icon iconType="Mapping" [tooltipDisabled]="false" [delay]="300"
                   [icon]="constants.Resource.LifeCycleStatus.Published"></ds-icon>
               </span>

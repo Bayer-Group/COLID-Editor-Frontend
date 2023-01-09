@@ -4,7 +4,7 @@ import { PidUriTemplateState, DeletePidUriTemplate, CreatePidUriTemplate, EditPi
 import { Observable, Subscription } from 'rxjs';
 import { PidUriTemplateResultDTO } from 'src/app/shared/models/pidUriTemplates/pid-uri-template-result-dto';
 import { MetaDataProperty } from 'src/app/shared/models/metadata/meta-data-property';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder } from '@angular/forms';
 import { FormItemSettings } from 'src/app/shared/models/form/form-item-settings';
 import { DeleteItemDialogComponent } from 'src/app/shared/components/delete-item-dialog/delete-item-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -35,7 +35,7 @@ export class PidUriTemplateTableComponent implements OnInit, OnDestroy {
   entityAction: PidUriTemplateAction;
 
   metaData: Array<MetaDataProperty>;
-  pidUriTemplateForm: FormGroup;
+  pidUriTemplateForm: UntypedFormGroup;
   selectedForEdit: PidUriTemplateResultDTO;
   pidUriConstant = Constants.Metadata.HasPidUri;
   constants = Constants;
@@ -55,7 +55,7 @@ export class PidUriTemplateTableComponent implements OnInit, OnDestroy {
   get f() { return this.pidUriTemplateForm.controls; }
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private store: Store,
     private snackbar: ColidMatSnackBarService,
     private entityFormService: EntityFormService,

@@ -6,6 +6,7 @@ import { ExtendedUriTemplateApiService } from '../core/http/extended-uri-templat
 import { ExtendedUriTemplateRequestDTO } from '../shared/models/extendedUriTemplates/extended-uri-template-request-dto';
 import { MetaDataApiService } from '../core/http/meta-data.api.service';
 import { Constants } from '../shared/constants';
+import { Injectable } from '@angular/core';
 
 export class FetchExtendedUriTemplates {
     static readonly type = '[ExtendedUriTemplate] Fetch extendedUriTemplates';
@@ -55,6 +56,7 @@ export class ExtendedUriTemplateStateModel {
         metadata: null
     }
 })
+@Injectable()
 export class ExtendedUriTemplateState {
     constructor(private extendedUriTemplateApiService: ExtendedUriTemplateApiService, private metadataService: MetaDataApiService) { }
 

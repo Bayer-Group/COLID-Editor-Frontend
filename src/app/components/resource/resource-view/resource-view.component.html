@@ -1,5 +1,5 @@
 <ng-container *ngIf="activeResource; else loading">
-  <mat-toolbar class="resource-title-bar">
+  <mat-toolbar class="resource-title-bar" style="position: relative">
 
     <mat-toolbar-row class="row px-5 mx-0">
       <app-entity-header class="col-10 resource-title" [screenWidth]="windowSize" [editMode]="(isAuthorizedToEdit$ | async) && (windowSize > 700 || actionBarOpened)" [numberSubscribers]="getNumSubscribers" [entity]="activeResource"

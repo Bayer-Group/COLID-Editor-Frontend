@@ -2,6 +2,7 @@ import { State, Action, StateContext, Selector } from '@ngxs/store';
 import { IdentifierApiService } from 'src/app/core/http/identifier.api.service';
 import { tap } from 'rxjs/operators';
 import { IdentifierResultDTO } from 'src/app/shared/models/identifier/identifier-result-dto';
+import { Injectable } from '@angular/core';
 
 export class FetchOrphanedIdentifiers {
   static readonly type = '[Identifier] Fetch orphaned';
@@ -26,6 +27,7 @@ export class IdentifierStateModel {
     loading: true,
   }
 })
+@Injectable()
 export class IdentifierState {
   constructor(private identifierApiService: IdentifierApiService) { }
 

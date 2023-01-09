@@ -17,7 +17,7 @@
       (click)="goToDataMarketplace()">
       Want to search data? Go to Data Marketplace
     </button>
-    <button mat-flat-button class="ml-4 d-none d-md-block" id="button-sidebar-rrm-link" (click)="goToRRM()">
+    <button mat-flat-button class="ms-4 d-none d-md-block" id="button-sidebar-rrm-link" (click)="goToRRM()">
       Want to link resources? Go to Resource Relationship Manager
     </button>
     <span class="filler"></span>
@@ -43,10 +43,10 @@
     <span class="gap"></span>
 
     <div *ngIf="isLoggedIn$ | async">
-    <!--  <button *ngIf="hasCreatePrivilege$ | async" mat-icon-button matTooltip="Statistics" [routerLink]="'/systemanalytics'">
+     <button *ngIf="hasCreatePrivilege$ | async" mat-icon-button matTooltip="Statistics" [routerLink]="'/systemanalytics'">
         <mat-icon>insert_chart_outlined</mat-icon>
       </button>
-    -->
+   
       <button mat-icon-button (click)="toggleNotification.emit()" matTooltip="Notifications"> 
         <mat-icon *ngIf="newNotifications === 0">notifications_none</mat-icon>
         <mat-icon *ngIf="newNotifications !== 0" [matBadge]="newNotifications" matBadgeColor="warn">notifications_active</mat-icon>

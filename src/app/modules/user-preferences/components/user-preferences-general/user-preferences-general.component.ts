@@ -3,7 +3,7 @@ import { Select, Store } from '@ngxs/store';
 import { UserInfoState, SetMessageConfig } from 'src/app/state/user-info.state';
 import { Observable, Subscription, of } from 'rxjs';
 import { MessageConfigDto } from 'src/app/shared/models/user/message-config-dto';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { ColidMatSnackBarService } from 'src/app/modules/colid-mat-snack-bar/colid-mat-snack-bar.service';
 import { catchError } from 'rxjs/operators';
 import { EntityFormStatus } from 'src/app/shared/components/entity-form/entity-form-status';
@@ -18,7 +18,7 @@ export class UserPreferencesGeneralComponent implements OnInit, OnDestroy {
   @Select(UserInfoState.getMessageConfig) messageConfig$: Observable<MessageConfigDto>;
   messageConfigSubscription: Subscription;
 
-  settingsForm: FormGroup;
+  settingsForm: UntypedFormGroup;
   savedSettings: MessageConfigDto;
 
   selectedSendIntervalValue: string;
@@ -37,9 +37,9 @@ export class UserPreferencesGeneralComponent implements OnInit, OnDestroy {
   constructor(private store: Store, private snackbar: ColidMatSnackBarService) { }
 
   ngOnInit() {
-    this.settingsForm = new FormGroup({
-      sendInterval: new FormControl('', Validators.required),
-      deleteInterval: new FormControl('', Validators.required)
+    this.settingsForm = new UntypedFormGroup({
+      sendInterval: new UntypedFormControl('', Validators.required),
+      deleteInterval: new UntypedFormControl('', Validators.required)
     });
 
     this.messageConfigSubscription = this.messageConfig$.subscribe(cfg => {

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, Route } from '@angular/router';
 import { ResourceComponent } from './components/resource/resource.component';
 import { ResourceDisplayComponent } from './components/resource/resource-display/resource-display.component';
 import { ResourceNewComponent } from './components/resource/resource-new/resource-new.component';
@@ -35,8 +35,9 @@ import { AuthGuardSuperAdminService } from './modules/authentication/guards/auth
 import { AuthGuardService } from './modules/authentication/guards/auth-guard.service';
 import { AuthGuardAdminService } from './modules/authentication/guards/auth-guard-admin.service';
 import { BroadcastMessageComponent } from './components/admin/admin-tasks/broadcast-message/broadcast-message.component';
+import { ExcelImportComponent } from './components/admin/admin-tasks/excel-import/excel-import/excel-import.component';
 
-const resourceRoute = {
+const resourceRoute: Route = {
   path: 'resource', component: ResourceComponent, children: [
     { path: 'welcome', component: ResourceWelcomeComponent },
     { path: 'new', component: ResourceNewComponent, canDeactivate: [CanDeactivateGuard] ,canActivate: [AuthGuardEditorService]},
@@ -53,7 +54,7 @@ const resourceRoute = {
   canActivate: [AuthGuardService]
 };
 
-const adminRoute = {
+const adminRoute: Route = {
   path: 'admin', component: AdminComponent, children: [
     {
       path: 'messageTemplates', component: MessageTemplateComponent,
@@ -70,6 +71,10 @@ const adminRoute = {
     },
     {
       path: 'broadcastMessage', component: BroadcastMessageComponent,
+      canActivate: [AuthGuardSuperAdminService]
+    },
+    {
+      path: 'excelimport', component: ExcelImportComponent,
       canActivate: [AuthGuardSuperAdminService]
     },
     {
@@ -138,7 +143,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })],
+  imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload', relativeLinkResolution: 'legacy' })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

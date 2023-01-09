@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
@@ -90,7 +90,7 @@ describe('ResourceFormComponent', () => {
   let store: Store;
   let httpMock: HttpTestingController;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         ResourceFormComponent,
@@ -119,7 +119,7 @@ describe('ResourceFormComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should update active resource on changes through store', async(() => {
+  it('should update active resource on changes through store', waitForAsync(() => {
     store.dispatch(new FetchResource('testing_key'));
 
     const resourceRequest = httpMock.expectOne(environment.colidApiUrl + '/resource/' + 'testing_key');
@@ -146,7 +146,7 @@ describe('ResourceFormComponent', () => {
     });
   }));
 
-  it('should update meta data on changes through store', async(() => {
+  it('should update meta data on changes through store', waitForAsync(() => {
     store.dispatch(new FetchMetaData());
 
     const resourceRequest = httpMock.expectOne(environment.colidApiUrl + '/metadata');

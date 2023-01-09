@@ -1,15 +1,9 @@
-<div class="modal-header justify-content-center">
-  <h2 class="mb-0">{{data.header}}</h2>
+
+  <h2 mat-dialog-title>{{data.header}}</h2>
+  <div mat-dialog-content>
+    <p innerHTML="{{data.body}}"></p>
   </div>
-  <div class="modal-body pb-0">
-    <div class="row">
-      <div class="col-12 text-center">
-        <p innerHTML="{{data.body}}">
-        </p>
-      </div>
-    </div>
-  </div>
-  <div class="modal-footer">
-    <button mat-raised-button color="primary" class="mr-2" mat-dialog-close>Cancel</button>
-    <button mat-raised-button color="accent" class="ml-2" [mat-dialog-close]="true">Continue</button>
+  <div mat-dialog-actions>
+    <button mat-raised-button color="primary" class="me-2" mat-dialog-close>Cancel</button>
+    <button mat-raised-button color="accent" class="ms-2" [mat-dialog-close]="true">Continue</button>
   </div>

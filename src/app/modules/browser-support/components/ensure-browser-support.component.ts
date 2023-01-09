@@ -17,6 +17,5 @@ export class BrowserSupportComponent implements OnInit {
 
   ngOnInit() {
     this.supportedBrowser = this.ensureBrowserSupportService.isSupported();
-    console.log("supported browser",this.supportedBrowser)
   }
 }

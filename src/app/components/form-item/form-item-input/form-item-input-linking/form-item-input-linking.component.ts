@@ -73,7 +73,6 @@ export class FormItemInputLinkingComponent implements OnChanges  {
 
     dialogRef.afterClosed().subscribe(result => { 
       if (result) {
-        console.log('Emit remove link event', result);
         var isInbound = linkEntity.linkType == 0
         this.authService.currentEmail$.pipe(map(currentEmail$ =>
         this.store.dispatch(new RemoveLink(this.metaData.key , linkEntity.pidUri, isInbound,currentEmail$))

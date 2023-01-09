@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import { Selector, State, StateContext, Action } from '@ngxs/store';
 
 // Actions
@@ -18,7 +19,7 @@ export class ResourceFormStateModel {
         touched: false
     }
 })
-
+@Injectable()
 export class ResourceFormState {
     constructor() { }
 

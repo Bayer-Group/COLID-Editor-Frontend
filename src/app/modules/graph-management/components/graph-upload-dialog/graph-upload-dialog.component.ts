@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { GraphManagementApiService } from 'src/app/core/http/graph-management-api.service';
 import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
@@ -24,10 +24,10 @@ export class GraphUploadDialogComponent implements OnInit {
 
   error: string;
 
-  uploadForm: FormGroup = new FormGroup({
-    graphName: new FormControl(null, Validators.required),
-    graphFile: new FormControl(null, [Validators.required, requiredFileType('ttl')]),
-    overwrite: new FormControl(false, Validators.required),
+  uploadForm: UntypedFormGroup = new UntypedFormGroup({
+    graphName: new UntypedFormControl(null, Validators.required),
+    graphFile: new UntypedFormControl(null, [Validators.required, requiredFileType('ttl')]),
+    overwrite: new UntypedFormControl(false, Validators.required),
   });
 
   constructor(private graphService: GraphManagementApiService) { }
@@ -93,7 +93,7 @@ export class GraphUploadDialogComponent implements OnInit {
 }
 
 export function requiredFileType(type: string) {
-  return function (control: FormControl) {
+  return function (control: UntypedFormControl) {
     const file = control.value;
     if (file) {
       const extension = /(?:\.([^.]+))?$/.exec(file.name)[1].toLowerCase();

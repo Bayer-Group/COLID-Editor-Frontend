@@ -2,6 +2,7 @@ import { Selector, State, StateContext, Action } from '@ngxs/store';
 import { tap } from 'rxjs/operators';
 import { BuildInformationDto } from '../shared/models/status/build-information-dto';
 import { StatusApiService } from '../core/http/status.api.service';
+import { Injectable } from '@angular/core';
 
 export class FetchBuildInformation {
   static readonly type = '[BuildInformation] Fetch buildInformation';
@@ -17,7 +18,7 @@ export class StatusStateModel {
         buildInformation: null,
     }
 })
-
+@Injectable()
 export class StatusState {
     constructor(private statusApiService: StatusApiService) { }
 

@@ -14,20 +14,19 @@ import { ColidIconsModule } from '../colid-icons/colid-icons.module';
 import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
-  declarations: [DeletionRequestComponent, DeletionRequestDialogComponent],
-  imports: [
-    CommonModule,
-    MatIconModule,
-    MatButtonModule,
-    MatCheckboxModule,
-    MatListModule,
-    MatDialogModule,
-    MatTooltipModule,
-    MatPaginatorModule,
-    SharedModule,
-    ColidIconsModule.forRoot(),
-    DeletionRequestRoutingModule
-  ],
-  entryComponents: [DeletionRequestDialogComponent]
+    declarations: [DeletionRequestComponent, DeletionRequestDialogComponent],
+    imports: [
+        CommonModule,
+        MatIconModule,
+        MatButtonModule,
+        MatCheckboxModule,
+        MatListModule,
+        MatDialogModule,
+        MatTooltipModule,
+        MatPaginatorModule,
+        SharedModule,
+        ColidIconsModule.forRoot(),
+        DeletionRequestRoutingModule
+    ]
 })
 export class DeletionRequestModule { }

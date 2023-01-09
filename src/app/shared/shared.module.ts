@@ -23,46 +23,48 @@ import { LastIndexStringPipe } from './pipes/last-index-string.pipe';
 import { ActionButtonComponent } from './components/button/action-button/action-button.component';
 import { JoinPipe } from './pipes/join.pipe';
 import { MapPipe } from './pipes/map.pipe';
+import { BypassSanitizerPipe } from './pipes/bypassSanitizer.pipe';
 
 @NgModule({
-  declarations: [
-    DebounceDirective,
-    MetadataGroupByPipe,
-    GroupByPipe,
-    JoinPipe,
-    MapPipe,
-    ColidSpinnerComponent,
-    ColidTreeViewComponent,
-    ClickOutsideDirective,
-    LoaderComponent,
-    RemoveWhiteSpacesPipe,
-    LastIndexStringPipe,
-    ActionButtonComponent
-  ],
-  imports: [
-    CommonModule,
-    MatProgressSpinnerModule,
-    MatTreeModule,
-    MatDividerModule,
-    CdkTreeModule,
-    MatCheckboxModule,
-    MatIconModule,
-    MatButtonModule
-  ],
-  exports: [
-    DebounceDirective,
-    MetadataGroupByPipe,
-    GroupByPipe,
-    JoinPipe,
-    MapPipe,
-    ColidSpinnerComponent,
-    CommonModule,
-    ColidTreeViewComponent,
-    ActionButtonComponent,
-    ClickOutsideDirective,
-    RemoveWhiteSpacesPipe,
-    LastIndexStringPipe
-  ],
-  entryComponents: [LoaderComponent]
+    declarations: [
+        DebounceDirective,
+        MetadataGroupByPipe,
+        GroupByPipe,
+        JoinPipe,
+        MapPipe,
+        BypassSanitizerPipe,
+        ColidSpinnerComponent,
+        ColidTreeViewComponent,
+        ClickOutsideDirective,
+        LoaderComponent,
+        RemoveWhiteSpacesPipe,
+        LastIndexStringPipe,
+        ActionButtonComponent
+    ],
+    imports: [
+        CommonModule,
+        MatProgressSpinnerModule,
+        MatTreeModule,
+        MatDividerModule,
+        CdkTreeModule,
+        MatCheckboxModule,
+        MatIconModule,
+        MatButtonModule
+    ],
+    exports: [
+        DebounceDirective,
+        MetadataGroupByPipe,
+        GroupByPipe,
+        JoinPipe,
+        MapPipe,
+        BypassSanitizerPipe,
+        ColidSpinnerComponent,
+        CommonModule,
+        ColidTreeViewComponent,
+        ActionButtonComponent,
+        ClickOutsideDirective,
+        RemoveWhiteSpacesPipe,
+        LastIndexStringPipe
+    ]
 })
 export class SharedModule { }

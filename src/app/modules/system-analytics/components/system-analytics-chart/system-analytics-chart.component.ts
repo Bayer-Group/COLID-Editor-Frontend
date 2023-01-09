@@ -9,7 +9,7 @@ import { ChartData } from 'src/app/shared/models/chart/chart-data';
 export class SystemAnalyticsChartComponent implements OnInit {
 
   colorScheme = {
-    domain: ['#0075A6', '#108000', '#6A4C72', '#DE0043', '#FFEB3B', '#FF9800', '#9E9E9E', '#607D8B']
+    domain: ['#0075A6', '#108000', '#6A4C72', '#DE0043', '#FFEB3B', '#FF9800', '#9E9E9E', '#607D8B'],
   };
 
   @Input() chart: ChartData;
@@ -20,6 +20,6 @@ export class SystemAnalyticsChartComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-  }
+  } 
 
 }

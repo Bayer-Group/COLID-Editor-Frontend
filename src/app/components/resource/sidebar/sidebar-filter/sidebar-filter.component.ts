@@ -1,12 +1,10 @@
-import { Component, Output, EventEmitter, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, Input } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { UserInfoState } from 'src/app/state/user-info.state';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ResourceSearchDTO } from 'src/app/shared/models/search/resource-search-dto';
 import { LogService } from 'src/app/core/logging/log.service';
-import { ResourceOverviewCTO } from 'src/app/shared/models/resources/resource-overview-cto';
 import { AuthService } from 'src/app/modules/authentication/services/auth.service';
-import { SearchFilterEditor } from 'src/app/shared/models/user/search-filter-editor';
 import { SearchResult } from 'src/app/shared/models/search/search-result';
 import { environment } from 'src/environments/environment';
 
@@ -15,16 +13,10 @@ import { environment } from 'src/environments/environment';
   templateUrl: './sidebar-filter.component.html',
   styleUrls: ['./sidebar-filter.component.scss']
 })
-export class SidebarFilterComponent implements OnInit, OnDestroy {
-  @Select(UserInfoState.getSelectedConsumerGroupId) selectedConsumerGroupId$: Observable<string>;
-  @Select(UserInfoState.getSearchFilterEditor) searchFilterEditor$: Observable<SearchFilterEditor>;
-
+export class SidebarFilterComponent implements OnInit {
   @Output() resourceSearchEvent = new EventEmitter<ResourceSearchDTO>();
 
   @Input() searchResultState: Observable<SearchResult>;
-
-  searchFilterEditorSubscription: Subscription;
-  selectedConsumerGroupIdSubscription: Subscription;
 
   filters = {
     searchText: '',
@@ -35,7 +27,7 @@ export class SidebarFilterComponent implements OnInit, OnDestroy {
     markedForDeletion: false
   };
 
-  sequenceDesc = true;
+  sequenceDesc = false;
 
   filterVocabulary =
     [
@@ -88,34 +80,8 @@ export class SidebarFilterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.selectedConsumerGroupIdSubscription = this.selectedConsumerGroupId$.subscribe(cgId => {
-        this.filter();
-    });
-
     this.authService.currentEmail$.subscribe(userEmail => this.userEmail = userEmail)
-
-    this.searchFilterEditorSubscription = this.searchFilterEditor$.subscribe((searchFilterEditor: SearchFilterEditor) => {
-      if (searchFilterEditor != null) {
-        this.filters.draft = searchFilterEditor.filterJson.draft;
-        this.filters.published = searchFilterEditor.filterJson.published;
-        this.filters.markedForDeletion = searchFilterEditor.filterJson.markedForDeletion;
-        this.filters.searchText = searchFilterEditor.filterJson.searchText;
-        this.filters.lastChanged = searchFilterEditor.filterJson.lastChangeUser != null ? true : false;
-        this.filters.consumerGroup = searchFilterEditor.filterJson.consumerGroup != null ? true : false;
-        this.limitSelected = searchFilterEditor.filterJson.limit;
-        this.offsetSelected = searchFilterEditor.filterJson.offset;
-        this.orderSelected = this.orderVocabulary.find(ov => ov.key.Predicate === searchFilterEditor.filterJson.orderPredicate);
-        this.sequenceDesc = searchFilterEditor.filterJson.sequence == 'desc' ? true : false;
-
-        this.filter();
-        //this.searchFilterEditorSubscription.unsubscribe();
-      }
-    });
-  }
-
-  ngOnDestroy() {
-    this.searchFilterEditorSubscription.unsubscribe();
-    this.selectedConsumerGroupIdSubscription.unsubscribe();
+    this.filter();
   }
 
   filter(key: string = null) {

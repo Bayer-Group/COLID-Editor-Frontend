@@ -3,6 +3,7 @@ import { tap } from 'rxjs/operators';
 import { TaxonomyService } from '../core/http/taxonomy.api.service';
 import { TaxonomyResultDTO } from '../shared/models/taxonomy/taxonomy-result-dto';
 import { Constants } from '../shared/constants';
+import { Injectable } from '@angular/core';
 
 export class TaxonomyStateModel {
     taxonomyResults: Map<string, TaxonomyResultDTO[]>;
@@ -20,7 +21,7 @@ export class FetchTaxonomyList {
         taxonomyResults: new Map<string, TaxonomyResultDTO[]>()
     }
 })
-
+@Injectable()
 export class TaxonomyState {
 
     constructor(private taxonomyApiService: TaxonomyService) { }

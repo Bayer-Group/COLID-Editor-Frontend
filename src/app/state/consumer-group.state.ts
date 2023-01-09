@@ -8,6 +8,7 @@ import { Constants } from '../shared/constants';
 import { ConsumerGroupRequestDTO } from '../shared/models/consumerGroups/consumer-group-request-dto';
 import { PidUriTemplateState, PidUriTemplateStateModel } from './pid-uri-template.state';
 import { UserInfoState, UserInfoStateModel, FetchConsumerGroupsByUser } from './user-info.state';
+import { Injectable } from '@angular/core';
 
 export class FetchConsumerGroups {
     static readonly type = '[ConsumerGroup] Fetch consumerGroups';
@@ -57,6 +58,7 @@ export class ConsumerGroupStateModel {
         metadata: null
     }
 })
+@Injectable()
 export class ConsumerGroupState {
     constructor(private consumerGroupApiService: ConsumerGroupApiService, private metadataService: MetaDataApiService) { }
 

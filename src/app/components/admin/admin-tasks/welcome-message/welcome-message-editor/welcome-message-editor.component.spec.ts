@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { WelcomeMessageEditorComponent } from './welcome-message-editor.component';
 
@@ -6,7 +6,7 @@ describe('WelcomeMessageEditorComponent', () => {
   let component: WelcomeMessageEditorComponent;
   let fixture: ComponentFixture<WelcomeMessageEditorComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ WelcomeMessageEditorComponent ]
     })

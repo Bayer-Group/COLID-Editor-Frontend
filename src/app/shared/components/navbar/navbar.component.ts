@@ -14,6 +14,7 @@ import { DefaultConsumerGroupDto } from '../../models/user/default-consumer-grou
 import { ColidMatSnackBarService } from 'src/app/modules/colid-mat-snack-bar/colid-mat-snack-bar.service';
 import { NotificationState } from 'src/app/modules/notification/notification.state';
 import { MessageDto } from '../../models/user/message-dto';
+import { Constants } from '../../constants';
 
 
 @Component({
@@ -104,8 +105,8 @@ export class NavbarComponent implements OnInit {
   }
 
   registerNewResource() {
-    this.store.dispatch(new CreateResource()).subscribe(() =>
-      this.router.navigate(['resource', 'hierarchy']));
+    //this.store.dispatch(new CreateResource()).subscribe(() =>
+      this.router.navigate(['resource', 'hierarchy']);//);
   }
 
   goToDataMarketplace() {
@@ -115,7 +116,10 @@ export class NavbarComponent implements OnInit {
 
   selectConsumerGroup(event: any) {
     this.selectedConsumerGroup = event.value;
-    this.store.dispatch(new SelectConsumerGroup(event.value.id)).subscribe();
+    const selectedConsumerGroupDefaultReviewCyclePolicy = this.selectedConsumerGroup.properties[Constants.ConsumerGroup.HasDefaultReviewCyclePolicy]
+      ? this.selectedConsumerGroup.properties[Constants.ConsumerGroup.HasDefaultReviewCyclePolicy][0]
+      : null;
+    this.store.dispatch(new SelectConsumerGroup(event.value.id, selectedConsumerGroupDefaultReviewCyclePolicy)).subscribe();
   }
 
   setDefaultConsumerGroup() {

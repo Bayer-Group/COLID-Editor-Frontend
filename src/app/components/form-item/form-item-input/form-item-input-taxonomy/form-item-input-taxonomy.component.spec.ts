@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { FormItemInputTaxonomyComponent } from './form-item-input-taxonomy.component';
 
@@ -6,7 +6,7 @@ describe('FormItemInputTaxonomyComponent', () => {
   let component: FormItemInputTaxonomyComponent;
   let fixture: ComponentFixture<FormItemInputTaxonomyComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ FormItemInputTaxonomyComponent ]
     })

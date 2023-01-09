@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { FormItemInputDatetimeComponent } from './form-item-input-datetime.component';
 
@@ -6,7 +6,7 @@ describe('FormItemInputDatetimeComponent', () => {
   let component: FormItemInputDatetimeComponent;
   let fixture: ComponentFixture<FormItemInputDatetimeComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ FormItemInputDatetimeComponent ]
     })
