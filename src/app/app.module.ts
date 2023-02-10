@@ -106,10 +106,7 @@ import { FormItemInputDistributionComponent } from './components/form-item/form-
 import { FormItemInputPidUriComponent } from './components/form-item/form-item-input/form-item-input-pid-uri/form-item-input-pid-uri.component';
 import { ResourceFormSecretDialogComponent } from './components/resource/resource-form/resource-form-secret-dialog/resource-form-secret-dialog.component';
 import { DeleteItemDialogComponent } from './shared/components/delete-item-dialog/delete-item-dialog.component';
-import { FormItemInputLinkingComponent } from './components/form-item/form-item-input/form-item-input-linking/form-item-input-linking.component';
-import { FormItemInputLinkingDialogComponent } from './components/form-item/form-item-input/form-item-input-linking/form-item-input-linking-dialog/form-item-input-linking-dialog.component';
 import { ResourceDisplayItemLinkingComponent } from './components/resource/resource-display/resource-display-item/resource-display-item-linking/resource-display-item-linking.component';
-import { FormItemCreateLinkingComponent } from './components/form-item/form-item-create/form-item-create-linking/form-item-create-linking.component';
 import { FormItemCreateNestedComponent } from './components/form-item/form-item-create/form-item-create-nested/form-item-create-nested.component';
 import { FormItemCreateDistributionComponent } from './components/form-item/form-item-create/form-item-create-distribution/form-item-create-distribution.component';
 import { ExtendedUriTemplateComponent } from './components/admin/admin-tasks/extended-uri-template/extended-uri-template.component';
@@ -241,10 +238,7 @@ const protectedResourceMap = new Map(Object.entries(environment.adalConfig.prote
         FormItemCreateDistributionComponent,
         ResourceFormSecretDialogComponent,
         DeleteItemDialogComponent,
-        FormItemInputLinkingComponent,
-        FormItemInputLinkingDialogComponent,
         ResourceDisplayItemLinkingComponent,
-        FormItemCreateLinkingComponent,
         ExtendedUriTemplateComponent,
         ExtendedUriTemplateDisplayComponent,
         ExtendedUriTemplateEditComponent,

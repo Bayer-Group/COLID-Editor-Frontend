@@ -28,17 +28,17 @@ function createTestResource(): Resource {
     testResource = new Resource();
     testResource.properties = new Array<ResourceProperty>();
 
-    testResource.properties.push(createResourceProperty('http://www.w3.org/1999/02/22-rdf-syntax-ns#type', 'https://pid.bayer.com/kos/19050#Resource', 'uri', null));
+    testResource.properties.push(createResourceProperty('http://www.w3.org/1999/02/22-rdf-syntax-ns#type', `https://pid.${environment.baseUrl}/kos/19050#Resource`, 'uri', null));
     testResource.properties.push(createResourceProperty('http://schema.org/accessibilityAPI', 'HTTP', 'literal', null));
     testResource.properties.push(createResourceProperty('http://schema.org/version', '1.0', 'literal', 'http://www.w3.org/2001/XMLSchema#float'));
     testResource.properties.push(createResourceProperty('http://www.w3.org/2004/02/skos/core#altLabel', 'Business Ontology Bayer Companies', 'literal', null));
     testResource.properties.push(createResourceProperty('http://www.w3.org/2004/02/skos/core#definition', 'Overview of the Bayer Companies', 'literal', null));
     testResource.properties.push(createResourceProperty('http://www.w3.org/2004/02/skos/core#editorialNote', 'Includes: Country, Region, Currency and Languages', 'literal', null));
     testResource.properties.push(createResourceProperty('http://www.w3.org/2004/02/skos/core#prefLabel', 'Bayer Companies Ontology', 'literal', null));
-    testResource.properties.push(createResourceProperty('https://pid.bayer.com/kos/19050#author', 'EUBLC', 'literal', null));
-    testResource.properties.push(createResourceProperty('https://pid.bayer.com/kos/19050#dateCreated', '2018-07-02T17:10:08', 'literal', 'http://www.w3.org/2001/XMLSchema#dateTime'));
-    testResource.properties.push(createResourceProperty('https://pid.bayer.com/kos/19050#dateModified', '2018-07-11T17:10:13', 'literal', 'http://www.w3.org/2001/XMLSchema#dateTime'));
-    testResource.properties.push(createResourceProperty('https://pid.bayer.com/kos/19050#hasBusinessDomain', 'https://pid.bayer.com/kos/19050/taxonomies#ControllingFinance', 'uri', null));
+    testResource.properties.push(createResourceProperty(`https://pid.${environment.baseUrl}/kos/19050#author`, 'EUBLC', 'literal', null));
+    testResource.properties.push(createResourceProperty(`https://pid.${environment.baseUrl}/kos/19050#dateCreated`, '2018-07-02T17:10:08', 'literal', 'http://www.w3.org/2001/XMLSchema#dateTime'));
+    testResource.properties.push(createResourceProperty(`https://pid.${environment.baseUrl}/kos/19050#dateModified`, '2018-07-11T17:10:13', 'literal', 'http://www.w3.org/2001/XMLSchema#dateTime'));
+    testResource.properties.push(createResourceProperty(`https://pid.${environment.baseUrl}/kos/19050#hasBusinessDomain`, `https://pid.${environment.baseUrl}/kos/19050/taxonomies#ControllingFinance`, 'uri', null));
 
     return testResource;
 }
@@ -67,20 +67,20 @@ function createTestMetadata (
 
 function createTestMetadataList(): Array<MetaDataProperty> {
     const testMetadata = new Array<MetaDataProperty>();
-    createTestMetadata('author', 'https://pid.bayer.com/kos/19050#author', 'Author', 'Original Author, name of the user (CWID or system user) who has introduced the item', 'http://www.w3.org/2001/XMLSchema#string', true, false, null);
-    createTestMetadata('dateCreated', 'https://pid.bayer.com/kos/19050#dateCreated', 'Creation date and time', 'Creation date/time', 'http://www.w3.org/2001/XMLSchema#dateTime', true, false, null);
-    createTestMetadata('dateModified', 'https://pid.bayer.com/kos/19050#dateModified', 'Last change date and time', 'Last Change date and time', 'http://www.w3.org/2001/XMLSchema#dateTime', true, false, null);
-    createTestMetadata('hasBusinessDomain', 'https://pid.bayer.com/kos/19050#hasBusinessDomain', 'Business Domain', 'In what kind of business domain the item is categorized', 'https://pid.bayer.com/kos/19050#BusinessDomain', true, false, null);
-    createTestMetadata('hasDataAccessLimitation', 'https://pid.bayer.com/kos/19050#hasDataAccessLimitation', 'Data Access Limitation', 'Controlled vocabulary for the Data Access.', 'https://pid.bayer.com/kos/19050#DataAccessLimitation', false, false, null);
-    createTestMetadata('hasDataSteward', 'https://pid.bayer.com/kos/19050#hasDataSteward', 'Data Steward', 'Name of the data steward (CWID) of the source.', 'http://www.w3.org/2001/XMLSchema#string', false, false, null);
-    createTestMetadata('hasInformationClassification', 'https://pid.bayer.com/kos/19050#hasInformationClassification', 'Information Classification', 'Bayer Information Classification levels as they apply to the registered Information.', 'https://pid.bayer.com/kos/19050#InformationClassification', true, false, null);
-    createTestMetadata('hasLastChangeUser', 'https://pid.bayer.com/kos/19050#hasLastChangeUser', 'Last change user', 'Name of the last user or system, who has changed the Item.', 'http://www.w3.org/2001/XMLSchema#string', true, false, null);
-    createTestMetadata('hasLifecycleStatus', 'https://pid.bayer.com/kos/19050#hasLifecycleStatus', 'Lifecycle Status', 'Indicates the maturity of an object.', 'https://pid.bayer.com/kos/19050#LifecycleStatus', true, false, null);
-    createTestMetadata('hasPIDURI', 'https://pid.bayer.com/kos/19050#hasPIDURI', 'PID URI', 'URI (URL) provided by PID.', 'http://www.w3.org/2001/XMLSchema#anyURI', true, false, null);
-    createTestMetadata('hasTargetURI', 'https://pid.bayer.com/kos/19050#hasTargetURI', 'Target URI', 'Original external or internal non-PID address (URL)', 'http://www.w3.org/2001/XMLSchema#anyURI', true, false, null);
-    createTestMetadata('hasTrustLevel', 'https://pid.bayer.com/kos/19050#hasTrustLevel', 'Trust Level', 'How trustworthy is the source.', 'https://pid.bayer.com/kos/19050#TrustLevel', false, false, null);
-    createTestMetadata( 'isPersonalData', 'https://pid.bayer.com/kos/19050#isPersonalData', 'Personal Data', 'In the sense of GDPR and internal rules', 'http://www.w3.org/2001/XMLSchema#boolean', true, false, null);
-    createTestMetadata( 'hasDataQuality', 'https://pid.bayer.com/kos/19050#hasDataQuality', 'Data Quality', 'Linked Data Quality status', 'https://pid.bayer.com/kos/19050#DataQuality', false, false, null);
+    createTestMetadata('author', `https://pid.${environment.baseUrl}/kos/19050#author`, 'Author', 'Original Author, name of the user (CWID or system user) who has introduced the item', 'http://www.w3.org/2001/XMLSchema#string', true, false, null);
+    createTestMetadata('dateCreated', `https://pid.${environment.baseUrl}/kos/19050#dateCreated`, 'Creation date and time', 'Creation date/time', 'http://www.w3.org/2001/XMLSchema#dateTime', true, false, null);
+    createTestMetadata('dateModified', `https://pid.${environment.baseUrl}/kos/19050#dateModified`, 'Last change date and time', 'Last Change date and time', 'http://www.w3.org/2001/XMLSchema#dateTime', true, false, null);
+    createTestMetadata('hasBusinessDomain', `https://pid.${environment.baseUrl}/kos/19050#hasBusinessDomain`, 'Business Domain', 'In what kind of business domain the item is categorized', `https://pid.${environment.baseUrl}/kos/19050#BusinessDomain`, true, false, null);
+    createTestMetadata('hasDataAccessLimitation', `https://pid.${environment.baseUrl}/kos/19050#hasDataAccessLimitation`, 'Data Access Limitation', 'Controlled vocabulary for the Data Access.', `https://pid.${environment.baseUrl}/kos/19050#DataAccessLimitation`, false, false, null);
+    createTestMetadata('hasDataSteward', `https://pid.${environment.baseUrl}/kos/19050#hasDataSteward`, 'Data Steward', 'Name of the data steward (CWID) of the source.', 'http://www.w3.org/2001/XMLSchema#string', false, false, null);
+    createTestMetadata('hasInformationClassification', `https://pid.${environment.baseUrl}/kos/19050#hasInformationClassification`, 'Information Classification', 'Bayer Information Classification levels as they apply to the registered Information.', `https://pid.${environment.baseUrl}/kos/19050#InformationClassification`, true, false, null);
+    createTestMetadata('hasLastChangeUser', `https://pid.${environment.baseUrl}/kos/19050#hasLastChangeUser`, 'Last change user', 'Name of the last user or system, who has changed the Item.', 'http://www.w3.org/2001/XMLSchema#string', true, false, null);
+    createTestMetadata('hasLifecycleStatus', `https://pid.${environment.baseUrl}/kos/19050#hasLifecycleStatus`, 'Lifecycle Status', 'Indicates the maturity of an object.', `https://pid.${environment.baseUrl}/kos/19050#LifecycleStatus`, true, false, null);
+    createTestMetadata('hasPIDURI', `https://pid.${environment.baseUrl}/kos/19050#hasPIDURI`, 'PID URI', 'URI (URL) provided by PID.', 'http://www.w3.org/2001/XMLSchema#anyURI', true, false, null);
+    createTestMetadata('hasTargetURI', `https://pid.${environment.baseUrl}/kos/19050#hasTargetURI`, 'Target URI', 'Original external or internal non-PID address (URL)', 'http://www.w3.org/2001/XMLSchema#anyURI', true, false, null);
+    createTestMetadata('hasTrustLevel', `https://pid.${environment.baseUrl}/kos/19050#hasTrustLevel`, 'Trust Level', 'How trustworthy is the source.', `https://pid.${environment.baseUrl}/kos/19050#TrustLevel`, false, false, null);
+    createTestMetadata( 'isPersonalData', `https://pid.${environment.baseUrl}/kos/19050#isPersonalData`, 'Personal Data', 'In the sense of GDPR and internal rules', 'http://www.w3.org/2001/XMLSchema#boolean', true, false, null);
+    createTestMetadata( 'hasDataQuality', `https://pid.${environment.baseUrl}/kos/19050#hasDataQuality`, 'Data Quality', 'Linked Data Quality status', `https://pid.${environment.baseUrl}/kos/19050#DataQuality`, false, false, null);
     return testMetadata;
 }
 

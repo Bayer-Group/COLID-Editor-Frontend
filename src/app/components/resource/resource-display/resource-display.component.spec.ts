@@ -27,17 +27,17 @@ function createTestResource(): Resource {
     testResource = new Resource();
     testResource.properties = new Array<ResourceProperty>();
 
-    testResource.properties.push(createResourceProperty('http://www.w3.org/1999/02/22-rdf-syntax-ns#type', 'https://pid.bayer.com/kos/19050#Resource', 'uri', null));
+    testResource.properties.push(createResourceProperty('http://www.w3.org/1999/02/22-rdf-syntax-ns#type', `https://pid.${environment.baseUrl}/kos/19050#Resource`, 'uri', null));
     testResource.properties.push(createResourceProperty('http://schema.org/accessibilityAPI', 'HTTP', 'literal', null));
     testResource.properties.push(createResourceProperty('http://schema.org/version', '1.0', 'literal', 'http://www.w3.org/2001/XMLSchema#float'));
     testResource.properties.push(createResourceProperty('http://www.w3.org/2004/02/skos/core#altLabel', 'Business Ontology Bayer Companies', 'literal', null));
     testResource.properties.push(createResourceProperty('http://www.w3.org/2004/02/skos/core#definition', 'Overview of the Bayer Companies', 'literal', null));
     testResource.properties.push(createResourceProperty('http://www.w3.org/2004/02/skos/core#editorialNote', 'Includes: Country, Region, Currency and Languages', 'literal', null));
     testResource.properties.push(createResourceProperty('http://www.w3.org/2004/02/skos/core#prefLabel', 'Bayer Companies Ontology', 'literal', null));
-    testResource.properties.push(createResourceProperty('https://pid.bayer.com/kos/19050#author', 'EUBLC', 'literal', null));
-    testResource.properties.push(createResourceProperty('https://pid.bayer.com/kos/19050#dateCreated', '2018-07-02T17:10:08', 'literal', 'http://www.w3.org/2001/XMLSchema#dateTime'));
-    testResource.properties.push(createResourceProperty('https://pid.bayer.com/kos/19050#dateModified', '2018-07-11T17:10:13', 'literal', 'http://www.w3.org/2001/XMLSchema#dateTime'));
-    testResource.properties.push(createResourceProperty('https://pid.bayer.com/kos/19050#hasBusinessDomain', 'https://pid.bayer.com/kos/19050/taxonomies#ControllingFinance', 'uri', null));
+    testResource.properties.push(createResourceProperty(`https://pid.${environment.baseUrl}/kos/19050#author`, 'EUBLC', 'literal', null));
+    testResource.properties.push(createResourceProperty(`https://pid.${environment.baseUrl}/kos/19050#dateCreated`, '2018-07-02T17:10:08', 'literal', 'http://www.w3.org/2001/XMLSchema#dateTime'));
+    testResource.properties.push(createResourceProperty(`https://pid.${environment.baseUrl}/kos/19050#dateModified`, '2018-07-11T17:10:13', 'literal', 'http://www.w3.org/2001/XMLSchema#dateTime'));
+    testResource.properties.push(createResourceProperty(`https://pid.${environment.baseUrl}/kos/19050#hasBusinessDomain`, `https://pid.${environment.baseUrl}/kos/19050/taxonomies#ControllingFinance`, 'uri', null));
 
     return testResource;
 }
@@ -177,7 +177,7 @@ describe('ResourceDisplayComponent', () => {
     expect(component.getResourcePropertyValue(testResource, 'anotherInvalidMetaData')).toBe('');
 
     expect(component.getResourcePropertyValue(testResource, 'dateModified')).toBe('2018-07-11T17:10:13');
-    expect(component.getResourcePropertyValue(testResource, 'hasBusinessDomain')).toBe('https://pid.bayer.com/kos/19050/taxonomies#ControllingFinance');
+    expect(component.getResourcePropertyValue(testResource, 'hasBusinessDomain')).toBe(`https://pid.${environment.baseUrl}/kos/19050/taxonomies#ControllingFinance');
   });
 
   it('#propToArray should return correct entries for a dictionary', () => {

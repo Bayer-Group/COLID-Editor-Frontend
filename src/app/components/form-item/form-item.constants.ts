@@ -1,16 +1,19 @@
+import { environment } from "src/environments/environment";
+import { Constants } from "src/app/shared/constants";
+
 export const FieldTypeFormItemMapping = {
-    'https://pid.bayer.com/ns/shacl/fieldType#string' : 'general',
-    'https://pid.bayer.com/ns/shacl/fieldType#naturalNumber' : 'number',
-    'https://pid.bayer.com/ns/shacl/fieldType#number' : 'number',
-    'https://pid.bayer.com/ns/shacl/fieldType#dateTime' : 'datetime',
-    'https://pid.bayer.com/ns/shacl/fieldType#html' : 'html',
-    'https://pid.bayer.com/ns/shacl/fieldType#boolean' : 'boolean',
-    'https://pid.bayer.com/ns/shacl/fieldType#list' : 'list',
-    'https://pid.bayer.com/ns/shacl/fieldType#extendableList' : 'extendableList' ,
-    'https://pid.bayer.com/ns/shacl/fieldType#hierarchy' : 'taxonomy',
-    'https://pid.bayer.com/ns/shacl/fieldType#identifier' : 'identifier',
-    'https://pid.bayer.com/ns/shacl/fieldType#entity' : 'nested',
-    'https://pid.bayer.com/ns/shacl/fieldType#attachment' : 'attachment',
-    'https://pid.bayer.com/ns/shacl/fieldType#linkedEntity' : 'linking',
-    'https://pid.bayer.com/ns/shacl/fieldType#person' : 'person',
+    [Constants.Shacl.String] : 'general',
+    [Constants.Shacl.NaturalNumber] : 'number',
+    [Constants.Shacl.Number] : 'number',
+    [Constants.Shacl.DateTime] : 'datetime',
+    [Constants.Shacl.HTML] : 'html',
+    [Constants.Shacl.Boolean] : 'boolean',
+    [Constants.Shacl.List] : 'list',
+    [Constants.Shacl.ExtendableList] : 'extendableList' ,
+    [Constants.Shacl.Hierarchy] : 'taxonomy',
+    [Constants.Shacl.Identifier] : 'identifier',
+    [Constants.Shacl.Entity] : 'nested',
+    [Constants.Shacl.Attachment] : 'attachment',
+    [Constants.Shacl.LinkedEntity] : 'linking',
+    [Constants.Shacl.Person] : 'person',
 };

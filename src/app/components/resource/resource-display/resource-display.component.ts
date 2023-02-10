@@ -8,6 +8,7 @@ import { Constants } from 'src/app/shared/constants';
 import { Resource } from '../../../shared/models/resources/resource';
 import { VersionProperty } from 'src/app/shared/models/resources/version-property';
 import { MetaDataProperty } from 'src/app/shared/models/metadata/meta-data-property';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-resource-display',
@@ -19,8 +20,9 @@ export class ResourceDisplayComponent implements OnInit, OnDestroy {
   @Select(MetaDataState.metadata) metadata$: Observable<Map<string, MetaDataProperty[]>>;
   constants = Constants;
 
-  headerGroup = "https://pid.bayer.com/kos/19050/PreferedLabel";
-  subHeaderGroup = "https://pid.bayer.com/kos/19050/Definition";
+  headerGroup = Constants.Metadata.PreferredLabel ;
+  subHeaderGroup = Constants.Metadata.PreferredLabel;
+  invisibleProperties = [Constants.Metadata.HasLabel]
 
   activeResource: Resource;
   metadata: MetaDataProperty[];

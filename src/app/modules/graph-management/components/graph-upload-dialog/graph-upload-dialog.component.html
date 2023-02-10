@@ -5,7 +5,7 @@
             <mat-form-field class="w-100" appearance="outline">
                 <mat-label>Graph Name</mat-label>
                 <input type="url" formControlName="graphName" matInput
-                    placeholder="https://pid.bayer.com/graph/example">
+                    [placeholder]="placeholder">
                 <mat-icon matSuffix>graphic_eq</mat-icon>
                 <mat-hint>Specifies the name to upload the graph with.</mat-hint>
             </mat-form-field>

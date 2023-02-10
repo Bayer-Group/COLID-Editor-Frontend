@@ -14,7 +14,7 @@
       <mat-icon>{{taxonomyMenuOpened ? 'arrow_drop_up' : 'arrow_drop_down'}}</mat-icon>
     </div>
   </div>
-  <div class="col">
+  <div style="position: relative">
     <div class="ng-dropdown-panel" [hidden]="!taxonomyMenuOpened">
       <div #scroll class="ng-dropdown-panel-items scroll-host">
         <div #padding [class.total-padding]="true"></div>

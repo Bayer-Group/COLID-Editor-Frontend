@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, Input, ViewChild, OnInit, ElementRef, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { Component, Output, EventEmitter, Input, ViewChild, OnInit, ElementRef, OnDestroy, ViewEncapsulation, AfterViewInit } from '@angular/core';
 import { Select } from '@ngxs/store';
 import { Observable, Subscription } from 'rxjs';
 import { Constants } from 'src/app/shared/constants';
@@ -12,7 +12,7 @@ import { SearchResult } from 'src/app/shared/models/search/search-result';
   templateUrl: './sidebar-content.component.html',
   styleUrls: ['./sidebar-content.component.scss']
 })
-export class SidebarContentComponent implements OnInit, OnDestroy {
+export class SidebarContentComponent implements OnInit, OnDestroy, AfterViewInit {
   constants = Constants;
   @Input() selectedResourcePidUri = '';
 
@@ -54,7 +54,9 @@ export class SidebarContentComponent implements OnInit, OnDestroy {
         }, 100);
       }
     });
-
+  }
+  
+  ngAfterViewInit(): void {
     this.resetScrollingSubscription = this.resetScrolling.subscribe(_ => this.results._elementRef.nativeElement.scrollTop = 0)
   }
 

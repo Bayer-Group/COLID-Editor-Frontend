@@ -1,77 +1,168 @@
 <ng-container *ngIf="activeResource; else loading">
   <mat-toolbar class="resource-title-bar" style="position: relative">
-
     <mat-toolbar-row class="row px-5 mx-0">
-      <app-entity-header class="col-10 resource-title" [screenWidth]="windowSize" [editMode]="(isAuthorizedToEdit$ | async) && (windowSize > 700 || actionBarOpened)" [numberSubscribers]="getNumSubscribers" [entity]="activeResource"
-        key="https://pid.bayer.com/kos/19050/hasLabel">
+      <app-entity-header
+        class="col-10 resource-title"
+        [screenWidth]="windowSize"
+        [editMode]="
+          (isAuthorizedToEdit$ | async) && (windowSize > 700 || actionBarOpened)
+        "
+        [numberSubscribers]="getNumSubscribers"
+        [entity]="activeResource"
+        [key]="key"
+      >
       </app-entity-header>
 
       <div class="col-2 resource-title-buttons">
         <div class="d-flex justify-content-end">
-        <ng-container  *ngIf="windowSize > 700 || actionBarOpened">
-        
-          <action-button type="mat-icon-button" id='btnEditResource' *ngIf="isAuthorizedToEdit$ | async" color="primary"
-          (click)="editResource()" matTooltip="Edit this resource" icon="edit"
-            [disabled]="isLoading">
-          </action-button>
-
-          <action-button type="mat-icon-button" id='btnChangeResourceType' *ngIf="isAuthorizedToEdit$ | async" color="primary"
-          (click)="changeResourceType()" matTooltip="Change resource type" icon="border_color"
-            [disabled]="isLoading">
-          </action-button>
-
-          <action-button type="mat-icon-button" id='btnSubscribeResource' *ngIf="!isResourceSubscribed" color="primary"
-            (click)="subscribeToResource()" matTooltip="Subscribe to this resource" icon="notifications_none"
-            [disabled]="isLoading" [loading]="isActionLoading('subscribe')">
-          </action-button>
-
-          <action-button type="mat-icon-button" id='btnUnsubscribeResource' *ngIf="isResourceSubscribed" color="primary"
-            (click)="unsubscribeFromResource()" matTooltip="Unsubscribe from this resource" icon="notifications_active"
-            [fontSet]="'material-icons'" [disabled]="isLoading" [loading]="isActionLoading('unsubscribe')">
-          </action-button>
-
-          <ng-container *ngIf="isAuthorizedToEdit$ | async">
-
-            <action-button type="mat-icon-button" id='btnDeleteDraft' *ngIf="isAuthorizedToDeleteDraft" color="primary"
-              (click)="confirmAndDelete()" matTooltip="Delete the resource draft" icon="delete" [disabled]="isLoading"
-              [loading]="isActionLoading('delete')">
+          <ng-container *ngIf="windowSize > 700 || actionBarOpened">
+            <action-button
+              type="mat-icon-button"
+              id="btnEditResource"
+              *ngIf="isAuthorizedToEdit$ | async"
+              color="primary"
+              (click)="editResource()"
+              matTooltip="Edit this resource"
+              icon="edit"
+              [disabled]="isLoading"
+            >
             </action-button>
 
-            <action-button type="mat-icon-button" id='btnMarkForDeletion' *ngIf="isAuthorizedToMarkForDeletion"
-              color="primary" (click)="markResourceForDeletion()" matTooltip="Mark this resource for deletion"
-              icon="delete_forever" [disabled]="isLoading" [loading]="isActionLoading('markForDeletion')">
+            <action-button
+              type="mat-icon-button"
+              id="btnChangeResourceType"
+              *ngIf="isAuthorizedToEdit$ | async"
+              color="primary"
+              (click)="changeResourceType()"
+              matTooltip="Change resource type"
+              icon="border_color"
+              [disabled]="isLoading"
+            >
             </action-button>
 
-            <action-button type="mat-icon-button" id='btnLinkResource' *ngIf="isAllowedToLink" color="primary"
-            (click)="showLinkingResourceDialog()" matTooltip="Link this resource to another resource version"
-              icon="link" [disabled]="isLoading" [loading]="isActionLoading('link')">
+            <action-button
+              type="mat-icon-button"
+              color="primary"
+              matTooltip="Add Linked Resources"
+              icon="new_label"
+              *ngIf="isPublished && (isAuthorizedToEdit$ | async)"
+              (click)="openInResourceRelationshipManager()"
+            ></action-button>
+
+            <action-button
+              type="mat-icon-button"
+              id="btnSubscribeResource"
+              *ngIf="!isResourceSubscribed"
+              color="primary"
+              (click)="subscribeToResource()"
+              matTooltip="Subscribe to this resource"
+              icon="notifications_none"
+              [disabled]="isLoading"
+              [loading]="isActionLoading('subscribe')"
+            >
             </action-button>
 
-            <action-button type="mat-icon-button" id='btnUnlinkResource' *ngIf="isAllowedToUnlink" color="primary"
-              (click)="unlinkResource()" matTooltip="Unlink this resource from its version list" icon="link_off"
-              [disabled]="isLoading" [loading]="isActionLoading('unlink')">
+            <action-button
+              type="mat-icon-button"
+              id="btnUnsubscribeResource"
+              *ngIf="isResourceSubscribed"
+              color="primary"
+              (click)="unsubscribeFromResource()"
+              matTooltip="Unsubscribe from this resource"
+              icon="notifications_active"
+              [fontSet]="'material-icons'"
+              [disabled]="isLoading"
+              [loading]="isActionLoading('unsubscribe')"
+            >
             </action-button>
 
-            <button mat-icon-button id='btnCreateNewVersion' *ngIf="isAllowedCreateNewVersion" color="primary"
-              (click)="createNewVersion()" matTooltip="Create new version of this resource">
-              <mat-icon id="button-resource-display-create-new-version" fontSet="material-icons">dynamic_feed</mat-icon>
-            </button>
+            <ng-container *ngIf="isAuthorizedToEdit$ | async">
+              <action-button
+                type="mat-icon-button"
+                id="btnDeleteDraft"
+                *ngIf="isAuthorizedToDeleteDraft"
+                color="primary"
+                (click)="confirmAndDelete()"
+                matTooltip="Delete the resource draft"
+                icon="delete"
+                [disabled]="isLoading"
+                [loading]="isActionLoading('delete')"
+              >
+              </action-button>
 
-            <!-- <button mat-icon-button id='btnCopyCurrentResource' color="primary" (click)="copyResource()"
+              <action-button
+                type="mat-icon-button"
+                id="btnMarkForDeletion"
+                *ngIf="isAuthorizedToMarkForDeletion"
+                color="primary"
+                (click)="markResourceForDeletion()"
+                matTooltip="Mark this resource for deletion"
+                icon="delete_forever"
+                [disabled]="isLoading"
+                [loading]="isActionLoading('markForDeletion')"
+              >
+              </action-button>
+
+              <action-button
+                type="mat-icon-button"
+                id="btnLinkResource"
+                *ngIf="isAllowedToLink"
+                color="primary"
+                (click)="showLinkingResourceDialog()"
+                matTooltip="Link this resource to another resource version"
+                icon="link"
+                [disabled]="isLoading"
+                [loading]="isActionLoading('link')"
+              >
+              </action-button>
+
+              <action-button
+                type="mat-icon-button"
+                id="btnUnlinkResource"
+                *ngIf="isAllowedToUnlink"
+                color="primary"
+                (click)="unlinkResource()"
+                matTooltip="Unlink this resource from its version list"
+                icon="link_off"
+                [disabled]="isLoading"
+                [loading]="isActionLoading('unlink')"
+              >
+              </action-button>
+
+              <button
+                mat-icon-button
+                id="btnCreateNewVersion"
+                *ngIf="isAllowedCreateNewVersion"
+                color="primary"
+                (click)="createNewVersion()"
+                matTooltip="Create new version of this resource"
+              >
+                <mat-icon
+                  id="button-resource-display-create-new-version"
+                  fontSet="material-icons"
+                  >dynamic_feed</mat-icon
+                >
+              </button>
+
+              <!-- <button mat-icon-button id='btnCopyCurrentResource' color="primary" (click)="copyResource()"
               matTooltip="Copy current resource">
               <mat-icon id="button-resource-display-copy-current-resource" fontSet="material-icons">content_copy
               </mat-icon>
             </button> -->
-
+            </ng-container>
           </ng-container>
-        </ng-container>
 
           <div class="" *ngIf="windowSize <= 700">
-            <action-button type="mat-icon-button" id='btnShowActions' color="primary"
-            (click)="toggleActionBar()" matTooltip="Click for more actions" icon="more_vert">
+            <action-button
+              type="mat-icon-button"
+              id="btnShowActions"
+              color="primary"
+              (click)="toggleActionBar()"
+              matTooltip="Click for more actions"
+              icon="more_vert"
+            >
             </action-button>
           </div>
-
         </div>
       </div>
     </mat-toolbar-row>
@@ -82,25 +173,62 @@
     <section>
       <div class="row">
         <div class="col">
-          <nav mat-tab-nav-bar animationDuration="0ms" mat-align-tabs="start" dynamicHeight="true">
-            <a mat-tab-link routerLink="./" [queryParams]="{ pidUri: activeResource.pidUri }" routerLinkActive
-              #current="routerLinkActive" [routerLinkActiveOptions]="{exact:true}" [active]="current.isActive">
+          <nav
+            mat-tab-nav-bar
+            animationDuration="0ms"
+            mat-align-tabs="start"
+            dynamicHeight="true"
+          >
+            <a
+              mat-tab-link
+              routerLink="./"
+              [queryParams]="{ pidUri: activeResource.pidUri }"
+              routerLinkActive
+              #current="routerLinkActive"
+              [routerLinkActiveOptions]="{ exact: true }"
+              [active]="current.isActive"
+            >
               Current
               <mat-chip-list>
-                <mat-chip selected color="deleted" *ngIf="isMarkedForDeletion" matTooltip="Marked for deletion">
-                  <mat-icon class="icon-display" fontSet="material-icons-outlined">delete_forever</mat-icon>
+                <mat-chip
+                  selected
+                  color="deleted"
+                  *ngIf="isMarkedForDeletion"
+                  matTooltip="Marked for deletion"
+                >
+                  <mat-icon
+                    class="icon-display"
+                    fontSet="material-icons-outlined"
+                    >delete_forever</mat-icon
+                  >
                 </mat-chip>
                 <mat-chip selected color="draft" *ngIf="isDraft">
-                  <mat-icon class="icon-display" fontSet="material-icons-outlined" matTooltip="Draft">edit</mat-icon>
+                  <mat-icon
+                    class="icon-display"
+                    fontSet="material-icons-outlined"
+                    matTooltip="Draft"
+                    >edit</mat-icon
+                  >
                 </mat-chip>
                 <mat-chip selected color="published" *ngIf="isPublished">
-                  <mat-icon class="icon-display" fontSet="material-icons-outlined" matTooltip="Published">cloud_upload
+                  <mat-icon
+                    class="icon-display"
+                    fontSet="material-icons-outlined"
+                    matTooltip="Published"
+                    >cloud_upload
                   </mat-icon>
                 </mat-chip>
               </mat-chip-list>
             </a>
-            <a mat-tab-link routerLink="history" [queryParams]="{ pidUri: activeResource.pidUri }" routerLinkActive
-              #history="routerLinkActive" [routerLinkActiveOptions]="{exact:true}" [active]="history.isActive">
+            <a
+              mat-tab-link
+              routerLink="history"
+              [queryParams]="{ pidUri: activeResource.pidUri }"
+              routerLinkActive
+              #history="routerLinkActive"
+              [routerLinkActiveOptions]="{ exact: true }"
+              [active]="history.isActive"
+            >
               History
             </a>
           </nav>
@@ -108,9 +236,19 @@
       </div>
     </section>
 
-    <button class="edit-button" id='btnFabEditResource' mat-fab *ngIf="current.isActive" color="accent"
-      [disabled]="!(isAuthorizedToEdit$ | async) || isLoading" matTooltip="Edit this resource" (click)="editResource()">
-      <mat-icon id="button-resource-display-edit-fab" fontSet="material-icons">edit</mat-icon>
+    <button
+      class="edit-button"
+      id="btnFabEditResource"
+      mat-fab
+      *ngIf="current.isActive"
+      color="accent"
+      [disabled]="!(isAuthorizedToEdit$ | async) || isLoading"
+      matTooltip="Edit this resource"
+      (click)="editResource()"
+    >
+      <mat-icon id="button-resource-display-edit-fab" fontSet="material-icons"
+        >edit</mat-icon
+      >
     </button>
 
     <!-- Display and History of resource -->

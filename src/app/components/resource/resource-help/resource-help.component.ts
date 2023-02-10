@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Select } from '@ngxs/store';
 import { BUILD } from '../../../../assets/build-variables';
 import { environment } from 'src/environments/environment';
+import { Constants } from 'src/app/shared/constants';
 
 @Component({
   selector: 'app-help',
@@ -16,6 +17,7 @@ export class ResourceHelpComponent implements OnInit {
   
   frontendBuildInformation = BUILD;
   releaseNotesUrl = environment.releaseNotesUrl;
+  imageUrl = Constants.Assets.Logo;
 
   constructor() { }
 

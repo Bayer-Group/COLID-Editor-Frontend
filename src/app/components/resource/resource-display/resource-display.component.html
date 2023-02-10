@@ -1,7 +1,7 @@
 <ng-container *ngIf="activeResource && metadata && metadata.length; else loading">
   <app-entity-display (versionClick)="versionClicked($event)" [entityVersions]="(activeResource$ | async)?.versions"
   [entity]="activeResource" [metadata]="metadata" [headerGroup]="headerGroup"
-  [subHeaderGroup]="subHeaderGroup" [invisbleProperties]="['https://pid.bayer.com/kos/19050/hasLabel']">
+  [subHeaderGroup]="subHeaderGroup" [invisbleProperties]="invisibleProperties">
 </app-entity-display>
 </ng-container>
 <ng-template #loading>

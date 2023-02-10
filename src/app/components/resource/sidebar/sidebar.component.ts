@@ -1,5 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Store, Select } from '@ngxs/store';
+import { Subscription } from 'rxjs'
 import { LogService } from 'src/app/core/logging/log.service';
 import { Router } from '@angular/router';
 import { ResourceSearchDTO } from 'src/app/shared/models/search/resource-search-dto';
@@ -13,9 +14,11 @@ import { SearchResult } from 'src/app/shared/models/search/search-result';
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.scss']
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, OnDestroy {
     @Select(ResourceOverviewState.searchResult) searchResult$: Observable<SearchResult>;
     @Select(ResourceOverviewState.loading) loading$: Observable<boolean>;
+    @Select(ResourceOverviewState.initialLoad) initialLoad$: Observable<boolean>;
+    initialLoadSub: Subscription;
     resetScrolling = new Subject<void>();
     resetScrolling$ = this.resetScrolling.asObservable();
 
@@ -29,6 +32,15 @@ export class SidebarComponent implements OnInit {
 
     ngOnInit() { 
         this.currentPageStatus = "listSideNav";
+        this.initialLoadSub = this.initialLoad$.subscribe((initialLoad: boolean) => {
+            if (initialLoad) {
+                this.resetScrolling.next();
+            }
+        })
+    }
+
+    ngOnDestroy() {
+        this.initialLoadSub.unsubscribe();
     }
 
     handleResourceSelectionChanged(selectedResourcePidUri: string) {

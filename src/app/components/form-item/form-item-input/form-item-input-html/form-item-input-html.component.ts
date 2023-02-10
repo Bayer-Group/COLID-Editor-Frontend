@@ -21,13 +21,8 @@ export class FormItemInputHtmlComponent extends FormItemInputBaseComponent {
   constructor() {
     super();
   }
-  handleBlankInput() {
-    var wrapper = document.createElement("div");
-    wrapper.innerHTML = this.internalValue;
-    var element = wrapper.getElementsByTagName("p")[0];
-    if (element.innerHTML.trim() == "" && this.internalValue != null) {
-      this.internalValue = null;
-    }
+
+  handleContentChanged() {
     this.handleValueChanged(this.internalValue);
   }
 }

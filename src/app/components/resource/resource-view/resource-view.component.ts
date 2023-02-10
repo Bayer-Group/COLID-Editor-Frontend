@@ -6,8 +6,6 @@ import { Observable, Subscription, of, combineLatest } from 'rxjs';
 import { Resource } from 'src/app/shared/models/resources/resource';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { LogService } from 'src/app/core/logging/log.service';
-import { ResourceOverviewDTO } from 'src/app/shared/models/resources/resource-overview-dto';
-import { FormItemInputLinkingDialogComponent } from '../../form-item/form-item-input/form-item-input-linking/form-item-input-linking-dialog/form-item-input-linking-dialog.component';
 import { DeleteItemDialogComponent } from '../../../shared/components/delete-item-dialog/delete-item-dialog.component';
 import { ColidMatSnackBarService } from 'src/app/modules/colid-mat-snack-bar/colid-mat-snack-bar.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -24,8 +22,8 @@ import { ColidEntrySubscriberCountState } from 'src/app/state/colid-entry-subcri
 import { EntityFormStatus } from 'src/app/shared/components/entity-form/entity-form-status';
 import { HostListener } from '@angular/core';
 import { ResourceHierarchyComponent } from '../resource-hierarchy/resource-hierarchy.component';
-import { FetchSecondMetadata } from 'src/app/state/meta-data.state';
 import { FetchSidebarResourceOverview } from 'src/app/state/resource-overview.state';
+import { environment } from 'src/environments/environment';
 
 export enum ResourceViewAction {
   SUBSCRIBE = 'subscribe', 
@@ -60,6 +58,8 @@ export class ResourceViewComponent implements OnInit, OnDestroy {
   combineLatestSubscription: Subscription;
   routerEventSubscription: Subscription;
   userEmail: string;
+
+  key = Constants.Metadata.HasLabel
 
   get isAuthorizedToEdit$(): Observable<boolean> {
     return this.authConsumerGroupService.IsAuthorizedToEdit();
@@ -217,20 +217,6 @@ export class ResourceViewComponent implements OnInit, OnDestroy {
     this.router.navigate(['resource', 'hierarchy'], { queryParams: { type: resourceType[0], based: this.activeResource.pidUri, creationType: ResourceCreationType.COPY } });
   }
 
-  showLinkingResourceDialog() {
-    const dialogRef = this.dialog.open(FormItemInputLinkingDialogComponent, {
-      width: '700px',
-      height: 'calc(100vh - 200px)',
-      disableClose: true
-    });
-
-    dialogRef.afterClosed().subscribe((result: string) => {
-      if (result) {
-       this.linkResource(result);
-      }
-    });
-  }
-
   linkResource(selectedResourceForLinking: string) {
     this.status = EntityFormStatus.LOADING;
     this.action = ResourceViewAction.LINK;
@@ -253,6 +239,11 @@ export class ResourceViewComponent implements OnInit, OnDestroy {
     }, error => {
       this.handleHttpErrorResponse(error);
     });
+  }
+
+  openInResourceRelationshipManager() {
+    const url = `${environment.rrmUrl}?baseNode=${this.activeResource.pidUri}`;
+    window.open(url, '_blank');
   }
 
   changeResourceType() {

@@ -27,7 +27,7 @@ export class ResourceDisplayItemDropdownComponent implements OnInit {
   ngOnInit() {
     const range = this.metadata.properties[Constants.Metadata.Range];
 
-    if (range === 'https://pid.bayer.com/kos/19050/Keyword') {
+    if (range === Constants.ResourceTypes.Keyword) {
       this.badges = true;
     }
 

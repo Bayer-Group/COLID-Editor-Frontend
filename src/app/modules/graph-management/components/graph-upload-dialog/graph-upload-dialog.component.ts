@@ -5,6 +5,8 @@ import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 import { NeptuneLoaderStatusReponse } from 'src/app/shared/models/graphs/neptune-loader-status-response';
 import { NeptuneLoaderResponse } from 'src/app/shared/models/graphs/neptune-loader-response';
+import { environment } from 'src/environments/environment';
+import { Constants } from 'src/app/shared/constants';
 
 @Component({
   selector: 'app-graph-upload-dialog',
@@ -23,6 +25,8 @@ export class GraphUploadDialogComponent implements OnInit {
   loadingStatus = ['LOAD_NOT_STARTED', 'LOAD_IN_PROGRESS', 'LOAD_IN_QUEUE']
 
   error: string;
+
+  placeholder = Constants.Metadata.Placeholder
 
   uploadForm: UntypedFormGroup = new UntypedFormGroup({
     graphName: new UntypedFormControl(null, Validators.required),

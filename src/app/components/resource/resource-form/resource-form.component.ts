@@ -187,8 +187,6 @@ export class ResourceFormComponent extends ComponentCanDeactivate  {
 
               });
             }
-            // retrieve all links of this resource and add it as property
-            //this.resourceResult.properties['https://pid.bayer.com/kos/19050/isSchemaOfDataset'] = ["https://pid.bayer.com/06a4a152-8eb1-4092-99d5-9e0104d5ec2d/"];
           }
         }
       );

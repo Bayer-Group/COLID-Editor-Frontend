@@ -145,10 +145,6 @@ export class FormComponent implements OnInit {
     return link;
   }
 
-  HasLinks(m :MetaDataProperty): boolean{
-    return (this._links != null || this._links != undefined) && (this._links[m.key] != null || this._links[m.key] != undefined)
-  }
-
   get setShaclDefaultValues() {
     return this.isNew && this.creationType === EntityCreationType.NEW;
   }

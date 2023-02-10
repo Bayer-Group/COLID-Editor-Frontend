@@ -11,7 +11,7 @@ import { GraphUploadDialogComponent } from './components/graph-upload-dialog/gra
 import { GraphManagementApiService } from 'src/app/core/http/graph-management-api.service';
 import { saveAs } from 'file-saver-es';
 import { EntityFormStatus } from 'src/app/shared/components/entity-form/entity-form-status';
-
+import { environment } from 'src/environments/environment';
 
 export enum GraphManagmentAction {
   LOADING = 'loading',
@@ -120,7 +120,7 @@ export class GraphManagementComponent implements OnInit, OnDestroy {
   }
 
   getFileName(namedGraph: string): string {
-    var prefix = "https://pid.bayer.com/";
+    var prefix = `https://pid.${environment.baseUrl}/`;
     var filename = namedGraph.replace(prefix, "").replace("graph/", "").replace("/", "__") + ".ttl";
     return filename;
   }

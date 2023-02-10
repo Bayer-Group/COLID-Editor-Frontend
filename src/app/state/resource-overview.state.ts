@@ -26,6 +26,7 @@ export class ResourceOverviewStateModel {
   loading: boolean;
   resourceOverviewSearch: ResourceSearchDTO;
   searchResult: SearchResult;
+  initialLoad: boolean; 
 }
 
 @State<ResourceOverviewStateModel>({
@@ -34,6 +35,7 @@ export class ResourceOverviewStateModel {
     loading: true,
     resourceOverviewSearch: null,
     searchResult: new SearchResult(),
+    initialLoad: false
   }
 })
 @Injectable()
@@ -56,11 +58,21 @@ export class ResourceOverviewState {
     return state.resourceOverviewSearch;
   }
 
+  @Selector()
+  public static initialLoad(state: ResourceOverviewStateModel) {
+    return state.initialLoad;
+  }
+
   @Action(FetchSidebarResourceOverview, { cancelUncompleted: true })
   fetchSidebarResourcesOverview({ getState, patchState }: StateContext<ResourceOverviewStateModel>, {payload}: FetchSidebarResourceOverview) {
     const state = getState();
     patchState({
-      loading: true
+      loading: true,
+      resourceOverviewSearch: {
+        ...state.resourceOverviewSearch,
+        offset: 0
+      },
+      initialLoad: true
     });
     if (state.resourceOverviewSearch !== null) {
       return this.searchService.search(state.resourceOverviewSearch,payload,false ).pipe(
@@ -88,7 +100,8 @@ export class ResourceOverviewState {
     searchFilters.offset = searchFilters.offset + searchFilters.limit;
 
     patchState({
-      loading: true
+      loading: true,
+      initialLoad: false,
     });
 
     this.searchService.search(state.resourceOverviewSearch).subscribe(searchResult => {

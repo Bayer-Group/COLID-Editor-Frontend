@@ -3,6 +3,7 @@ export const environment = {
   production: true,
   allowAnonymous: true,
   enableIndexSearch: true,
+  baseUrl: 'bayer.com',
   colidApiUrl: 'http://localhost:51770/api/v3',
   appDataApiUrl: 'http://localhost:51810/api',
   reportingApiUrl: 'http://localhost:51910/api',

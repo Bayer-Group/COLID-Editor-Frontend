@@ -7,6 +7,7 @@ import { LogService } from 'src/app/core/logging/log.service';
 import { AuthService } from 'src/app/modules/authentication/services/auth.service';
 import { SearchResult } from 'src/app/shared/models/search/search-result';
 import { environment } from 'src/environments/environment';
+import { Constants } from 'src/app/shared/constants';
 
 @Component({
   selector: 'app-sidebar-filter',
@@ -43,21 +44,21 @@ export class SidebarFilterComponent implements OnInit {
   orderVocabulary = [
     {
       key: {
-        Predicate: 'https://pid.bayer.com/kos/19050/hasLabel',
+        Predicate: Constants.Metadata.HasLabel,
         Sequence: 'asc'
       },
       value: 'Label'
     },
     {
       key: {
-        Predicate: 'https://pid.bayer.com/kos/19050/lastChangeDateTime',
+        Predicate:  Constants.Metadata.LastChangeDateTime,
         Sequence: 'asc'
       },
       value: 'Last Change Date'
     },
     {
       key: {
-        Predicate: 'https://pid.bayer.com/kos/19050/dateCreated',
+        Predicate: Constants.Metadata.DateCreated,
         Sequence: 'asc'
       },
       value: 'Created Date'

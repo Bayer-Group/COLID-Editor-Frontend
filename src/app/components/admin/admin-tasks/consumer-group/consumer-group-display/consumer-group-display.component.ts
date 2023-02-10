@@ -6,6 +6,7 @@ import { ConsumerGroupResultDTO } from 'src/app/shared/models/consumerGroups/con
 import { ConsumerGroupState, FetchConsumerGroups, ReactivateConsumerGroup } from 'src/app/state/consumer-group.state';
 import { MetaDataProperty } from 'src/app/shared/models/metadata/meta-data-property';
 import { Constants } from 'src/app/shared/constants';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-consumer-group-display',
@@ -19,8 +20,8 @@ export class ConsumerGroupDisplayComponent implements OnInit {
   isConsumerGroupReactivating: ConsumerGroupResultDTO;
 
   lifecycleStatusMapping = {
-    'https://pid.bayer.com/kos/19050/active': 'Active',
-    'https://pid.bayer.com/kos/19050/deprecated': 'Deprecated'
+    [Constants.ConsumerGroup.LifecycleStatus.Active] : 'Active',
+    [Constants.ConsumerGroup.LifecycleStatus.Deprecated] : 'Deprecated'
   }
 
   constructor(private router: Router, private store: Store) { }
