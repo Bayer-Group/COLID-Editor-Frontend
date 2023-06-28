@@ -11,7 +11,7 @@
           [hidden]="
             isLinkingGroup(m) ||
             (f[m.properties] &&
-              (f[m.properties[pidUriConstant]].value == null ||
+              (f[m.properties[pidUriConstant]].value === null ||
                 f[m.properties[pidUriConstant]].value.length === 0))
           "
         >
@@ -66,7 +66,7 @@
                 [fetched]="pidUriTemplatesFetched | async"
                 [presets]="pidUriTemplateNames"
                 [isNew]="isNew"
-                (valueChanged)="handleResourceFormItemChange($event, true)"
+                (valueChanged)="handleResourceFormItemChange($event)"
               >
               </app-form-item>
               <small
@@ -103,7 +103,7 @@
                 Part for nested distribution endpoints
               -->
               <app-form-item-create-distribution
-                *ngIf="m.key == distributionConstant"
+                *ngIf="m.key === distributionConstant"
                 [label]="m.properties[constants.Metadata.Name]"
                 [metaData]="m.nestedMetadata"
                 [placeholder]="placeholder"
@@ -117,7 +117,7 @@
                 Part for all other nested entities (e.g. attachments)
               -->
               <app-form-item-create-attachment
-                *ngIf="m.key == attachmentConstant"
+                *ngIf="m.key === attachmentConstant"
                 [label]="m.properties[constants.Metadata.Name]"
                 [metaData]="m.nestedMetadata"
                 [disabled]="formReadOnly"
@@ -132,7 +132,7 @@
               -->
               <app-form-item-create-nested
                 *ngIf="
-                  m.key != distributionConstant && m.key != attachmentConstant
+                  m.key !== distributionConstant && m.key !== attachmentConstant
                 "
                 [label]="m.properties[constants.Metadata.Name]"
                 [metaData]="m.nestedMetadata"
@@ -194,9 +194,7 @@
                           handleMainDistributionChanged(control)
                         "
                         (attachmentUploaded)="handleAttachmentUploaded($event)"
-                        (valueChanged)="
-                          handleResourceFormItemChange($event, false)
-                        "
+                        (valueChanged)="handleResourceFormItemChange($event)"
                       >
                       </app-form-item>
                       <div
@@ -226,7 +224,10 @@
               ></small>
             </div>
           </div>
-          <mat-divider class="my-3" *ngIf="i == 1 && !nestedForm"></mat-divider>
+          <mat-divider
+            class="my-3"
+            *ngIf="i === 1 && !nestedForm"
+          ></mat-divider>
         </div>
       </div>
     </ng-container>

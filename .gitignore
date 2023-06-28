@@ -256,6 +256,7 @@ ModelManifest.xml
 \.idea.*
 
 # misc
+/.angular/cache
 /.sass-cache
 /connect.lock
 /coverage
@@ -269,3 +270,6 @@ testem.log
 .DS_Store
 Thumbs.db
 .npmrc
+.angular/cache/13.3.5/angular-webpack/
+.angular/cache/13.3.5/babel-webpack/0a0b4acdfc6fd9011ba4a5dfaac54799.json
+.angular/cache/13.3.5/babel-webpack/

@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { FormItemInputDatetimeComponent } from './form-item-input-datetime.component';
+import { FormItemInputDatetimeComponent } from "./form-item-input-datetime.component";
 
-describe('FormItemInputDatetimeComponent', () => {
+describe("FormItemInputDatetimeComponent", () => {
   let component: FormItemInputDatetimeComponent;
   let fixture: ComponentFixture<FormItemInputDatetimeComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormItemInputDatetimeComponent ]
-    })
-    .compileComponents();
+      declarations: [FormItemInputDatetimeComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('FormItemInputDatetimeComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

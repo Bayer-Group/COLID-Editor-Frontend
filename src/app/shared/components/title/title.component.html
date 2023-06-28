@@ -1,12 +1,23 @@
 <div class="d-inline-flex">
   <a href="">
-    <img *ngIf="iconColor == 'primary'" src="assets/BAG_COLID-Visual.svg" height="29" alt="COLID">
-    <img *ngIf="iconColor == 'white'" src="assets/BAG_COLID-Visual_white_lh.svg" height="29" alt="COLID">
+    <img
+      *ngIf="iconColor === 'primary'"
+      src="assets/BAG_COLID-Visual.svg"
+      height="29"
+      alt="COLID"
+    />
+    <img
+      *ngIf="iconColor === 'white'"
+      src="assets/BAG_COLID-Visual_white_lh.svg"
+      height="29"
+      alt="COLID"
+    />
   </a>
-  <div class="app-title">Editor
-    <span *ngIf="(buildInformation$ | async) as buildInformation">
-      {{buildInformation.versionNumber}}
-      <span>{{environmentLabel}}</span>
+  <div class="app-title">
+    Editor
+    <span *ngIf="buildInformation$ | async as buildInformation">
+      {{ buildInformation.versionNumber }}
+      <span>{{ environmentLabel }}</span>
     </span>
   </div>
 </div>

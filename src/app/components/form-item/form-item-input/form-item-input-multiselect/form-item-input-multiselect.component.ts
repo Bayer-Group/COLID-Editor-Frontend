@@ -1,30 +1,35 @@
-import { Component, OnInit, Input, forwardRef} from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { FormItemInputBaseComponent } from '../form-item-input-base/form-item-input-base.component';
-import { MetaDataProperty } from 'src/app/shared/models/metadata/meta-data-property';
-import { BaseEntityResultDTO } from 'src/app/shared/models/Entities/base-entity-result-dto';
-import { Constants } from 'src/app/shared/constants';
-import { Observable, Subject} from 'rxjs';
-import { BaseEntityRequestDTO } from 'src/app/shared/models/Entities/base-entity-request-dto';
-import { MultiselectSettings } from 'src/app/shared/models/form/multi-select-settings';
-import { Store, Select } from '@ngxs/store';
-import { FetchTaxonomyList, TaxonomyState } from 'src/app/state/taxonomy.state';
-import { TaxonomyResultDTO } from 'src/app/shared/models/taxonomy/taxonomy-result-dto';
+import { Component, OnInit, Input, forwardRef } from "@angular/core";
+import { NG_VALUE_ACCESSOR } from "@angular/forms";
+import { FormItemInputBaseComponent } from "../form-item-input-base/form-item-input-base.component";
+import { MetaDataProperty } from "src/app/shared/models/metadata/meta-data-property";
+import { BaseEntityResultDTO } from "src/app/shared/models/Entities/base-entity-result-dto";
+import { Constants } from "src/app/shared/constants";
+import { Observable, Subject } from "rxjs";
+import { BaseEntityRequestDTO } from "src/app/shared/models/Entities/base-entity-request-dto";
+import { MultiselectSettings } from "src/app/shared/models/form/multi-select-settings";
+import { Store, Select } from "@ngxs/store";
+import { FetchTaxonomyList, TaxonomyState } from "src/app/state/taxonomy.state";
+import { TaxonomyResultDTO } from "src/app/shared/models/taxonomy/taxonomy-result-dto";
 
 @Component({
-  selector: 'app-form-item-input-multiselect',
-  templateUrl: './form-item-input-multiselect.component.html',
-  styleUrls: ['./form-item-input-multiselect.component.scss'],
+  selector: "app-form-item-input-multiselect",
+  templateUrl: "./form-item-input-multiselect.component.html",
+  styleUrls: ["./form-item-input-multiselect.component.scss"],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => FormItemInputMultiselectComponent),
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
-export class FormItemInputMultiselectComponent extends FormItemInputBaseComponent implements OnInit {
-  @Select(TaxonomyState.getTaxonomyList) taxonomyList$: Observable<Map<string, TaxonomyResultDTO[]>>;
+export class FormItemInputMultiselectComponent
+  extends FormItemInputBaseComponent
+  implements OnInit
+{
+  @Select(TaxonomyState.getTaxonomyList) taxonomyList$: Observable<
+    Map<string, TaxonomyResultDTO[]>
+  >;
 
   @Input() maxCount: number;
   @Input() multiselectSettings: MultiselectSettings;
@@ -50,7 +55,7 @@ export class FormItemInputMultiselectComponent extends FormItemInputBaseComponen
 
   ngOnInit() {
     this.store.dispatch(new FetchTaxonomyList(this.range)).subscribe();
-    this.taxonomyList$.subscribe(res => {
+    this.taxonomyList$.subscribe((res) => {
       this.entityList = res.get(this.range);
     });
   }
@@ -58,7 +63,9 @@ export class FormItemInputMultiselectComponent extends FormItemInputBaseComponen
   writeValue(value: any): void {
     if (value != null) {
       const valueList = Array.isArray(value) ? value : [value];
-      this.internalValue = this.multiselectSettings.multiple ? valueList : valueList[0];
+      this.internalValue = this.multiselectSettings.multiple
+        ? valueList
+        : valueList[0];
     }
   }
 

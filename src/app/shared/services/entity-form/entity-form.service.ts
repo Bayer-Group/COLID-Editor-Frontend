@@ -1,24 +1,24 @@
-import { Injectable } from '@angular/core';
-import { FormExtension } from 'src/app/shared/extensions/form.extension';
-import { Constants } from 'src/app/shared/constants';
-import { KeyValuePair } from 'src/app/shared/models/key-value-pair';
-import { EntityBase } from 'src/app/shared/models/Entities/entity-base';
+import { Injectable } from "@angular/core";
+import { FormExtension } from "src/app/shared/extensions/form.extension";
+import { Constants } from "src/app/shared/constants";
+import { EntityBase } from "src/app/shared/models/Entities/entity-base";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class EntityFormService {
-
-  constructor() { }
+  constructor() {}
 
   createEntity(formProperties, metadata, type: string): EntityBase {
     const entity = new EntityBase();
 
-    entity.properties = FormExtension.createEntityPropertyList(formProperties, metadata);
+    entity.properties = FormExtension.createEntityPropertyList(
+      formProperties,
+      metadata
+    );
 
     entity.properties[Constants.Metadata.EntityType] = [type];
 
-
     return entity;
-}
+  }
 }

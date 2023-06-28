@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { AdminTasksComponent } from './admin-tasks.component';
+import { AdminTasksComponent } from "./admin-tasks.component";
 
-describe('AdminTasksComponent', () => {
+describe("AdminTasksComponent", () => {
   let component: AdminTasksComponent;
   let fixture: ComponentFixture<AdminTasksComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ AdminTasksComponent ]
-    })
-    .compileComponents();
+      declarations: [AdminTasksComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('AdminTasksComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

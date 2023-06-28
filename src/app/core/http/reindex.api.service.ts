@@ -1,17 +1,16 @@
-import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
-import { HttpClient} from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { environment } from "src/environments/environment";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class ReindexApiService {
-
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {}
 
   reindex(): Observable<any> {
-    const url = environment.colidApiUrl + '/reindex/start';
+    const url = environment.colidApiUrl + "/reindex/start";
 
     return this.httpClient.post(url, null);
   }

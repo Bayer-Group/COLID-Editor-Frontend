@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { ResourceLockedDialogComponent } from './resource-locked-dialog.component';
+import { ResourceLockedDialogComponent } from "./resource-locked-dialog.component";
 
-describe('ResourceLockedDialogComponent', () => {
+describe("ResourceLockedDialogComponent", () => {
   let component: ResourceLockedDialogComponent;
   let fixture: ComponentFixture<ResourceLockedDialogComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ResourceLockedDialogComponent ]
-    })
-    .compileComponents();
+      declarations: [ResourceLockedDialogComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('ResourceLockedDialogComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

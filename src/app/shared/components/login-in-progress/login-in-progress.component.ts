@@ -1,28 +1,30 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { AuthService } from 'src/app/modules/authentication/services/auth.service';
-import { EnsureBrowserSupportService } from 'src/app/modules/browser-support/services/ensure-browser-support.service';
+import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Subscription } from "rxjs";
+import { AuthService } from "src/app/modules/authentication/services/auth.service";
+import { EnsureBrowserSupportService } from "src/app/modules/browser-support/services/ensure-browser-support.service";
 
 @Component({
-  selector: 'app-login-in-progress',
-  templateUrl: './login-in-progress.component.html',
-  styleUrls: ['./login-in-progress.component.css']
+  selector: "app-login-in-progress",
+  templateUrl: "./login-in-progress.component.html",
+  styleUrls: ["./login-in-progress.component.css"],
 })
 export class LoginInProgressComponent implements OnInit, OnDestroy {
   isBrowserSupported = false;
-  constructor(private authService: AuthService,private browserSupport: EnsureBrowserSupportService) {
+  constructor(
+    private authService: AuthService,
+    private browserSupport: EnsureBrowserSupportService
+  ) {
     this.isBrowserSupported = browserSupport.isSupported();
-   }
-  checkAccountSubscribtion : Subscription;
-  
+  }
+  checkAccountSubscribtion: Subscription;
 
   ngOnInit() {
-    if(this.isBrowserSupported){
-       this.checkAccountSubscribtion = this.authService.subscribeCheckAccount()
+    if (this.isBrowserSupported) {
+      this.checkAccountSubscribtion = this.authService.subscribeCheckAccount();
     }
   }
 
-  ngOnDestroy(){
-    this.checkAccountSubscribtion.unsubscribe()
+  ngOnDestroy() {
+    this.checkAccountSubscribtion.unsubscribe();
   }
 }

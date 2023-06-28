@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { FormItemInputPersonComponent } from './form-item-input-person.component';
+import { FormItemInputPersonComponent } from "./form-item-input-person.component";
 
-describe('FormItemInputPersonComponent', () => {
+describe("FormItemInputPersonComponent", () => {
   let component: FormItemInputPersonComponent;
   let fixture: ComponentFixture<FormItemInputPersonComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormItemInputPersonComponent ]
-    })
-    .compileComponents();
+      declarations: [FormItemInputPersonComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('FormItemInputPersonComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

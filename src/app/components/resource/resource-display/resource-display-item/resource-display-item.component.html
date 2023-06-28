@@ -1,52 +1,84 @@
 <div class="row" [class.mb-2]="!previousLinking">
   <div class="col-3" *ngIf="!disableLabel">
     <ng-container *ngIf="!previousLinking" [ngSwitch]="displayType">
-      <ng-container *ngSwitchCase="'linking'">{{metadata.properties[constants.Metadata.Group]?.label}}</ng-container>
-      <ng-container *ngSwitchDefault>{{metadata.properties[constants.Metadata.Name]}}</ng-container>
+      <ng-container *ngSwitchCase="'linking'">{{
+        metadata.properties[constants.Metadata.Group]?.label
+      }}</ng-container>
+      <ng-container *ngSwitchDefault>{{
+        metadata.properties[constants.Metadata.Name]
+      }}</ng-container>
     </ng-container>
   </div>
   <div [class.col-9]="!disableLabel" [class.col-12]="disableLabel">
-   <ng-container  *ngIf="internalValue.length">
-    <ng-container *ngFor="let value of internalValue">
-      <ng-container [ngSwitch]="displayType">
-        <app-resource-display-item-dropdown *ngSwitchCase="'list'" [dropdownList]="value" [metadata]="metadata">
-        </app-resource-display-item-dropdown>
-        <ng-container *ngSwitchCase="'datetime'">
-          <span>{{value | date:'yyyy-MM-dd HH:mm'}}</span>
-        </ng-container>
-        <ng-container *ngSwitchCase="'url'">
-          <a class="wordbreak" [href]="value" target="_blank" rel="noopener noreferrer">{{value}}</a>
-        </ng-container>
-        <ng-container *ngSwitchCase="'externalUrl'">
-          <a class="wordbreak" [href]="'//' + value" target="_blank" rel="noopener noreferrer">{{value}}</a>
-        </ng-container>
-        <ng-container *ngSwitchCase="'identifier'">
-          <a class="wordbreak" [href]="value?.id" target="_blank" rel="noopener noreferrer">{{value?.id}}</a>
-        </ng-container>
-        <ng-container *ngSwitchCase="'email'">
-          <a class="wordbreak me-2" [href]="'mailto:' + value">{{value}}</a>
-        </ng-container>
-        <ng-container *ngSwitchCase="'html'">
-          <!-- <div class="ql-snow">
+    <ng-container *ngIf="internalValue.length">
+      <ng-container *ngFor="let value of internalValue">
+        <ng-container [ngSwitch]="displayType">
+          <app-resource-display-item-dropdown
+            *ngSwitchCase="'list'"
+            [dropdownList]="value"
+            [metadata]="metadata"
+          >
+          </app-resource-display-item-dropdown>
+          <ng-container *ngSwitchCase="'datetime'">
+            <span>{{ value | date : "yyyy-MM-dd HH:mm" }}</span>
+          </ng-container>
+          <ng-container *ngSwitchCase="'url'">
+            <a
+              class="wordbreak"
+              [href]="value"
+              target="_blank"
+              rel="noopener noreferrer"
+              >{{ value }}</a
+            >
+          </ng-container>
+          <ng-container *ngSwitchCase="'externalUrl'">
+            <a
+              class="wordbreak"
+              [href]="'//' + value"
+              target="_blank"
+              rel="noopener noreferrer"
+              >{{ value }}</a
+            >
+          </ng-container>
+          <ng-container *ngSwitchCase="'identifier'">
+            <a
+              class="wordbreak"
+              [href]="value?.id"
+              target="_blank"
+              rel="noopener noreferrer"
+              >{{ value?.id }}</a
+            >
+          </ng-container>
+          <ng-container *ngSwitchCase="'email'">
+            <a class="wordbreak me-2" [href]="'mailto:' + value">{{ value }}</a>
+          </ng-container>
+          <ng-container *ngSwitchCase="'html'">
+            <!-- <div class="ql-snow">
             <span class="ql-editor" [innerHTML]="value | bypassSanitizer">
             </span>
           </div> -->
-          <quill-view-html [content]="value" theme="snow"></quill-view-html>
+            <quill-view-html [content]="value" theme="snow"></quill-view-html>
+          </ng-container>
+          <ng-container *ngSwitchCase="'distribution'">
+            <app-resource-display-item-distribution
+              [endpoints]="value"
+              [metadata]="metadata"
+            >
+            </app-resource-display-item-distribution>
+          </ng-container>
+          <ng-container *ngSwitchCase="'linking'">
+            <app-resource-display-item-linking
+              *ngIf="value"
+              [label]="metadata.properties[constants.Metadata.Name]"
+              [linkedEntities]="value"
+            ></app-resource-display-item-linking>
+          </ng-container>
+          <ng-container *ngSwitchDefault>
+            <span innerHtml="{{ value }}"></span>
+          </ng-container>
         </ng-container>
-        <ng-container *ngSwitchCase="'distribution'">
-          <app-resource-display-item-distribution [endpoints]="value" [metadata]="metadata">
-          </app-resource-display-item-distribution>
-        </ng-container>
-        <ng-container *ngSwitchCase="'linking'">
-          <app-resource-display-item-linking *ngIf="value" [label]="metadata.properties[constants.Metadata.Name]"
-            [linkedEntities]="value"></app-resource-display-item-linking>
-        </ng-container>
-        <ng-container *ngSwitchDefault>
-          <span innerHtml="{{value}}"></span>
-        </ng-container>
+        <br *ngIf="internalValue.length > 1" />
       </ng-container>
-      <br *ngIf="internalValue.length > 1">
     </ng-container>
-   </ng-container>
   </div>
 </div>

@@ -1,28 +1,68 @@
-<div class="container" *ngIf="resourceResult && metaData && (consumerGroup$ | async); else loadingTemplate">
+<div
+  class="container"
+  *ngIf="
+    resourceResult && metaData && (consumerGroup$ | async);
+    else loadingTemplate
+  "
+>
   <div>
-    <app-form [metaData]="metaData" [linkingMetadata]="linkingMetadata" [errors]="formErrors"
-      [entity]="resourceResult" [isNew]="isNew" [isTypeChanging]="isResourceChanging"
-      [placeholder]="placeholder" [adminPrivilege]="authService.hasAdminPrivilege$ | async"
+    <app-form
+      [metaData]="metaData"
+      [linkingMetadata]="linkingMetadata"
+      [errors]="formErrors"
+      [entity]="resourceResult"
+      [isNew]="isNew"
+      [isTypeChanging]="isResourceChanging"
+      [placeholder]="placeholder"
+      [adminPrivilege]="authService.hasAdminPrivilege$ | async"
       [creationType]="creationType"
       [formReadOnly]="isLoading"
-      [hasPublishedVersion]="hasPublishedVersion" [pidUriTemplatesFetched]="pidUriTemplatesFetched$"
-      [pidUriTemplateNames]="pidUriTemplateNames" [mainDistribution]="mainDistribution"
-      (handleFormChanged)="handleFormChanged($event)">
+      [hasPublishedVersion]="hasPublishedVersion"
+      [pidUriTemplatesFetched]="pidUriTemplatesFetched$"
+      [pidUriTemplateNames]="pidUriTemplateNames"
+      [mainDistribution]="mainDistribution"
+      (handleFormChanged)="handleFormChanged($event)"
+    >
     </app-form>
     <div class="col-12 mb-3">
       <div class="d-flex justify-content-end">
-        <button mat-raised-button class="ms-2" *ngIf="!isNew" [routerLink]="['/resource']"
-          [queryParams]="{ pidUri: resourceResult.pidUri }">
+        <button
+          mat-raised-button
+          class="ms-2"
+          *ngIf="!isNew"
+          [routerLink]="['/resource']"
+          [queryParams]="{ pidUri: resourceResult.pidUri }"
+        >
           <mat-icon fontSet="material-icons-outlined">cancel</mat-icon>
           Cancel
         </button>
         <!-- <action-button class="ms-2" color="info" (click)="revert()" *ngIf="resourceResult.publishedVersion" icon="undo" [disabled]="isLoading" [loading]="isLoading && currentOperation === operation.REVERT">
           Revert to published
         </action-button> -->
-        <action-button class="ms-2" id="saveButton" color="draft" (click)="save()" icon="save" [disabled]="isLoading" [loading]="isLoading && currentOperation === operation.SAVE">
+        <action-button
+          class="ms-2"
+          id="saveButton"
+          color="draft"
+          (click)="save()"
+          icon="save"
+          [disabled]="isLoading"
+          [loading]="isLoading && currentOperation === operation.SAVE"
+        >
           Save
         </action-button>
-        <action-button class="ms-2" id="publishButton" color="published" (click)="saveAndPublish()" icon="cloud_upload" [disabled]="isLoading" [loading]="isLoading && (currentOperation === operation.PUBLISH || currentOperation === operation.SAVEANDPUBLISH)">
+        <action-button
+          class="ms-2"
+          id="publishButton"
+          color="published"
+          (click)="saveAndPublish()"
+          icon="cloud_upload"
+          [disabled]="isLoading"
+          [loading]="
+            isLoading &&
+            (currentOperation === operation.PUBLISH ||
+              currentOperation === operation.SAVEANDPUBLISH)
+          "
+        >
           Publish
         </action-button>
       </div>

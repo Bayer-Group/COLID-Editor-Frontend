@@ -1,4 +1,4 @@
 export class SuggestOption {
-    text: string;
-    score: number;
+  text: string;
+  score: number;
 }

@@ -1,29 +1,34 @@
-import { Component, OnInit, forwardRef, Input } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { FormItemInputBaseComponent } from '../form-item-input-base/form-item-input-base.component';
-import { MultiselectSettings } from 'src/app/shared/models/form/multi-select-settings';
-import { AdObject } from 'src/app/shared/models/activeDirectory/ad-object';
-import { PersonApiService } from 'src/app/core/http/person.api.service';
-import { MetaDataProperty } from 'src/app/shared/models/metadata/meta-data-property';
-import { AdSearchResult } from 'src/app/shared/models/activeDirectory/ad-search-result';
-import { Subject, concat, Observable, of } from 'rxjs';
-import { distinctUntilChanged, tap, switchMap, catchError, map, debounceTime } from 'rxjs/operators';
-import { ExtendedUriTemplateRequestDTO } from 'src/app/shared/models/extendedUriTemplates/extended-uri-template-request-dto';
+import { Component, forwardRef, Input } from "@angular/core";
+import { NG_VALUE_ACCESSOR } from "@angular/forms";
+import { FormItemInputBaseComponent } from "../form-item-input-base/form-item-input-base.component";
+import { MultiselectSettings } from "src/app/shared/models/form/multi-select-settings";
+import { AdObject } from "src/app/shared/models/activeDirectory/ad-object";
+import { PersonApiService } from "src/app/core/http/person.api.service";
+import { MetaDataProperty } from "src/app/shared/models/metadata/meta-data-property";
+import { AdSearchResult } from "src/app/shared/models/activeDirectory/ad-search-result";
+import { Subject, Observable, of } from "rxjs";
+import {
+  distinctUntilChanged,
+  tap,
+  switchMap,
+  catchError,
+  map,
+  debounceTime,
+} from "rxjs/operators";
 
 @Component({
-  selector: 'app-form-item-input-person',
-  templateUrl: './form-item-input-person.component.html',
-  styleUrls: ['./form-item-input-person.component.scss'],
+  selector: "app-form-item-input-person",
+  templateUrl: "./form-item-input-person.component.html",
+  styleUrls: ["./form-item-input-person.component.scss"],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => FormItemInputPersonComponent),
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
-export class FormItemInputPersonComponent extends FormItemInputBaseComponent implements OnInit {
-
+export class FormItemInputPersonComponent extends FormItemInputBaseComponent {
   @Input() maxCount: number;
   @Input() multiselectSettings: MultiselectSettings;
   @Input() metadata: MetaDataProperty;
@@ -41,19 +46,20 @@ export class FormItemInputPersonComponent extends FormItemInputBaseComponent imp
   }
 
   private loadPersons() {
-    this.persons$ =
-      this.personInput$.pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
-        tap(() => this.personLoading = true),
-        switchMap(term => this.personApiService.searchPerson(term).pipe(
+    this.persons$ = this.personInput$.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      tap(() => (this.personLoading = true)),
+      switchMap((term) =>
+        this.personApiService.searchPerson(term).pipe(
           catchError(() => of(new AdSearchResult())), // empty list on error
-          map(res => {
+          map((res) => {
             this.personLoading = false;
-            return this.buildPersonList(res)
+            return this.buildPersonList(res);
           })
-        ))
+        )
       )
+    );
   }
 
   writeValue(value: any): void {
@@ -67,18 +73,18 @@ export class FormItemInputPersonComponent extends FormItemInputBaseComponent imp
   }
 
   buildPersonList(res: AdSearchResult): any[] {
-    const users = res.users.map(user => {
+    const users = res.users.map((user) => {
       return {
-        'type': 'Users',
-        ...<AdObject>user
-      }
+        type: "Users",
+        ...(<AdObject>user),
+      };
     });
 
-    const groups = res.groups.map(group => {
+    const groups = res.groups.map((group) => {
       return {
-        'type': 'Groups',
-        ...<AdObject>group
-      }
+        type: "Groups",
+        ...(<AdObject>group),
+      };
     });
 
     return users.concat(groups);

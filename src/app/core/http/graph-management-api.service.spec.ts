@@ -1,8 +1,8 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { GraphManagementApiService } from './graph-management-api.service';
+import { GraphManagementApiService } from "./graph-management-api.service";
 
-describe('GraphManagementApiService', () => {
+describe("GraphManagementApiService", () => {
   let service: GraphManagementApiService;
 
   beforeEach(() => {
@@ -10,7 +10,7 @@ describe('GraphManagementApiService', () => {
     service = TestBed.inject(GraphManagementApiService);
   });
 
-  it('should be created', () => {
+  it("should be created", () => {
     expect(service).toBeTruthy();
   });
 });

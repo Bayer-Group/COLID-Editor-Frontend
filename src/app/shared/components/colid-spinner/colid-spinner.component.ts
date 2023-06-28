@@ -1,9 +1,9 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input } from "@angular/core";
 
 @Component({
-  selector: 'app-colid-spinner',
-  templateUrl: './colid-spinner.component.html',
-  styleUrls: ['./colid-spinner.component.css']
+  selector: "app-colid-spinner",
+  templateUrl: "./colid-spinner.component.html",
+  styleUrls: ["./colid-spinner.component.css"],
 })
 export class ColidSpinnerComponent implements OnInit {
   @Input() diameter: number = 100;
@@ -12,8 +12,7 @@ export class ColidSpinnerComponent implements OnInit {
   matDiameter: number;
   matStrokeWidth: number;
 
-  constructor() { 
-  }
+  constructor() {}
 
   ngOnInit() {
     this.matDiameter = this.diameter;

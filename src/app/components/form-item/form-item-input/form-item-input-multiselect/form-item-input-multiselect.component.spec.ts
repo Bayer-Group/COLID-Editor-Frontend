@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { FormItemInputMultiselectComponent } from './form-item-input-multiselect.component';
+import { FormItemInputMultiselectComponent } from "./form-item-input-multiselect.component";
 
-describe('FormItemInputMultiselectComponent', () => {
+describe("FormItemInputMultiselectComponent", () => {
   let component: FormItemInputMultiselectComponent;
   let fixture: ComponentFixture<FormItemInputMultiselectComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormItemInputMultiselectComponent ]
-    })
-    .compileComponents();
+      declarations: [FormItemInputMultiselectComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('FormItemInputMultiselectComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

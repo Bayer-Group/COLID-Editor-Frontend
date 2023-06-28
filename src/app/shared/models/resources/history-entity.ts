@@ -6,9 +6,9 @@ export class HistoryEntityDirection {
   entityVersion: any;
 }
 
-export class HistoryEntity{
+export class HistoryEntity {
   additions: HistoryEntityDirection = new HistoryEntityDirection();
   removals: HistoryEntityDirection = new HistoryEntityDirection();
-  lastchangedByDateTime:string;
-  isExpanded:boolean
+  lastchangedByDateTime: string;
+  isExpanded: boolean;
 }

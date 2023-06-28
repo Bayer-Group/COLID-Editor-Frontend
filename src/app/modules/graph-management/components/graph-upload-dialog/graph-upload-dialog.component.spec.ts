@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { GraphUploadDialogComponent } from './graph-upload-dialog.component';
+import { GraphUploadDialogComponent } from "./graph-upload-dialog.component";
 
-describe('GraphUploadDialogComponent', () => {
+describe("GraphUploadDialogComponent", () => {
   let component: GraphUploadDialogComponent;
   let fixture: ComponentFixture<GraphUploadDialogComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ GraphUploadDialogComponent ]
-    })
-    .compileComponents();
+      declarations: [GraphUploadDialogComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('GraphUploadDialogComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

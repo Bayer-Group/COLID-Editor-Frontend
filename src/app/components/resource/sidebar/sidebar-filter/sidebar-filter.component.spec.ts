@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { SidebarFilterComponent } from './sidebar-filter.component';
+import { SidebarFilterComponent } from "./sidebar-filter.component";
 
-describe('SidebarFilterComponent', () => {
+describe("SidebarFilterComponent", () => {
   let component: SidebarFilterComponent;
   let fixture: ComponentFixture<SidebarFilterComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SidebarFilterComponent ]
-    })
-    .compileComponents();
+      declarations: [SidebarFilterComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('SidebarFilterComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

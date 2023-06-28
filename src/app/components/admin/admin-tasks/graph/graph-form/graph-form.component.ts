@@ -1,34 +1,44 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Select, Store } from '@ngxs/store';
-import { ActivatedRoute, Router } from '@angular/router';
-import { GraphResultDTO } from 'src/app/shared/models/graphs/graph-result-dto';
-import { ValidationResult } from 'src/app/shared/models/validation/validation-result';
-import { HttpErrorResponse } from '@angular/common/http';
-import { ColidMatSnackBarService } from 'src/app/modules/colid-mat-snack-bar/colid-mat-snack-bar.service';
-import { GraphState, FetchGraph, CreateGraph, FetchGraphMetadata } from '../graph.state';
-import { MetaDataProperty } from 'src/app/shared/models/metadata/meta-data-property';
-import { EntityBase } from 'src/app/shared/models/Entities/entity-base';
-import { Constants } from 'src/app/shared/constants';
-import { EntityFormStatus } from 'src/app/shared/components/entity-form/entity-form-status';
+import { Component } from "@angular/core";
+import { Observable } from "rxjs";
+import { Select, Store } from "@ngxs/store";
+import { ActivatedRoute, Router } from "@angular/router";
+import { GraphResultDTO } from "src/app/shared/models/graphs/graph-result-dto";
+import { ValidationResult } from "src/app/shared/models/validation/validation-result";
+import { HttpErrorResponse } from "@angular/common/http";
+import { ColidMatSnackBarService } from "src/app/modules/colid-mat-snack-bar/colid-mat-snack-bar.service";
+import {
+  GraphState,
+  FetchGraph,
+  CreateGraph,
+  FetchGraphMetadata,
+} from "../graph.state";
+import { MetaDataProperty } from "src/app/shared/models/metadata/meta-data-property";
+import { EntityBase } from "src/app/shared/models/Entities/entity-base";
+import { Constants } from "src/app/shared/constants";
+import { EntityFormStatus } from "src/app/shared/components/entity-form/entity-form-status";
 
 @Component({
-  selector: 'app-graph-form',
-  templateUrl: './graph-form.component.html',
-  styleUrls: ['./graph-form.component.css']
+  selector: "app-graph-form",
+  templateUrl: "./graph-form.component.html",
+  styleUrls: ["./graph-form.component.css"],
 })
-export class GraphFormComponent implements OnInit {
+export class GraphFormComponent {
   @Select(GraphState.getActualGraph) actualGraph$: Observable<GraphResultDTO>;
-  @Select(GraphState.getGraphMetadata) graphMetadata$: Observable<Array<MetaDataProperty>>;
+  @Select(GraphState.getGraphMetadata) graphMetadata$: Observable<
+    Array<MetaDataProperty>
+  >;
 
   validationResult: ValidationResult;
   formStatus: EntityFormStatus;
 
   entityType = Constants.ResourceTypes.MetadataGraphConfiguration;
 
-  constructor(private store: Store, private route: ActivatedRoute, private snackbar: ColidMatSnackBarService, private router: Router) { }
-
-  ngOnInit() { }
+  constructor(
+    private store: Store,
+    private route: ActivatedRoute,
+    private snackbar: ColidMatSnackBarService,
+    private router: Router
+  ) {}
 
   handleCreateEntityEmitter(entityBase: EntityBase) {
     this.formStatus = EntityFormStatus.LOADING;
@@ -37,11 +47,15 @@ export class GraphFormComponent implements OnInit {
       () => {
         this.formStatus = EntityFormStatus.SUCCESS;
         this.store.dispatch(new FetchGraph());
-        this.snackbar.success('Created', 'New metadata graph configuration created successfully');
+        this.snackbar.success(
+          "Created",
+          "New metadata graph configuration created successfully"
+        );
       },
-      error => {
+      (error) => {
         this.handleResponseError(error);
-      });
+      }
+    );
   }
 
   handleResponseError(error: HttpErrorResponse) {
@@ -53,6 +67,8 @@ export class GraphFormComponent implements OnInit {
   }
 
   handleCancelEditEntityEmitter() {
-    this.store.dispatch([new FetchGraphMetadata(), new FetchGraph()]).subscribe();
+    this.store
+      .dispatch([new FetchGraphMetadata(), new FetchGraph()])
+      .subscribe();
   }
 }

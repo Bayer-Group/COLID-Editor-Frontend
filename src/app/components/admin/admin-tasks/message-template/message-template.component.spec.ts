@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { MessageTemplateComponent } from './message-template.component';
+import { MessageTemplateComponent } from "./message-template.component";
 
-describe('MessageTemplateComponent', () => {
+describe("MessageTemplateComponent", () => {
   let component: MessageTemplateComponent;
   let fixture: ComponentFixture<MessageTemplateComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ MessageTemplateComponent ]
-    })
-    .compileComponents();
+      declarations: [MessageTemplateComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('MessageTemplateComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

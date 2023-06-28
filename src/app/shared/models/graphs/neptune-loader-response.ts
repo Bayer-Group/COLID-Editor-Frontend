@@ -1,4 +1,4 @@
 export class NeptuneLoaderResponse {
-        status: String;
-        payload: { [id: string] : string; };
+  status: String;
+  payload: { [id: string]: string };
 }

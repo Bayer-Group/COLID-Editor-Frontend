@@ -1,8 +1,14 @@
 <div class="d-flex flex-column search-field px-1 pt-1">
-  <mat-form-field appearance="outline">
+  <mat-form-field appearance="outline">
     <mat-label>Please enter a search term to begin your search</mat-label>
-    <input matInput id="input-sidebar-resource-filter" [(ngModel)]="filters.searchText" [debounce]="320"
-      (onDebounce)="filter()" placeholder="Enter the title, parts of description, PID URI, or Base URI">
+    <input
+      matInput
+      id="input-sidebar-resource-filter"
+      [(ngModel)]="filters.searchText"
+      [debounce]="320"
+      (debounceHandler)="filter()"
+      placeholder="Enter the title, parts of description, PID URI, or Base URI"
+    />
   </mat-form-field>
 </div>
 
@@ -11,8 +17,9 @@
     <mat-button-toggle
       *ngFor="let fv of filterVocabulary"
       (click)="filter(fv.key)"
-      [checked]="filters[fv.key]">
-      <span id='link_{{fv.key}}' >{{fv.label}}</span>
+      [checked]="filters[fv.key]"
+    >
+      <span id="link_{{ fv.key }}">{{ fv.label }}</span>
     </mat-button-toggle>
   </mat-button-toggle-group>
 </div>
@@ -20,19 +27,33 @@
 <div class="px-1">
   <div class="d-flex justify-content-between align-items-center">
     <div class="d-flex pl-2">
-      <span>Total {{(searchResultState | async)?.hits.total}}</span>
+      <span>Total {{ (searchResultState | async)?.hits.total }}</span>
     </div>
-    <div class="d-flex justify-content-end align-items-center sidebar-select-form-field">
+    <div
+      class="d-flex justify-content-end align-items-center sidebar-select-form-field"
+    >
       <mat-form-field>
-        <mat-select [value]='orderSelected.value'>
-          <mat-option *ngFor="let ov of orderVocabulary" [value]="ov.value" (click)="orderSelected = ov; filter()">
-            {{ov.value}}
+        <mat-select [value]="orderSelected.value">
+          <mat-option
+            *ngFor="let ov of orderVocabulary"
+            [value]="ov.value"
+            (click)="orderSelected = ov; filter()"
+          >
+            {{ ov.value }}
           </mat-option>
         </mat-select>
       </mat-form-field>
       <button mat-icon-button matTooltip="Order">
-        <mat-icon *ngIf="!sequenceDesc" (click)="sequenceDesc = !sequenceDesc; filter()">arrow_upward</mat-icon>
-        <mat-icon *ngIf="sequenceDesc" (click)="sequenceDesc = !sequenceDesc; filter()">arrow_downward</mat-icon>
+        <mat-icon
+          *ngIf="!sequenceDesc"
+          (click)="sequenceDesc = !sequenceDesc; filter()"
+          >arrow_upward</mat-icon
+        >
+        <mat-icon
+          *ngIf="sequenceDesc"
+          (click)="sequenceDesc = !sequenceDesc; filter()"
+          >arrow_downward</mat-icon
+        >
       </button>
     </div>
   </div>

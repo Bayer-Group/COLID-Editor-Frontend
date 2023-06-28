@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { GraphFileUploadComponent } from './graph-file-upload.component';
+import { GraphFileUploadComponent } from "./graph-file-upload.component";
 
-describe('GraphFileUploadComponent', () => {
+describe("GraphFileUploadComponent", () => {
   let component: GraphFileUploadComponent;
   let fixture: ComponentFixture<GraphFileUploadComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ GraphFileUploadComponent ]
-    })
-    .compileComponents();
+      declarations: [GraphFileUploadComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('GraphFileUploadComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

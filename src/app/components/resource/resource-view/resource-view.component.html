@@ -106,7 +106,6 @@
               <action-button
                 type="mat-icon-button"
                 id="btnLinkResource"
-                *ngIf="isAllowedToLink"
                 color="primary"
                 (click)="showLinkingResourceDialog()"
                 matTooltip="Link this resource to another resource version"
@@ -242,7 +241,7 @@
       mat-fab
       *ngIf="current.isActive"
       color="accent"
-      [disabled]="!(isAuthorizedToEdit$ | async) || isLoading"
+      [disabled]="(isAuthorizedToEdit$ | async) === false || isLoading"
       matTooltip="Edit this resource"
       (click)="editResource()"
     >

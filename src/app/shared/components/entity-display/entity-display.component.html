@@ -1,11 +1,35 @@
 <div class="mt-3" *ngIf="metadata && entity; else loading">
-  <div class="row p-0 m-0" *ngFor="let groupedMetadata of metadata | groupByGroup; let i = index">
+  <div
+    class="row p-0 m-0"
+    *ngFor="let groupedMetadata of metadata | groupByGroup; let i = index"
+  >
     <div class="col-12">
-      <ng-container *ngIf="isVisibleMetadataGroup(groupedMetadata.key) && !isAttachmentGroup(groupedMetadata.key)">
-        <app-entity-display-group (versionClick)="versionClicked($event)" [invisbleProperties]="invisbleProperties" [entityVersions]="entityVersions" [group]="groupedMetadata.key" [groupedMetadata]="groupedMetadata.value" [entity]="entity" [headerGroup]="headerGroup" [subHeaderGroup]="subHeaderGroup"></app-entity-display-group>
+      <ng-container
+        *ngIf="
+          isVisibleMetadataGroup(groupedMetadata.key) &&
+          !isAttachmentGroup(groupedMetadata.key)
+        "
+      >
+        <app-entity-display-group
+          (versionClick)="versionClicked($event)"
+          [invisbleProperties]="invisbleProperties"
+          [entityVersions]="entityVersions"
+          [group]="groupedMetadata.key"
+          [groupedMetadata]="groupedMetadata.value"
+          [entity]="entity"
+          [headerGroup]="headerGroup"
+          [subHeaderGroup]="subHeaderGroup"
+        ></app-entity-display-group>
       </ng-container>
       <ng-container *ngIf="isAttachmentGroup(groupedMetadata.key)">
-        <app-entity-display-image [invisbleProperties]="invisbleProperties" [group]="groupedMetadata.key" [groupedMetadata]="groupedMetadata.value" [entity]="entity" [headerGroup]="headerGroup" [subHeaderGroup]="subHeaderGroup"></app-entity-display-image>
+        <app-entity-display-image
+          [invisbleProperties]="invisbleProperties"
+          [group]="groupedMetadata.key"
+          [groupedMetadata]="groupedMetadata.value"
+          [entity]="entity"
+          [headerGroup]="headerGroup"
+          [subHeaderGroup]="subHeaderGroup"
+        ></app-entity-display-image>
       </ng-container>
     </div>
   </div>

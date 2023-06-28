@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { MessageTemplateEditComponent } from './message-template-edit.component';
+import { MessageTemplateEditComponent } from "./message-template-edit.component";
 
-describe('MessageTemplateEditComponent', () => {
+describe("MessageTemplateEditComponent", () => {
   let component: MessageTemplateEditComponent;
   let fixture: ComponentFixture<MessageTemplateEditComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ MessageTemplateEditComponent ]
-    })
-    .compileComponents();
+      declarations: [MessageTemplateEditComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('MessageTemplateEditComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

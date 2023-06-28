@@ -1,28 +1,25 @@
-import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
-import { Constants } from 'src/app/shared/constants';
-import { StringExtension } from 'src/app/shared/extensions/string.extension';
-import { SearchHit } from 'src/app/shared/models/search/search-hit';
-import { environment } from 'src/environments/environment';
+import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Constants } from "src/app/shared/constants";
+import { StringExtension } from "src/app/shared/extensions/string.extension";
+import { SearchHit } from "src/app/shared/models/search/search-hit";
+import { environment } from "src/environments/environment";
 
 @Component({
-  selector: 'app-sidebar-content-item',
-  templateUrl: './sidebar-content-item.component.html',
-  styleUrls: ['./sidebar-content-item.component.scss']
+  selector: "app-sidebar-content-item",
+  templateUrl: "./sidebar-content-item.component.html",
+  styleUrls: ["./sidebar-content-item.component.scss"],
 })
-export class SidebarContentItemComponent implements OnInit {
+export class SidebarContentItemComponent {
   constants = Constants;
 
   @Input() hit: SearchHit;
-  @Input() selectedResourcePidUri = '';
-  @Input() currentPageStatus: string
+  @Input() selectedResourcePidUri = "";
+  @Input() currentPageStatus: string;
   @Input() index: number;
-  
-  @Output() select: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor() { }
+  @Output() selectHandler: EventEmitter<string> = new EventEmitter<string>();
 
-  ngOnInit(): void {
-  }
+  constructor() {}
 
   get resourceType(): string {
     if (environment.enableIndexSearch) {
@@ -44,10 +41,11 @@ export class SidebarContentItemComponent implements OnInit {
   }
 
   get definition(): string {
-    const definition = this.hit.source[Constants.Metadata.HasResourceDefinition]
+    const definition =
+      this.hit.source[Constants.Metadata.HasResourceDefinition];
 
-    if(definition == null) {
-      return '';
+    if (definition == null) {
+      return "";
     }
 
     if (environment.enableIndexSearch) {
@@ -63,7 +61,8 @@ export class SidebarContentItemComponent implements OnInit {
 
   get lifeCycleStatus(): string {
     if (environment.enableIndexSearch) {
-      return this.hit.source[Constants.Metadata.LifeCycleStatus].outbound[0].uri;
+      return this.hit.source[Constants.Metadata.LifeCycleStatus].outbound[0]
+        .uri;
     } else {
       return this.hit.source[Constants.Metadata.LifeCycleStatus].toString();
     }
@@ -71,7 +70,7 @@ export class SidebarContentItemComponent implements OnInit {
 
   get pidUri(): string {
     if (environment.enableIndexSearch) {
-      return this.hit.source[Constants.Metadata.HasPidUri].outbound[0].uri
+      return this.hit.source[Constants.Metadata.HasPidUri].outbound[0].uri;
     } else {
       return this.hit.source[Constants.Metadata.HasPidUri].toString();
     }
@@ -86,15 +85,21 @@ export class SidebarContentItemComponent implements OnInit {
   }
 
   get hasMarkedDeletionVersion(): boolean {
-    return this.lifeCycleStatus === Constants.Resource.LifeCycleStatus.MarkedDeletion;
+    return (
+      this.lifeCycleStatus === Constants.Resource.LifeCycleStatus.MarkedDeletion
+    );
   }
 
   get hasPublishedVersion(): boolean {
-    return this.lifeCycleStatus === Constants.Resource.LifeCycleStatus.Published || this.hasLinkedPublishedVersion;
+    return (
+      this.lifeCycleStatus === Constants.Resource.LifeCycleStatus.Published ||
+      this.hasLinkedPublishedVersion
+    );
   }
 
   get hasLinkedPublishedVersion(): boolean {
-    const resourceLinkedLifecycleStatus = this.hit.source['resourceLinkedLifecycleStatus'];
+    const resourceLinkedLifecycleStatus =
+      this.hit.source["resourceLinkedLifecycleStatus"];
     if (resourceLinkedLifecycleStatus == null) {
       return false;
     }
@@ -106,7 +111,10 @@ export class SidebarContentItemComponent implements OnInit {
       lifeCycleStatus = resourceLinkedLifecycleStatus.toString();
     }
 
-    return lifeCycleStatus === Constants.Resource.LifeCycleStatus.MarkedDeletion || lifeCycleStatus === Constants.Resource.LifeCycleStatus.Published;
+    return (
+      lifeCycleStatus === Constants.Resource.LifeCycleStatus.MarkedDeletion ||
+      lifeCycleStatus === Constants.Resource.LifeCycleStatus.Published
+    );
   }
 
   getTooltipContent(tooltipContent: string) {
@@ -114,8 +122,8 @@ export class SidebarContentItemComponent implements OnInit {
     const decodedString = dom.body.textContent;
     return decodedString;
   }
-  
-  selectResource(){
-    this.select.emit(this.pidUri);
+
+  selectResource() {
+    this.selectHandler.emit(this.pidUri);
   }
 }

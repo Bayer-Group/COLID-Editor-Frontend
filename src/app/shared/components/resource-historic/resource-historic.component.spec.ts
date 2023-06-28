@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { ResourceHistoricComponent } from './resource-historic.component';
+import { ResourceHistoricComponent } from "./resource-historic.component";
 
-describe('ResourceHistoricComponent', () => {
+describe("ResourceHistoricComponent", () => {
   let component: ResourceHistoricComponent;
   let fixture: ComponentFixture<ResourceHistoricComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ResourceHistoricComponent ]
-    })
-    .compileComponents();
+      declarations: [ResourceHistoricComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('ResourceHistoricComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

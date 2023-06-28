@@ -1,5 +1,13 @@
 <ng-container *ngIf="history$ | async as history">
-    <app-resource-historic [entities]="history" [selectedEntity]="selectedHistoricResource$ | async" [historicEntities]="historicResources$ | async"
-    [metadata]="metadeta" [isMetadataMapped]="true" (selectionChange)="handleSelectionChanged($event)" (versionClick)="handleVersionClicked($event)"
-    header="lastChangeDateTime" subHeader="lastChangeUser"></app-resource-historic>
+  <app-resource-historic
+    [entities]="history"
+    [selectedEntity]="selectedHistoricResource$ | async"
+    [historicEntities]="historicResources$ | async"
+    [metadata]="metadeta"
+    [isMetadataMapped]="true"
+    (selectionChange)="handleSelectionChanged($event)"
+    (versionClick)="handleVersionClicked($event)"
+    header="lastChangeDateTime"
+    subHeader="lastChangeUser"
+  ></app-resource-historic>
 </ng-container>

@@ -1,73 +1,89 @@
-import { Injectable } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import { GeneralException } from '../../shared/models/exceptions/general-exception';
-import { ColidMatSnackBarService } from '../../modules/colid-mat-snack-bar/colid-mat-snack-bar.service';
-import { BusinessException } from '../../shared/models/exceptions/business-exception';
-import { ValidationException } from '../../shared/models/exceptions/business/validation-exception';
-import { EntityValidationException } from '../../shared/models/exceptions/business/validation/entity-validation-exception';
-import { ResourceValidationException } from '../../shared/models/exceptions/business/validation/resource-validation-exception';
+import { Injectable } from "@angular/core";
+import {
+  HttpRequest,
+  HttpHandler,
+  HttpEvent,
+  HttpInterceptor,
+  HttpErrorResponse,
+} from "@angular/common/http";
+import { Observable, of } from "rxjs";
+import { tap } from "rxjs/operators";
+import { Router } from "@angular/router";
+import { GeneralException } from "../../shared/models/exceptions/general-exception";
+import { ColidMatSnackBarService } from "../../modules/colid-mat-snack-bar/colid-mat-snack-bar.service";
+import { BusinessException } from "../../shared/models/exceptions/business-exception";
+import { ValidationException } from "../../shared/models/exceptions/business/validation-exception";
+import { EntityValidationException } from "../../shared/models/exceptions/business/validation/entity-validation-exception";
+import { ResourceValidationException } from "../../shared/models/exceptions/business/validation/resource-validation-exception";
 
-import { TechnicalException } from '../../shared/models/exceptions/technical-exception';
-import { EntityNotFoundException } from '../../shared/models/exceptions/business/entity-not-found-exception';
-import { environment } from 'src/environments/environment';
-import { Constants } from 'src/app/shared/constants';
-
+import { TechnicalException } from "../../shared/models/exceptions/technical-exception";
+import { EntityNotFoundException } from "../../shared/models/exceptions/business/entity-not-found-exception";
+import { environment } from "src/environments/environment";
+import { Constants } from "src/app/shared/constants";
 
 @Injectable()
 export class ColidDefaultInterceptor implements HttpInterceptor {
+  constructor(
+    public router: Router,
+    private snackBar: ColidMatSnackBarService
+  ) {}
 
-  constructor(public router: Router, private snackBar: ColidMatSnackBarService) { }
-
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const updateHeaders = { 'Cache-Control': 'no-cache' }
-    if (request.headers.has('x-skip-content-type')) {
-      request.headers.delete('x-skip-content-type');
+  intercept(
+    request: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
+    const updateHeaders = { "Cache-Control": "no-cache" };
+    if (request.headers.has("x-skip-content-type")) {
+      request.headers.delete("x-skip-content-type");
     } else {
-      updateHeaders['Content-Type'] = 'application/json; charset=utf-8'
+      updateHeaders["Content-Type"] = "application/json; charset=utf-8";
     }
 
     request = request.clone({ setHeaders: updateHeaders });
 
-    return next.handle(request)
-      .pipe(
-        tap(event => { },
-          error => {
-            if (error instanceof HttpErrorResponse) {
-              // Needed to ignore first user not found exception
-              if (this.isToBeIgnoredResponse(error.status, request.url)) {
-                return of(error);
-              }
-
-              // Needed to handle blocked resources separately
-              if (error.status === 423) {
-                return of(error);
-              }
-              
-              if (error.status === 401) {
-                this.router.navigate(['unauthorized']);
-                return of(error);
-              } else if (error.status === 503) {
-                this.router.navigate(['unavailable']);
-              }
-
-              if (error.error as GeneralException) {
-                this.handleException(error.error);
-                return of(error);
-              }
+    return next.handle(request).pipe(
+      tap(
+        (_) => {},
+        (error) => {
+          if (error instanceof HttpErrorResponse) {
+            // Needed to ignore first user not found exception
+            if (this.isToBeIgnoredResponse(error.status, request.url)) {
+              return of(error);
             }
-            console.error(error);
-            return of(error);
-          })
-      );
+
+            // Needed to handle blocked resources separately
+            if (error.status === 423) {
+              return of(error);
+            }
+
+            if (error.status === 401) {
+              this.router.navigate(["unauthorized"]);
+              return of(error);
+            } else if (error.status === 503) {
+              this.router.navigate(["unavailable"]);
+            }
+
+            if (error.error as GeneralException) {
+              this.handleException(error.error);
+              return of(error);
+            }
+          }
+          console.error(error);
+          return of(error);
+        }
+      )
+    );
   }
 
   private isToBeIgnoredResponse(errorStatus: number, url: string) {
-    return errorStatus == 404 && url.startsWith(`${environment.appDataApiUrl}/Users/`) ||
-           errorStatus == 404 && url.startsWith(`${environment.appDataApiUrl}/activeDirectory/`) ||
-           errorStatus == 409 && url.startsWith(`${environment.colidApiUrl}/attachment`)
+    return (
+      (errorStatus == 404 &&
+        url.startsWith(`${environment.appDataApiUrl}/Users/`)) ||
+      (errorStatus == 404 &&
+        url.startsWith(`${environment.appDataApiUrl}/activeDirectory/`)) ||
+      (errorStatus == 409 &&
+        url.startsWith(`${environment.colidApiUrl}/attachment`))
+    );
   }
 
   private handleException(colidException: GeneralException) {
@@ -78,7 +94,7 @@ export class ColidDefaultInterceptor implements HttpInterceptor {
     }
     // Server errors
     else if (statusCode >= 500) {
-      this.handleServerException(colidException)
+      this.handleServerException(colidException);
     }
   }
 
@@ -104,13 +120,25 @@ export class ColidDefaultInterceptor implements HttpInterceptor {
     }
   }
 
-  private handleValidationException(colidException: ValidationException | EntityValidationException) {
-    if (colidException.validationResult.severity === Constants.Shacl.Severity.Violation) {
+  private handleValidationException(
+    colidException: ValidationException | EntityValidationException
+  ) {
+    if (
+      colidException.validationResult.severity ===
+      Constants.Shacl.Severity.Violation
+    ) {
       this.snackBar.error("Error", colidException.message, colidException);
-    } else if (colidException.validationResult.severity === Constants.Shacl.Severity.Warning) {
-      this.snackBar.warning("Validation", colidException.message, colidException);
+    } else if (
+      colidException.validationResult.severity ===
+      Constants.Shacl.Severity.Warning
+    ) {
+      this.snackBar.warning(
+        "Validation",
+        colidException.message,
+        colidException
+      );
     } else {
-      this.snackBar.info('Information', colidException.message, colidException)
+      this.snackBar.info("Information", colidException.message, colidException);
     }
   }
 

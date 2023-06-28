@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { DeletionRequestComponent } from './deletion-request.component';
+import { DeletionRequestComponent } from "./deletion-request.component";
 
-describe('DeletionRequestComponent', () => {
+describe("DeletionRequestComponent", () => {
   let component: DeletionRequestComponent;
   let fixture: ComponentFixture<DeletionRequestComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ DeletionRequestComponent ]
-    })
-    .compileComponents();
+      declarations: [DeletionRequestComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('DeletionRequestComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

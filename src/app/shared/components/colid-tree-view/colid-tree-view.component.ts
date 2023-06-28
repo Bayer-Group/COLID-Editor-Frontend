@@ -1,21 +1,23 @@
-import { SelectionModel } from '@angular/cdk/collections';
-import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, Injectable, Input, Output, EventEmitter, OnInit, ChangeDetectorRef } from '@angular/core';
-import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
-import { TaxonomyResultDTO } from '../../models/taxonomy/taxonomy-result-dto';
-import { TreeViewSelectionChangeEvent } from '../../models/tree-view-selection-change-event';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { SelectionModel } from "@angular/cdk/collections";
+import { FlatTreeControl } from "@angular/cdk/tree";
+import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
+import {
+  MatTreeFlatDataSource,
+  MatTreeFlattener,
+} from "@angular/material/tree";
+import { TaxonomyResultDTO } from "../../models/taxonomy/taxonomy-result-dto";
+import { TreeViewSelectionChangeEvent } from "../../models/tree-view-selection-change-event";
+import { MatCheckboxChange } from "@angular/material/checkbox";
 
 /**
  * @title Tree with checkboxes
  */
 @Component({
-  selector: 'colid-tree-view',
-  templateUrl: 'colid-tree-view.component.html',
-  styleUrls: ['colid-tree-view.component.scss']
+  selector: "colid-tree-view",
+  templateUrl: "colid-tree-view.component.html",
+  styleUrls: ["colid-tree-view.component.scss"],
 })
 export class ColidTreeViewComponent implements OnInit {
-
   @Input() name: string;
   @Input() singleSelection: boolean = false;
   @Input() TREE_DATA: TaxonomyResultDTO[] = [];
@@ -29,7 +31,8 @@ export class ColidTreeViewComponent implements OnInit {
     }
   }
 
-  @Output() selectionChanged: EventEmitter<TreeViewSelectionChangeEvent> = new EventEmitter<TreeViewSelectionChangeEvent>();
+  @Output() selectionChanged: EventEmitter<TreeViewSelectionChangeEvent> =
+    new EventEmitter<TreeViewSelectionChangeEvent>();
 
   _selectedNodes: string[] = [];
 
@@ -50,24 +53,41 @@ export class ColidTreeViewComponent implements OnInit {
 
   allSelected = false;
 
-  get isTaxonomy(): boolean { return this.TREE_DATA.some(t => t.hasChild); }
+  get isTaxonomy(): boolean {
+    return this.TREE_DATA.some((t) => t.hasChild);
+  }
 
   constructor() {
-    this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
-    this.treeControl = new FlatTreeControl<TaxonomyResultDTO>(this.getLevel, this.isExpandable);
-    this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+    this.treeFlattener = new MatTreeFlattener(
+      this.transformer,
+      this.getLevel,
+      this.isExpandable,
+      this.getChildren
+    );
+    this.treeControl = new FlatTreeControl<TaxonomyResultDTO>(
+      this.getLevel,
+      this.isExpandable
+    );
+    this.dataSource = new MatTreeFlatDataSource(
+      this.treeControl,
+      this.treeFlattener
+    );
   }
 
   ngOnInit() {
-    this.checklistSelection = new SelectionModel<TaxonomyResultDTO>(!this.singleSelection /* multiple */);
+    this.checklistSelection = new SelectionModel<TaxonomyResultDTO>(
+      !this.singleSelection /* multiple */
+    );
     this.dataSource.data = this.TREE_DATA;
 
-    this.checklistSelection.changed.subscribe(c => {
-      this.allSelected = this.TREE_DATA.every(t => this.checklistSelection.isSelected(t));
+    this.checklistSelection.changed.subscribe((_) => {
+      this.allSelected = this.TREE_DATA.every((t) =>
+        this.checklistSelection.isSelected(t)
+      );
     });
 
     /** Writing the value from the upper component takes place before the components are initialized,
-    * so no data is available yet. The data must be written intially here. */
+     * so no data is available yet. The data must be written intially here. */
     this.handleInputSelectionChanged(this._selectedNodes);
   }
 
@@ -83,21 +103,32 @@ export class ColidTreeViewComponent implements OnInit {
   transformer = (node: TaxonomyResultDTO, level: number) => {
     node.level = level;
     return node;
-  }
+  };
 
   selectAll(event: MatCheckboxChange) {
     if (event.checked) {
-      this.checklistSelection.select(...this.treeControl.dataNodes.filter(node => !this.checklistSelection.isSelected(node)))
+      this.checklistSelection.select(
+        ...this.treeControl.dataNodes.filter(
+          (node) => !this.checklistSelection.isSelected(node)
+        )
+      );
     } else {
-      this.checklistSelection.deselect(...this.treeControl.dataNodes.filter(node => this.checklistSelection.isSelected(node)))
+      this.checklistSelection.deselect(
+        ...this.treeControl.dataNodes.filter((node) =>
+          this.checklistSelection.isSelected(node)
+        )
+      );
     }
-    this.selectionChanged.emit({ initialChange: false, values: this.checklistSelection.selected });
+    this.selectionChanged.emit({
+      initialChange: false,
+      values: this.checklistSelection.selected,
+    });
   }
 
   /** Whether all the descendants of the node are selected. */
   descendantsAllSelected(node: TaxonomyResultDTO): boolean {
     const descendants = this.treeControl.getDescendants(node);
-    const descAllSelected = descendants.every(child =>
+    const descAllSelected = descendants.every((child) =>
       this.checklistSelection.isSelected(child)
     );
     return descAllSelected;
@@ -106,7 +137,9 @@ export class ColidTreeViewComponent implements OnInit {
   /** Whether part of the descendants are selected */
   descendantsPartiallySelected(node: TaxonomyResultDTO): boolean {
     const descendants = this.treeControl.getDescendants(node);
-    const result = descendants.some(child => this.checklistSelection.isSelected(child));
+    const result = descendants.some((child) =>
+      this.checklistSelection.isSelected(child)
+    );
     return result && !this.descendantsAllSelected(node);
   }
 
@@ -119,19 +152,26 @@ export class ColidTreeViewComponent implements OnInit {
       : this.checklistSelection.deselect(...descendants);
 
     // Force update for the parent
-    descendants.every(child =>
-      this.checklistSelection.isSelected(child)
-    );
+    descendants.every((child) => this.checklistSelection.isSelected(child));
     this.checkAllParentsSelection(node);
 
-    this.selectionChanged.emit({ initialChange: initial, values: this.checklistSelection.selected });
+    this.selectionChanged.emit({
+      initialChange: initial,
+      values: this.checklistSelection.selected,
+    });
   }
 
   /** Toggle a leaf item selection. Check all the parents to see if they changed */
-  leafItemSelectionToggle(node: TaxonomyResultDTO, initial: boolean = false): void {
+  leafItemSelectionToggle(
+    node: TaxonomyResultDTO,
+    initial: boolean = false
+  ): void {
     this.checklistSelection.toggle(node);
     this.checkAllParentsSelection(node);
-    this.selectionChanged.emit({ initialChange: initial, values: this.checklistSelection.selected });
+    this.selectionChanged.emit({
+      initialChange: initial,
+      values: this.checklistSelection.selected,
+    });
   }
 
   /* Checks all the parents when a leaf node is selected/unselected */
@@ -147,7 +187,7 @@ export class ColidTreeViewComponent implements OnInit {
   checkRootNodeSelection(node: TaxonomyResultDTO): void {
     const nodeSelected = this.checklistSelection.isSelected(node);
     const descendants = this.treeControl.getDescendants(node);
-    const descAllSelected = descendants.every(child =>
+    const descAllSelected = descendants.every((child) =>
       this.checklistSelection.isSelected(child)
     );
     if (nodeSelected && !descAllSelected) {
@@ -186,7 +226,7 @@ export class ColidTreeViewComponent implements OnInit {
   }
 
   handleNodeList(identifiers: string[], results: TaxonomyResultDTO[]) {
-    results.forEach(t => {
+    results.forEach((t) => {
       if (identifiers.includes(t.id)) {
         if (t.hasChild) {
           this.itemSelectionToggle(t, true);

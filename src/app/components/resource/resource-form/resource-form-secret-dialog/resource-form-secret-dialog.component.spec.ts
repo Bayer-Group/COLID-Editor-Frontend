@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { ResourceFormSecretDialogComponent } from './resource-form-secret-dialog.component';
+import { ResourceFormSecretDialogComponent } from "./resource-form-secret-dialog.component";
 
-describe('ResourceFormSecretDialogComponent', () => {
+describe("ResourceFormSecretDialogComponent", () => {
   let component: ResourceFormSecretDialogComponent;
   let fixture: ComponentFixture<ResourceFormSecretDialogComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ResourceFormSecretDialogComponent ]
-    })
-    .compileComponents();
+      declarations: [ResourceFormSecretDialogComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('ResourceFormSecretDialogComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

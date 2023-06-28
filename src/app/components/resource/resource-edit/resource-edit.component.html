@@ -1,26 +1,31 @@
-<div *ngIf="(isAuthorizedToEdit$ | async) else loading">
-    <div *ngIf="(isAuthorizedToEdit$ | async)">
-        <app-resource-form [isNew]="false"></app-resource-form>
-    </div>
-    <div *ngIf="!(isAuthorizedToEdit$ | async)">
-        <div class="container">
-            <div class="row mt-4 justify-content-center">
-                <div class="col-auto">
-                    <h5>
-                        <span class="text-muted">You are not authorized to edit the entry.</span>
-                    </h5>
-                    <h1 class="display-4">Unauthorized</h1>
-                    <p>You do not have the required access rights to edit the requested information.</p>
-                    <p>Please change your consumer group and try again.</p>
-                </div>
-            </div>
+<div *ngIf="isAuthorizedToEdit$ | async; else loading">
+  <div *ngIf="isAuthorizedToEdit$ | async">
+    <app-resource-form [isNew]="false"></app-resource-form>
+  </div>
+  <div *ngIf="(isAuthorizedToEdit$ | async) === false">
+    <div class="container">
+      <div class="row mt-4 justify-content-center">
+        <div class="col-auto">
+          <h5>
+            <span class="text-muted"
+              >You are not authorized to edit the entry.</span
+            >
+          </h5>
+          <h1 class="display-4">Unauthorized</h1>
+          <p>
+            You do not have the required access rights to edit the requested
+            information.
+          </p>
+          <p>Please change your consumer group and try again.</p>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 <ng-template #loading>
-    <div class="row justify-content-center mt-4">
-        <div class="col-auto">
-            <app-colid-spinner></app-colid-spinner>
-        </div>
+  <div class="row justify-content-center mt-4">
+    <div class="col-auto">
+      <app-colid-spinner></app-colid-spinner>
     </div>
+  </div>
 </ng-template>

@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { FormItemInputDistributionComponent } from './form-item-input-distribution.component';
+import { FormItemInputDistributionComponent } from "./form-item-input-distribution.component";
 
-describe('FormItemInputDistributionComponent', () => {
+describe("FormItemInputDistributionComponent", () => {
   let component: FormItemInputDistributionComponent;
   let fixture: ComponentFixture<FormItemInputDistributionComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormItemInputDistributionComponent ]
-    })
-    .compileComponents();
+      declarations: [FormItemInputDistributionComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('FormItemInputDistributionComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

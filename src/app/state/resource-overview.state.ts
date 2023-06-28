@@ -1,47 +1,57 @@
-import { State, Action, StateContext, Selector, Store, Actions, ofAction, ofActionDispatched } from '@ngxs/store';
-import { ResourceSearchDTO } from '../shared/models/search/resource-search-dto';
-import { SearchService } from '../core/http/search.service';
-import { SearchResult } from '../shared/models/search/search-result';
-import { tap } from 'rxjs/operators';
-import { Injectable } from '@angular/core';
+import {
+  State,
+  Action,
+  StateContext,
+  Selector,
+  Store,
+  Actions,
+} from "@ngxs/store";
+import { ResourceSearchDTO } from "../shared/models/search/resource-search-dto";
+import { SearchService } from "../core/http/search.service";
+import { SearchResult } from "../shared/models/search/search-result";
+import { tap } from "rxjs/operators";
+import { Injectable } from "@angular/core";
 
 export class FetchSidebarResourceOverview {
-  static readonly type = '[ResourcesOverview] Fetch';
-  constructor(public payload : boolean = false ) { }
+  static readonly type = "[ResourcesOverview] Fetch";
+  constructor(public payload: boolean = false) {}
 }
 
 export class SetSidebarSearch {
-  static readonly type = '[ResourcesOverview] SetSidebarSearch';
+  static readonly type = "[ResourcesOverview] SetSidebarSearch";
 
-  constructor(public payload: ResourceSearchDTO) { }
+  constructor(public payload: ResourceSearchDTO) {}
 }
 
 export class FetchNextResourceBatch {
-  static readonly type = '[ResourcesOverview] Fetch Next Resource Batch';
+  static readonly type = "[ResourcesOverview] Fetch Next Resource Batch";
 
-  constructor(public payload: number) { }
+  constructor(public payload: number) {}
 }
 
 export class ResourceOverviewStateModel {
   loading: boolean;
   resourceOverviewSearch: ResourceSearchDTO;
   searchResult: SearchResult;
-  initialLoad: boolean; 
+  initialLoad: boolean;
 }
 
 @State<ResourceOverviewStateModel>({
-  name: 'resourceOverview',
+  name: "resourceOverview",
   defaults: {
     loading: true,
     resourceOverviewSearch: null,
     searchResult: new SearchResult(),
-    initialLoad: false
-  }
+    initialLoad: false,
+  },
 })
 @Injectable()
 export class ResourceOverviewState {
-
-  constructor(private actions$: Actions, private store: Store, private searchService: SearchService) { }
+  constructor(
+    private actions$: Actions,
+    private store: Store,
+    private searchService: SearchService
+  ) {}
 
   @Selector()
   public static searchResult(state: ResourceOverviewStateModel): SearchResult {
@@ -64,31 +74,38 @@ export class ResourceOverviewState {
   }
 
   @Action(FetchSidebarResourceOverview, { cancelUncompleted: true })
-  fetchSidebarResourcesOverview({ getState, patchState }: StateContext<ResourceOverviewStateModel>, {payload}: FetchSidebarResourceOverview) {
+  fetchSidebarResourcesOverview(
+    { getState, patchState }: StateContext<ResourceOverviewStateModel>,
+    { payload }: FetchSidebarResourceOverview
+  ) {
     const state = getState();
     patchState({
       loading: true,
       resourceOverviewSearch: {
         ...state.resourceOverviewSearch,
-        offset: 0
+        offset: 0,
       },
-      initialLoad: true
+      initialLoad: true,
     });
     if (state.resourceOverviewSearch !== null) {
-      return this.searchService.search(state.resourceOverviewSearch,payload,false ).pipe(
-        tap(res => {
-          patchState({
-            searchResult: res,
-            loading: false
+      return this.searchService
+        .search(state.resourceOverviewSearch, payload, false)
+        .pipe(
+          tap((res) => {
+            patchState({
+              searchResult: res,
+              loading: false,
+            });
           })
-        })
-      );
+        );
     }
   }
 
   @Action(FetchNextResourceBatch)
-  fetchNextResourceBatch({ getState, patchState }: StateContext<ResourceOverviewStateModel>,
-    { payload }: FetchNextResourceBatch) {
+  fetchNextResourceBatch(
+    { getState, patchState }: StateContext<ResourceOverviewStateModel>,
+    { payload }: FetchNextResourceBatch
+  ) {
     const state = getState();
     const searchFilters = state.resourceOverviewSearch;
     // offset mean already loaded records plus limit.
@@ -104,28 +121,35 @@ export class ResourceOverviewState {
       initialLoad: false,
     });
 
-    this.searchService.search(state.resourceOverviewSearch).subscribe(searchResult => {
-      if (state.resourceOverviewSearch.offset >= state.searchResult.hits.hits.length) {
+    this.searchService
+      .search(state.resourceOverviewSearch)
+      .subscribe((searchResult) => {
+        if (
+          state.resourceOverviewSearch.offset >=
+          state.searchResult.hits.hits.length
+        ) {
+          searchResult.hits.hits = [
+            ...state.searchResult.hits.hits,
+            ...searchResult.hits.hits,
+          ];
 
-        searchResult.hits.hits = [...state.searchResult.hits.hits, ...searchResult.hits.hits]
-
-        patchState({
-          loading: false,
-          resourceOverviewSearch: searchFilters,
-          searchResult: searchResult
-        });
-      }
-    });
+          patchState({
+            loading: false,
+            resourceOverviewSearch: searchFilters,
+            searchResult: searchResult,
+          });
+        }
+      });
   }
 
-
   @Action(SetSidebarSearch)
-  setSidebarSearch({ patchState }: StateContext<ResourceOverviewStateModel>, { payload }: SetSidebarSearch) {
+  setSidebarSearch(
+    { patchState }: StateContext<ResourceOverviewStateModel>,
+    { payload }: SetSidebarSearch
+  ) {
     patchState({
-      resourceOverviewSearch: payload
+      resourceOverviewSearch: payload,
     });
     this.store.dispatch(new FetchSidebarResourceOverview()).subscribe();
   }
-  
 }
-

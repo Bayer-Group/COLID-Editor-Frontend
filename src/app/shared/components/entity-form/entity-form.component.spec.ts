@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { EntityFormComponent } from './entity-form.component';
+import { EntityFormComponent } from "./entity-form.component";
 
-describe('EntityFormComponent', () => {
+describe("EntityFormComponent", () => {
   let component: EntityFormComponent;
   let fixture: ComponentFixture<EntityFormComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ EntityFormComponent ]
-    })
-    .compileComponents();
+      declarations: [EntityFormComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('EntityFormComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

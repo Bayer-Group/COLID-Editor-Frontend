@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { DeletionRequestDialogComponent } from './deletion-request-dialog.component';
+import { DeletionRequestDialogComponent } from "./deletion-request-dialog.component";
 
-describe('DeletionRequestDialogComponent', () => {
+describe("DeletionRequestDialogComponent", () => {
   let component: DeletionRequestDialogComponent;
   let fixture: ComponentFixture<DeletionRequestDialogComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ DeletionRequestDialogComponent ]
-    })
-    .compileComponents();
+      declarations: [DeletionRequestDialogComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('DeletionRequestDialogComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

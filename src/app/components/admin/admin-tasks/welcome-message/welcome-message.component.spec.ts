@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { WelcomeMessageComponent } from './welcome-message.component';
+import { WelcomeMessageComponent } from "./welcome-message.component";
 
-describe('WelcomeMessageComponent', () => {
+describe("WelcomeMessageComponent", () => {
   let component: WelcomeMessageComponent;
   let fixture: ComponentFixture<WelcomeMessageComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ WelcomeMessageComponent ]
-    })
-    .compileComponents();
+      declarations: [WelcomeMessageComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('WelcomeMessageComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

@@ -1,55 +1,53 @@
-import {StateContext, Action, Selector, State} from '@ngxs/store';
-import {mergeMap, tap} from 'rxjs/operators';
-import {MetaDataProperty} from '../shared/models/metadata/meta-data-property';
-import {PidUriTemplateResultDTO} from '../shared/models/pidUriTemplates/pid-uri-template-result-dto';
-import {PidUriTemplateApiService} from '../core/http/pid-uri-template.api.service';
-import { MetaDataApiService } from '../core/http/meta-data.api.service';
-import { Constants } from '../shared/constants';
-import { PidUriTemplateRequestDTO } from '../shared/models/pidUriTemplates/pid-uri-template-request-dto';
-import { Injectable } from '@angular/core';
+import { StateContext, Action, Selector, State } from "@ngxs/store";
+import { mergeMap, tap } from "rxjs/operators";
+import { MetaDataProperty } from "../shared/models/metadata/meta-data-property";
+import { PidUriTemplateResultDTO } from "../shared/models/pidUriTemplates/pid-uri-template-result-dto";
+import { PidUriTemplateApiService } from "../core/http/pid-uri-template.api.service";
+import { MetaDataApiService } from "../core/http/meta-data.api.service";
+import { Constants } from "../shared/constants";
+import { PidUriTemplateRequestDTO } from "../shared/models/pidUriTemplates/pid-uri-template-request-dto";
+import { Injectable } from "@angular/core";
 
 export class FetchPidUriTemplates {
-  static readonly type = '[PidUriTemplate] Fetch PidUriTemplates';
+  static readonly type = "[PidUriTemplate] Fetch PidUriTemplates";
   constructor() {}
 }
 
 export class FetchPidUriTemplateDetails {
-  static readonly type = '[PidUriTemplate] Fetch PidUriTemplateDetails';
+  static readonly type = "[PidUriTemplate] Fetch PidUriTemplateDetails";
   constructor(public payload: string) {}
 }
 
 export class FetchPidUriTemplateMetadata {
-  static readonly type = '[PidUriTemplate] Fetch PidUriTemplateMetadata';
+  static readonly type = "[PidUriTemplate] Fetch PidUriTemplateMetadata";
   constructor() {}
 }
 
 export class CreatePidUriTemplate {
-  static readonly type = '[PidUriTemplate] Create PidUriTemplate';
-  constructor(public payload: PidUriTemplateRequestDTO) { }
+  static readonly type = "[PidUriTemplate] Create PidUriTemplate";
+  constructor(public payload: PidUriTemplateRequestDTO) {}
 }
 
 export class EditPidUriTemplate {
-  static readonly type = '[PidUriTemplate] Edit PidUriTemplate';
-  constructor(public id: string, public payload: PidUriTemplateRequestDTO) { }
+  static readonly type = "[PidUriTemplate] Edit PidUriTemplate";
+  constructor(public id: string, public payload: PidUriTemplateRequestDTO) {}
 }
 
 export class DeletePidUriTemplate {
-  static readonly type = '[PidUriTemplate] Delete PidUriTemplate';
+  static readonly type = "[PidUriTemplate] Delete PidUriTemplate";
   constructor(public payload: string) {}
 }
 
 export class ReactivatePidUriTemplate {
-  static readonly type = '[PidUriTemplate] Reactivate PidUriTemplate';
-  constructor(public payload: string) { }
+  static readonly type = "[PidUriTemplate] Reactivate PidUriTemplate";
+  constructor(public payload: string) {}
 }
 
 export class ClearPidUriTemplate {
-  static readonly type = '[PidUriTemplate] Clear PidUriTemplate';
+  static readonly type = "[PidUriTemplate] Clear PidUriTemplate";
 }
 
-
 export class PidUriTemplateStateModel {
-
   pidUriTemplatesFetched: boolean;
   pidUriTemplates: PidUriTemplateResultDTO[];
   pidUriTemplate: PidUriTemplateResultDTO;
@@ -57,18 +55,20 @@ export class PidUriTemplateStateModel {
 }
 
 @State<PidUriTemplateStateModel>({
-  name: 'pidUriTemplates',
+  name: "pidUriTemplates",
   defaults: {
     pidUriTemplatesFetched: false,
     pidUriTemplates: null,
     pidUriTemplate: null,
-    metadata: null
-  }
+    metadata: null,
+  },
 })
 @Injectable()
 export class PidUriTemplateState {
-  constructor(private pidUriTemplateApiService: PidUriTemplateApiService, private metadataService: MetaDataApiService) {
-  }
+  constructor(
+    private pidUriTemplateApiService: PidUriTemplateApiService,
+    private metadataService: MetaDataApiService
+  ) {}
 
   @Selector()
   public static getPidUriTemplates(state: PidUriTemplateStateModel) {
@@ -91,75 +91,105 @@ export class PidUriTemplateState {
   }
 
   @Action(FetchPidUriTemplates)
-  fetchPidUriTemplates({getState, patchState}: StateContext<PidUriTemplateStateModel>, {}: FetchPidUriTemplates) {
+  fetchPidUriTemplates(
+    { patchState }: StateContext<PidUriTemplateStateModel>,
+    {}: FetchPidUriTemplates
+  ) {
     patchState({
       pidUriTemplates: null,
-      pidUriTemplatesFetched: false
+      pidUriTemplatesFetched: false,
     });
-    return this.pidUriTemplateApiService.getAllEntities().pipe(tap(res => {
-      patchState({
-        pidUriTemplates: res,
-        pidUriTemplatesFetched: true
-      });
-    }));
+    return this.pidUriTemplateApiService.getAllEntities().pipe(
+      tap((res) => {
+        patchState({
+          pidUriTemplates: res,
+          pidUriTemplatesFetched: true,
+        });
+      })
+    );
   }
 
   @Action(FetchPidUriTemplateMetadata)
-  fetchPidUriTemplateMetadata({getState, patchState}: StateContext<PidUriTemplateStateModel>, {}: FetchPidUriTemplateMetadata) {
+  fetchPidUriTemplateMetadata(
+    { getState, patchState }: StateContext<PidUriTemplateStateModel>,
+    {}: FetchPidUriTemplateMetadata
+  ) {
     if (getState().metadata != null) {
       return;
     }
 
-    return this.metadataService.getMetaData(Constants.ResourceTypes.PidUriTemplate).pipe(tap(res => {
-      patchState({
-        metadata: res
-      });
-    }));
+    return this.metadataService
+      .getMetaData(Constants.ResourceTypes.PidUriTemplate)
+      .pipe(
+        tap((res) => {
+          patchState({
+            metadata: res,
+          });
+        })
+      );
   }
 
   @Action(CreatePidUriTemplate)
-  createPidUriTemplate({getState, patchState, dispatch}: StateContext<PidUriTemplateStateModel>, {payload}: CreatePidUriTemplate) {
-    return this.pidUriTemplateApiService.createEntity(payload)
-      .pipe(
-        mergeMap(() => dispatch(new FetchPidUriTemplates()))
-      );
+  createPidUriTemplate(
+    { dispatch }: StateContext<PidUriTemplateStateModel>,
+    { payload }: CreatePidUriTemplate
+  ) {
+    return this.pidUriTemplateApiService
+      .createEntity(payload)
+      .pipe(mergeMap(() => dispatch(new FetchPidUriTemplates())));
   }
 
   @Action(DeletePidUriTemplate)
-  deletePidUriTemplate({getState, patchState, dispatch}: StateContext<PidUriTemplateStateModel>, {payload}: DeletePidUriTemplate) {
-    return this.pidUriTemplateApiService.deleteEntity(payload).pipe(
-      mergeMap(() => dispatch(new FetchPidUriTemplates()))
-    );
+  deletePidUriTemplate(
+    { dispatch }: StateContext<PidUriTemplateStateModel>,
+    { payload }: DeletePidUriTemplate
+  ) {
+    return this.pidUriTemplateApiService
+      .deleteEntity(payload)
+      .pipe(mergeMap(() => dispatch(new FetchPidUriTemplates())));
   }
 
   @Action(ReactivatePidUriTemplate)
-  reactivatePidUriTemplate({getState, patchState, dispatch}: StateContext<PidUriTemplateStateModel>, {payload}: ReactivatePidUriTemplate) {
-    return this.pidUriTemplateApiService.reactivatePidUriTemplate(payload).pipe(
-      mergeMap(() => dispatch(new FetchPidUriTemplates()))
-    );
+  reactivatePidUriTemplate(
+    { dispatch }: StateContext<PidUriTemplateStateModel>,
+    { payload }: ReactivatePidUriTemplate
+  ) {
+    return this.pidUriTemplateApiService
+      .reactivatePidUriTemplate(payload)
+      .pipe(mergeMap(() => dispatch(new FetchPidUriTemplates())));
   }
 
   @Action(EditPidUriTemplate)
-  editPidUriTemplate({getState, patchState, dispatch}: StateContext<PidUriTemplateStateModel>, {id, payload}: EditPidUriTemplate) {
-    return this.pidUriTemplateApiService.editEntity(id, payload)
-      .pipe(
-        mergeMap(() => dispatch(new FetchPidUriTemplates()))
-      );
+  editPidUriTemplate(
+    { dispatch }: StateContext<PidUriTemplateStateModel>,
+    { id, payload }: EditPidUriTemplate
+  ) {
+    return this.pidUriTemplateApiService
+      .editEntity(id, payload)
+      .pipe(mergeMap(() => dispatch(new FetchPidUriTemplates())));
   }
 
   @Action(FetchPidUriTemplateDetails)
-  fetchPidUriTemplateDetails({getState, patchState}: StateContext<PidUriTemplateStateModel>, {payload}: FetchPidUriTemplateDetails) {
-    return this.pidUriTemplateApiService.getEntityById(payload).pipe(tap(res => {
-      patchState({
-        pidUriTemplate: res
-      });
-    }));
+  fetchPidUriTemplateDetails(
+    { patchState }: StateContext<PidUriTemplateStateModel>,
+    { payload }: FetchPidUriTemplateDetails
+  ) {
+    return this.pidUriTemplateApiService.getEntityById(payload).pipe(
+      tap((res) => {
+        patchState({
+          pidUriTemplate: res,
+        });
+      })
+    );
   }
 
   @Action(ClearPidUriTemplate)
-  clearPidUriTemplate({getState, patchState}: StateContext<PidUriTemplateStateModel>, {}: ClearPidUriTemplate) {
+  clearPidUriTemplate(
+    { patchState }: StateContext<PidUriTemplateStateModel>,
+    {}: ClearPidUriTemplate
+  ) {
     patchState({
-      pidUriTemplate: null
+      pidUriTemplate: null,
     });
   }
 }

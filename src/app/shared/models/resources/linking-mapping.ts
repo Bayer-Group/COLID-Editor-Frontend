@@ -1,17 +1,15 @@
+export class LinkingMapping {
+  pidUri: string;
+  InboundLinkLabel: string;
+  InboundLinkComment: string;
+  linkType: LinkType;
 
-export class LinkingMapping   {
-    pidUri: string;
-    InboundLinkLabel: string;
-    InboundLinkComment: string;
-    linkType: LinkType;
-     
-    constructor(pidUri: string, linkType: LinkType) {
-        this.pidUri=pidUri,
-        this.linkType=linkType
-    }
+  constructor(pidUri: string, linkType: LinkType) {
+    (this.pidUri = pidUri), (this.linkType = linkType);
   }
-  
-  export enum LinkType {
-    Inbound,
-    Outbound
-  }
+}
+
+export enum LinkType {
+  Inbound,
+  Outbound,
+}

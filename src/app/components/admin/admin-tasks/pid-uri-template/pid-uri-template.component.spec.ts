@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { PidUriTemplateComponent } from './pid-uri-template.component';
+import { PidUriTemplateComponent } from "./pid-uri-template.component";
 
-describe('PidUriTemplateComponent', () => {
+describe("PidUriTemplateComponent", () => {
   let component: PidUriTemplateComponent;
   let fixture: ComponentFixture<PidUriTemplateComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ PidUriTemplateComponent ]
-    })
-    .compileComponents();
+      declarations: [PidUriTemplateComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('PidUriTemplateComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

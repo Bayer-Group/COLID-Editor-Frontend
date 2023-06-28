@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { ResourceDisplayItemLinkingComponent } from './resource-display-item-linking.component';
+import { ResourceDisplayItemLinkingComponent } from "./resource-display-item-linking.component";
 
-describe('ResourceDisplayItemLinkingComponent', () => {
+describe("ResourceDisplayItemLinkingComponent", () => {
   let component: ResourceDisplayItemLinkingComponent;
   let fixture: ComponentFixture<ResourceDisplayItemLinkingComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ResourceDisplayItemLinkingComponent ]
-    })
-    .compileComponents();
+      declarations: [ResourceDisplayItemLinkingComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('ResourceDisplayItemLinkingComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

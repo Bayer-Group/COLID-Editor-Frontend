@@ -16,10 +16,12 @@
     </ng-container>
   </div>
   <div class="col-10">
-    <h4 *ngIf="data.header">{{data.header}}</h4>
-    <p *ngIf="data.message">{{data.message}}</p>
-    <div style="text-align: right;">
-      <button *ngIf="data.data" mat-button [cdkCopyToClipboard]="data | json">Copy</button>
+    <h4 *ngIf="data.header">{{ data.header }}</h4>
+    <p *ngIf="data.message">{{ data.message }}</p>
+    <div style="text-align: right">
+      <button *ngIf="data.data" mat-button [cdkCopyToClipboard]="data | json">
+        Copy
+      </button>
       <button mat-button (click)="dismiss()">Dismiss</button>
     </div>
   </div>

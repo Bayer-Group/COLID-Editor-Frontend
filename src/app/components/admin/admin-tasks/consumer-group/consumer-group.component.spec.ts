@@ -1,15 +1,14 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { ConsumerGroupComponent } from './consumer-group.component';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ConsumerGroupComponent } from "./consumer-group.component";
 
-describe('ConsumerGroupComponent', () => {
+describe("ConsumerGroupComponent", () => {
   let component: ConsumerGroupComponent;
   let fixture: ComponentFixture<ConsumerGroupComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ConsumerGroupComponent ]
-    })
-    .compileComponents();
+      declarations: [ConsumerGroupComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -18,7 +17,7 @@ describe('ConsumerGroupComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

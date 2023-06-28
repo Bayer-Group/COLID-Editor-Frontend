@@ -1,3 +1,3 @@
 export class FormItemSettings {
-    debounceTime = 0;
+  debounceTime = 0;
 }

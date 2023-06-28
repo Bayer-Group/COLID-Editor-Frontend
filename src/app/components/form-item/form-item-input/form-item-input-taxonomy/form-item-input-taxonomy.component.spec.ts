@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { FormItemInputTaxonomyComponent } from './form-item-input-taxonomy.component';
+import { FormItemInputTaxonomyComponent } from "./form-item-input-taxonomy.component";
 
-describe('FormItemInputTaxonomyComponent', () => {
+describe("FormItemInputTaxonomyComponent", () => {
   let component: FormItemInputTaxonomyComponent;
   let fixture: ComponentFixture<FormItemInputTaxonomyComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormItemInputTaxonomyComponent ]
-    })
-    .compileComponents();
+      declarations: [FormItemInputTaxonomyComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('FormItemInputTaxonomyComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

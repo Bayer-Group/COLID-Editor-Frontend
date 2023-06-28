@@ -1,15 +1,14 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { GraphComponent } from './graph.component';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { GraphComponent } from "./graph.component";
 
-describe('GraphComponent', () => {
+describe("GraphComponent", () => {
   let component: GraphComponent;
   let fixture: ComponentFixture<GraphComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ GraphComponent ]
-    })
-    .compileComponents();
+      declarations: [GraphComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -18,7 +17,7 @@ describe('GraphComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

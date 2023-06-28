@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { EntityDisplayItemVersioningComponent } from './entity-display-item-versioning.component';
+import { EntityDisplayItemVersioningComponent } from "./entity-display-item-versioning.component";
 
-describe('EntityDisplayItemVersioningComponent', () => {
+describe("EntityDisplayItemVersioningComponent", () => {
   let component: EntityDisplayItemVersioningComponent;
   let fixture: ComponentFixture<EntityDisplayItemVersioningComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ EntityDisplayItemVersioningComponent ]
-    })
-    .compileComponents();
+      declarations: [EntityDisplayItemVersioningComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('EntityDisplayItemVersioningComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

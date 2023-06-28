@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { SystemAnalyticsChartComponent } from './system-analytics-chart.component';
+import { SystemAnalyticsChartComponent } from "./system-analytics-chart.component";
 
-describe('SystemAnalyticsChartComponent', () => {
+describe("SystemAnalyticsChartComponent", () => {
   let component: SystemAnalyticsChartComponent;
   let fixture: ComponentFixture<SystemAnalyticsChartComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SystemAnalyticsChartComponent ]
-    })
-    .compileComponents();
+      declarations: [SystemAnalyticsChartComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('SystemAnalyticsChartComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

@@ -1,15 +1,14 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { ResourceHelpComponent } from './resource-help.component';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ResourceHelpComponent } from "./resource-help.component";
 
-describe('ResourceHelpComponent', () => {
+describe("ResourceHelpComponent", () => {
   let component: ResourceHelpComponent;
   let fixture: ComponentFixture<ResourceHelpComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ResourceHelpComponent]
-    })
-      .compileComponents();
+      declarations: [ResourceHelpComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -18,7 +17,7 @@ describe('ResourceHelpComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

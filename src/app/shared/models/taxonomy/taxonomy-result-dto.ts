@@ -1,7 +1,6 @@
-import { BaseEntityResultDTO } from '../Entities/base-entity-result-dto';
+import { BaseEntityResultDTO } from "../Entities/base-entity-result-dto";
 
 export class TaxonomyResultDTO extends BaseEntityResultDTO {
-
   hasParent: boolean;
   hasChild: boolean;
   children: TaxonomyResultDTO[];
@@ -10,5 +9,4 @@ export class TaxonomyResultDTO extends BaseEntityResultDTO {
   public constructor() {
     super();
   }
-
 }

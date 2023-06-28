@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { FormItemInputHtmlComponent } from './form-item-input-html.component';
+import { FormItemInputHtmlComponent } from "./form-item-input-html.component";
 
-describe('FormItemInputHtmlComponent', () => {
+describe("FormItemInputHtmlComponent", () => {
   let component: FormItemInputHtmlComponent;
   let fixture: ComponentFixture<FormItemInputHtmlComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormItemInputHtmlComponent ]
-    })
-    .compileComponents();
+      declarations: [FormItemInputHtmlComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('FormItemInputHtmlComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

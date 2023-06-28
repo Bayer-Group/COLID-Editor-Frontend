@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { FormItemCreateNestedComponent } from './form-item-create-nested.component';
+import { FormItemCreateNestedComponent } from "./form-item-create-nested.component";
 
-describe('FormItemCreateNestedComponent', () => {
+describe("FormItemCreateNestedComponent", () => {
   let component: FormItemCreateNestedComponent;
   let fixture: ComponentFixture<FormItemCreateNestedComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormItemCreateNestedComponent ]
-    })
-    .compileComponents();
+      declarations: [FormItemCreateNestedComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('FormItemCreateNestedComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

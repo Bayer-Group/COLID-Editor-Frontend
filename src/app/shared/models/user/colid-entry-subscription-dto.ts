@@ -1,9 +1,9 @@
 export class ColidEntrySubscriptionDto {
   colidPidUri: string;
-  subscriptions:number;
+  subscriptions: number;
 
-  public constructor(colidPidUri: string, subscriptions?:number) {
-      this.colidPidUri = colidPidUri;
-      this.subscriptions = subscriptions;
+  public constructor(colidPidUri: string, subscriptions?: number) {
+    this.colidPidUri = colidPidUri;
+    this.subscriptions = subscriptions;
   }
 }

@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { EntityDisplayItemTaxonomyComponent } from './entity-display-item-taxonomy.component';
+import { EntityDisplayItemTaxonomyComponent } from "./entity-display-item-taxonomy.component";
 
-describe('EntityDisplayItemTaxonomyComponent', () => {
+describe("EntityDisplayItemTaxonomyComponent", () => {
   let component: EntityDisplayItemTaxonomyComponent;
   let fixture: ComponentFixture<EntityDisplayItemTaxonomyComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ EntityDisplayItemTaxonomyComponent ]
-    })
-    .compileComponents();
+      declarations: [EntityDisplayItemTaxonomyComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('EntityDisplayItemTaxonomyComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

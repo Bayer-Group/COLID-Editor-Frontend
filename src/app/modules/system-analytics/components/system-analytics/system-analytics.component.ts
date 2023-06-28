@@ -286,24 +286,20 @@ export class SystemAnalyticsComponent implements OnInit, OnDestroy {
       if (initialChart === "bar-vertical") {
         charts.set(propertyStatistics.name, chartData);
         for (const part of propertyStatistics.counts) {
-          charts
-            .get(propertyStatistics.name)
-            .data.push({
-              name: this.getChartName(part.key, increment),
-              value: part.value,
-            });
+          charts.get(propertyStatistics.name).data.push({
+            name: this.getChartName(part.key, increment),
+            value: part.value,
+          });
         }
       }
 
       if (initialChart === "pie") {
         charts.set(propertyStatistics.name, chartData);
         for (const part of propertyStatistics.counts) {
-          charts
-            .get(propertyStatistics.name)
-            .data.push({
-              name: this.getChartName(part.key, increment),
-              value: part.value,
-            });
+          charts.get(propertyStatistics.name).data.push({
+            name: this.getChartName(part.key, increment),
+            value: part.value,
+          });
         }
       }
 
@@ -324,20 +320,20 @@ export class SystemAnalyticsComponent implements OnInit, OnDestroy {
                 name: this.getChartName(part.key, increment),
                 series: [
                   {
-                    name: 'Has Property',
+                    name: "Has Property",
                     value: +part.value,
-                 },
+                  },
                   {
                     name: "Without Property",
                     value: +part.total - +part.value,
                   },
-               ],
+                ],
               });
             }
           }
         });
+      }
     }
-   }
   }
 
   getChartName(key: string, increment: number): string {

@@ -1,34 +1,31 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Metadata } from 'src/app/shared/models/metadata/meta-data';
-import { Entity } from 'src/app/shared/models/Entities/entity';
-import { Constants } from 'src/app/shared/constants';
-import { Guid } from 'guid-typescript';
+import { Component, Input, Output, EventEmitter } from "@angular/core";
+import { Metadata } from "src/app/shared/models/metadata/meta-data";
+import { Entity } from "src/app/shared/models/Entities/entity";
+import { Constants } from "src/app/shared/constants";
+import { Guid } from "guid-typescript";
 
 @Component({
-  selector: 'app-form-item-create-distribution',
-  templateUrl: './form-item-create-distribution.component.html',
-  styleUrls: ['./form-item-create-distribution.component.scss']
+  selector: "app-form-item-create-distribution",
+  templateUrl: "./form-item-create-distribution.component.html",
+  styleUrls: ["./form-item-create-distribution.component.scss"],
 })
-export class FormItemCreateDistributionComponent implements OnInit {
-
+export class FormItemCreateDistributionComponent {
   @Input() disabled: boolean = false;
   @Input() selectedPreset: string;
   @Input() label: string;
   @Input() metaData: Metadata[];
   @Input() placeholder: any;
 
-  @Output() createDistributionEntity: EventEmitter<Entity> = new EventEmitter<Entity>();
+  @Output() createDistributionEntity: EventEmitter<Entity> =
+    new EventEmitter<Entity>();
 
   distributionTypesVisible = false;
 
   selectedDistributionType: Metadata;
-  constructor() { }
-
-  ngOnInit() {
-  }
+  constructor() {}
 
   showDistributionTypes() {
-      this.distributionTypesVisible = true;
+    this.distributionTypesVisible = true;
   }
 
   hideDistributionTypes() {
@@ -40,15 +37,21 @@ export class FormItemCreateDistributionComponent implements OnInit {
     const entity = new Entity();
     entity.id = Constants.Resource.Prefix + Guid.create();
 
-    entity.properties[Constants.Metadata.EntityType] = [this.selectedDistributionType.key];
+    entity.properties[Constants.Metadata.EntityType] = [
+      this.selectedDistributionType.key,
+    ];
 
-    const selectedPreset: Entity[] = this.placeholder[Constants.Metadata.HasPidUri];
+    const selectedPreset: Entity[] =
+      this.placeholder[Constants.Metadata.HasPidUri];
     if (selectedPreset != null) {
-      entity.properties[Constants.Metadata.HasPidUri] =  Array.isArray(selectedPreset) ? selectedPreset : [selectedPreset];
+      entity.properties[Constants.Metadata.HasPidUri] = Array.isArray(
+        selectedPreset
+      )
+        ? selectedPreset
+        : [selectedPreset];
     }
 
     this.createDistributionEntity.emit(entity);
     this.hideDistributionTypes();
   }
-
 }

@@ -1,3 +1,5 @@
-import { Suggest } from './suggest';
+import { Suggest } from "./suggest";
 
-export interface SuggestMap { [key: string]: Suggest; }
+export interface SuggestMap {
+  [key: string]: Suggest;
+}

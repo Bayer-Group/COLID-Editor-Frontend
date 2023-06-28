@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { SystemAnalyticsComponent } from './system-analytics.component';
+import { SystemAnalyticsComponent } from "./system-analytics.component";
 
-describe('SystemAnalyticsComponent', () => {
+describe("SystemAnalyticsComponent", () => {
   let component: SystemAnalyticsComponent;
   let fixture: ComponentFixture<SystemAnalyticsComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SystemAnalyticsComponent ]
-    })
-    .compileComponents();
+      declarations: [SystemAnalyticsComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('SystemAnalyticsComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

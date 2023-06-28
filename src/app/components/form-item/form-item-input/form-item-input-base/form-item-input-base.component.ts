@@ -1,25 +1,22 @@
-import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
-import { ControlValueAccessor } from '@angular/forms';
-import { FormItemChangedDTO } from 'src/app/shared/models/form/form-item-changed-dto';
+import { Component, EventEmitter, Output, Input } from "@angular/core";
+import { ControlValueAccessor } from "@angular/forms";
+import { FormItemChangedDTO } from "src/app/shared/models/form/form-item-changed-dto";
 
 @Component({
-  template: ''
+  template: "",
 })
-export class FormItemInputBaseComponent implements OnInit, ControlValueAccessor {
-
+export class FormItemInputBaseComponent implements ControlValueAccessor {
   internalValue: any = null;
   @Input() name: string;
   @Input() readOnly: boolean;
   @Input() adminPrivilege: boolean;
 
-  onChange: any = () => { };
-  onTouched: any = () => { };
-  @Output() valueChanged: EventEmitter<FormItemChangedDTO> = new EventEmitter<FormItemChangedDTO>();
+  onChange: any = () => {};
+  onTouched: any = () => {};
+  @Output() valueChanged: EventEmitter<FormItemChangedDTO> =
+    new EventEmitter<FormItemChangedDTO>();
 
-  constructor() { }
-
-  ngOnInit() {
-  }
+  constructor() {}
 
   registerOnChange(fn) {
     this.onChange = fn;

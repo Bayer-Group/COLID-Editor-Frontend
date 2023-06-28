@@ -24,6 +24,12 @@ RUN npm install \
 ##3 against vulnerable packages
 RUN npm audit fix
 
+ARG BUILD_CIPIPELINEID
+ENV Build__CiPipelineId=${BUILD_CIPIPELINEID}
+
+ARG BUILD_CICOMMITSHA
+ENV Build__CiCommitSha=${BUILD_CICOMMITSHA}
+
 WORKDIR /ng-app
 
 COPY . .

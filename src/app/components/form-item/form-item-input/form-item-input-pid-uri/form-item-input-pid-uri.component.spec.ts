@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { FormItemInputPidUriComponent } from './form-item-input-pid-uri.component';
+import { FormItemInputPidUriComponent } from "./form-item-input-pid-uri.component";
 
-describe('FormItemInputPidUriComponent', () => {
+describe("FormItemInputPidUriComponent", () => {
   let component: FormItemInputPidUriComponent;
   let fixture: ComponentFixture<FormItemInputPidUriComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormItemInputPidUriComponent ]
-    })
-    .compileComponents();
+      declarations: [FormItemInputPidUriComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('FormItemInputPidUriComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

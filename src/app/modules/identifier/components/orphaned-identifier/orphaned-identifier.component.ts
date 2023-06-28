@@ -1,29 +1,35 @@
-import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
-import { IdentifierState, FetchOrphanedIdentifiers, DeleteOrphanedIdentifier } from 'src/app/modules/identifier/identifier.state';
-import { Select, Store } from '@ngxs/store';
-import { IdentifierResultDTO } from 'src/app/shared/models/identifier/identifier-result-dto';
-import { MatTableDataSource } from '@angular/material/table';
-import { DeleteItemDialogComponent } from 'src/app/shared/components/delete-item-dialog/delete-item-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
-import { ColidMatSnackBarService } from 'src/app/modules/colid-mat-snack-bar/colid-mat-snack-bar.service';
-import { EntityFormStatus } from 'src/app/shared/components/entity-form/entity-form-status';
+import { Component, OnInit, ViewChild, OnDestroy } from "@angular/core";
+import { Observable, Subscription } from "rxjs";
+import {
+  IdentifierState,
+  FetchOrphanedIdentifiers,
+  DeleteOrphanedIdentifier,
+} from "src/app/modules/identifier/identifier.state";
+import { Select, Store } from "@ngxs/store";
+import { IdentifierResultDTO } from "src/app/shared/models/identifier/identifier-result-dto";
+import { MatTableDataSource } from "@angular/material/table";
+import { DeleteItemDialogComponent } from "src/app/shared/components/delete-item-dialog/delete-item-dialog.component";
+import { MatDialog } from "@angular/material/dialog";
+import { MatSort } from "@angular/material/sort";
+import { MatPaginator } from "@angular/material/paginator";
+import { ColidMatSnackBarService } from "src/app/modules/colid-mat-snack-bar/colid-mat-snack-bar.service";
+import { EntityFormStatus } from "src/app/shared/components/entity-form/entity-form-status";
 
 @Component({
-  selector: 'app-oprhaned-identifier',
-  templateUrl: './orphaned-identifier.component.html',
-  styleUrls: ['./orphaned-identifier.component.css']
+  selector: "app-oprhaned-identifier",
+  templateUrl: "./orphaned-identifier.component.html",
+  styleUrls: ["./orphaned-identifier.component.css"],
 })
 export class OrphanedIdentifierComponent implements OnInit, OnDestroy {
   @Select(IdentifierState.getIsLoading) loading$: Observable<boolean>;
-  @Select(IdentifierState.getIdentifiers) identifiers$: Observable<IdentifierResultDTO[]>;
+  @Select(IdentifierState.getIdentifiers) identifiers$: Observable<
+    IdentifierResultDTO[]
+  >;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  displayedColumns: string[] = ['identifierUri', 'delete'];
+  displayedColumns: string[] = ["identifierUri", "delete"];
 
   dataSource: MatTableDataSource<IdentifierResultDTO>;
   dataSourceLength: number = 0;
@@ -36,10 +42,17 @@ export class OrphanedIdentifierComponent implements OnInit, OnDestroy {
   selectedIdentifier: string;
 
   get isLoading(): boolean {
-    return this.status === EntityFormStatus.LOADING || this.status === EntityFormStatus.RELOADING;
+    return (
+      this.status === EntityFormStatus.LOADING ||
+      this.status === EntityFormStatus.RELOADING
+    );
   }
 
-  constructor(private store: Store, public dialog: MatDialog, private snackBar: ColidMatSnackBarService) {
+  constructor(
+    private store: Store,
+    public dialog: MatDialog,
+    private snackBar: ColidMatSnackBarService
+  ) {
     this.dataSource = new MatTableDataSource([]);
   }
 
@@ -48,15 +61,17 @@ export class OrphanedIdentifierComponent implements OnInit, OnDestroy {
     this.dataSource.sort = this.sort;
 
     // If the user changes the sort order, reset back to the first page.
-    this.sortChangeSubscription = this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+    this.sortChangeSubscription = this.sort.sortChange.subscribe(
+      () => (this.paginator.pageIndex = 0)
+    );
 
     this.loadData();
 
-    this.identifierSubscription = this.identifiers$.subscribe(uris => {
+    this.identifierSubscription = this.identifiers$.subscribe((uris) => {
       const data = uris == null ? [] : uris;
       this.dataSourceLength = data.length;
       this.dataSource.data = data;
-    })
+    });
   }
 
   ngOnDestroy() {
@@ -66,7 +81,10 @@ export class OrphanedIdentifierComponent implements OnInit, OnDestroy {
 
   loadData() {
     this.status = EntityFormStatus.RELOADING;
-    this.store.dispatch(new FetchOrphanedIdentifiers()).subscribe(res => this.status = EntityFormStatus.SUCCESS, error => this.status = EntityFormStatus.ERROR);
+    this.store.dispatch(new FetchOrphanedIdentifiers()).subscribe(
+      (_) => (this.status = EntityFormStatus.SUCCESS),
+      (_) => (this.status = EntityFormStatus.ERROR)
+    );
   }
 
   applyFilter(filterValue: string) {
@@ -78,24 +96,31 @@ export class OrphanedIdentifierComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(DeleteItemDialogComponent, {
       data: {
         header: `Deleting Identifier`,
-        body: `Are you sure you want to delete the following identifier:<br><br> ${identifierUri}`
+        body: `Are you sure you want to delete the following identifier:<br><br> ${identifierUri}`,
       },
-      width: 'auto',
-      disableClose: true
+      width: "auto",
+      disableClose: true,
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.status = EntityFormStatus.LOADING;
 
-        this.store.dispatch(new DeleteOrphanedIdentifier(identifierUri)).subscribe(res => {
-          this.snackBar.success("Permanent Identifier", "Deleted successfully");
-          this.status = EntityFormStatus.SUCCESS;
-          this.loadData();
-        }, error => {
-          this.status = EntityFormStatus.ERROR;
-        })
+        this.store
+          .dispatch(new DeleteOrphanedIdentifier(identifierUri))
+          .subscribe(
+            (_) => {
+              this.snackBar.success(
+                "Permanent Identifier",
+                "Deleted successfully"
+              );
+              this.status = EntityFormStatus.SUCCESS;
+              this.loadData();
+            },
+            (_) => {
+              this.status = EntityFormStatus.ERROR;
+            }
+          );
       }
     });
   }

@@ -1,15 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from "@angular/core";
 
 @Component({
-  selector: 'app-search-filter-data-marketplace',
-  templateUrl: './search-filter-data-marketplace.component.html',
-  styleUrls: ['./search-filter-data-marketplace.component.css']
+  selector: "app-search-filter-data-marketplace",
+  templateUrl: "./search-filter-data-marketplace.component.html",
+  styleUrls: ["./search-filter-data-marketplace.component.css"],
 })
-export class SearchFilterDataMarketplaceComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+export class SearchFilterDataMarketplaceComponent {
+  constructor() {}
 }

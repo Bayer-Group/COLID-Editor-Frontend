@@ -1,6 +1,6 @@
-import { SearchHit } from './search-hit';
+import { SearchHit } from "./search-hit";
 
 export class SearchHits {
-    hits: SearchHit[] = [];
-    total: number = 0;
+  hits: SearchHit[] = [];
+  total: number = 0;
 }

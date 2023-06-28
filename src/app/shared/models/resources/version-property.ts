@@ -1,6 +1,6 @@
 export class VersionProperty {
-    id: string;
-    version: string;
-    pidUri: string;
-    baseUri: string;
+  id: string;
+  version: string;
+  pidUri: string;
+  baseUri: string;
 }

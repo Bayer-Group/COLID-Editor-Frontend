@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { ColidTreeViewComponent } from './colid-tree-view.component';
+import { ColidTreeViewComponent } from "./colid-tree-view.component";
 
-describe('ColidTreeViewComponent', () => {
+describe("ColidTreeViewComponent", () => {
   let component: ColidTreeViewComponent;
   let fixture: ComponentFixture<ColidTreeViewComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ColidTreeViewComponent ]
-    })
-    .compileComponents();
+      declarations: [ColidTreeViewComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('ColidTreeViewComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

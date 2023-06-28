@@ -2,6 +2,10 @@
   color: black !important;
 }
 
+.modal-footer {
+  margin-top: 1rem;
+}
+
 :host ::ng-deep .search-results {
-  height: calc(100vh - 521px) !important;
+  height: calc(80vh - 350px) !important;
 }

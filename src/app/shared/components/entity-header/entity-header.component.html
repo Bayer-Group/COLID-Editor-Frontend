@@ -1,7 +1,17 @@
 <div class="d-flex entity-header">
-  <ds-icon class="entity-header-icon" iconType="S3" [tooltipDisabled]="false" [delay]="300" [icon]="iconKey"></ds-icon>
-  <h1 class="entity-header-text" [ngClass]="className" matTooltip="{{label}}">
-    {{label}} <span class="text-muted">({{numberSubscribers}} subscriber{{ numberSubscribers > 1 ? "s" : ""}})</span> 
+  <ds-icon
+    class="entity-header-icon"
+    iconType="S3"
+    [tooltipDisabled]="false"
+    [delay]="300"
+    [icon]="iconKey"
+  ></ds-icon>
+  <h1 class="entity-header-text" [ngClass]="className" matTooltip="{{ label }}">
+    {{ label }}
+    <span class="text-muted"
+      >({{ numberSubscribers }} subscriber{{
+        numberSubscribers > 1 ? "s" : ""
+      }})</span
+    >
   </h1>
 </div>
- 

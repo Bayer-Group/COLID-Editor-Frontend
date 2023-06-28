@@ -1,33 +1,42 @@
 <ng-container *ngIf="!fetching; else loading">
-  <mat-card class="my-2" *ngIf="_linkedEntities && _linkedEntities.length !== 0">
+  <mat-card
+    class="my-2"
+    *ngIf="_linkedEntities && _linkedEntities.length !== 0"
+  >
     <mat-card-header>
-      <mat-card-title>{{label}}</mat-card-title>
+      <mat-card-title>{{ label }}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <div class="row" *ngFor="let linkEntity of _linkedEntities; let i = index">
-        <div class="col-md-3">
-          Label:
-        </div>
+      <div
+        class="row"
+        *ngFor="let linkEntity of _linkedEntities; let i = index"
+      >
+        <div class="col-md-3">Label:</div>
         <div class="col-md-9" [class.font-weight-bold]="!displayForm">
-          {{linkEntity.name}}
+          {{ linkEntity.name }}
         </div>
-        <div class="col-md-3 my-1">
-          Definition:
-        </div>
-        <div class="col-md-9 my-1" style="overflow-y: hidden" [class.font-weight-bold]="!displayForm"
-          innerHTML="{{linkEntity.definition}}">
-        </div>
-        <div class="col-md-3">
-          PID URI:
-        </div>
+        <div class="col-md-3 my-1">Definition:</div>
+        <div
+          class="col-md-9 my-1"
+          style="overflow-y: hidden"
+          [class.font-weight-bold]="!displayForm"
+          innerHTML="{{ linkEntity.definition }}"
+        ></div>
+        <div class="col-md-3">PID URI:</div>
         <div class="col-md-9" [class.font-weight-bold]="!displayForm">
-          <a class="wordbreak" [href]="linkEntity.pidUri" target="_blank" rel="noopener noreferrer">{{linkEntity.pidUri}}</a>
+          <a
+            class="wordbreak"
+            [href]="linkEntity.pidUri"
+            target="_blank"
+            rel="noopener noreferrer"
+            >{{ linkEntity.pidUri }}</a
+          >
         </div>
         <div class="col-12 text-right">
           <ng-content></ng-content>
         </div>
-        <div class="col-12" *ngIf="_linkedEntities.length !== (i + 1)">
-          <mat-divider class="my-3" ></mat-divider>
+        <div class="col-12" *ngIf="_linkedEntities.length !== i + 1">
+          <mat-divider class="my-3"></mat-divider>
         </div>
       </div>
     </mat-card-content>
@@ -36,4 +45,3 @@
 <ng-template #loading>
   <fa-icon icon="spinner" [spin]="true"></fa-icon>
 </ng-template>
-

@@ -1,8 +1,7 @@
-export class IdentifierResultDTO  {
-
+export class IdentifierResultDTO {
   identifierUri: string;
 
-  constructor(identifierUri: string){
+  constructor(identifierUri: string) {
     this.identifierUri = identifierUri;
   }
 }

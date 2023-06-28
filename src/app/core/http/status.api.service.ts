@@ -1,19 +1,31 @@
-import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { BuildInformationDto } from '../../shared/models/status/build-information-dto';
+import { Injectable } from "@angular/core";
+import { environment } from "src/environments/environment";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { StatusBuildInformationDto } from "../../shared/models/status/status-build-information-dto";
+import { RawDeploymentInformationDto } from "../../shared/models/status/raw-deployment-information-dto";
+import { map } from "rxjs/operators";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class StatusApiService {
+  constructor(private httpClient: HttpClient) {}
 
-  constructor(private httpClient: HttpClient) { }
+  getBuildInformation(): Observable<StatusBuildInformationDto> {
+    const url = environment.deploymentInfoUrl;
 
-  getBuildInformation(): Observable<BuildInformationDto> {
-    const url = environment.colidApiUrl + '/status';
-
-    return this.httpClient.get<BuildInformationDto>(url);
+    return this.httpClient.get<RawDeploymentInformationDto>(url).pipe(
+      map((res: RawDeploymentInformationDto) => {
+        let editorInformation = res.services["pid-ui"];
+        return {
+          versionNumber: res.version,
+          imageTags: editorInformation.image_tags,
+          latestReleaseDate: new Date(
+            editorInformation.image_pushed_at_epoch_utc_seconds * 1000
+          ),
+        } as StatusBuildInformationDto;
+      })
+    );
   }
 }

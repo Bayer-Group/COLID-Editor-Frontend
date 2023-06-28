@@ -1,8 +1,16 @@
-<ng-container *ngIf="activeResource && metadata && metadata.length; else loading">
-  <app-entity-display (versionClick)="versionClicked($event)" [entityVersions]="(activeResource$ | async)?.versions"
-  [entity]="activeResource" [metadata]="metadata" [headerGroup]="headerGroup"
-  [subHeaderGroup]="subHeaderGroup" [invisbleProperties]="invisibleProperties">
-</app-entity-display>
+<ng-container
+  *ngIf="activeResource && metadata && metadata.length; else loading"
+>
+  <app-entity-display
+    (versionClick)="versionClicked($event)"
+    [entityVersions]="(activeResource$ | async)?.versions"
+    [entity]="activeResource"
+    [metadata]="metadata"
+    [headerGroup]="headerGroup"
+    [subHeaderGroup]="subHeaderGroup"
+    [invisbleProperties]="invisibleProperties"
+  >
+  </app-entity-display>
 </ng-container>
 <ng-template #loading>
   <div class="row justify-content-center mt-4">

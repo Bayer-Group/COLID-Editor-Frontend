@@ -1,10 +1,9 @@
-import {EntityBase} from './entity-base';
+import { EntityBase } from "./entity-base";
 
 export class Entity extends EntityBase {
-    id: string;
+  id: string;
 
-    constructor() {
-      super();
-    }
+  constructor() {
+    super();
+  }
 }
-

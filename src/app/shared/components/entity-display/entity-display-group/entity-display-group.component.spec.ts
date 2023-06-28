@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { EntityDisplayGroupComponent } from './entity-display-group.component';
+import { EntityDisplayGroupComponent } from "./entity-display-group.component";
 
-describe('EntityDisplayGroupComponent', () => {
+describe("EntityDisplayGroupComponent", () => {
   let component: EntityDisplayGroupComponent;
   let fixture: ComponentFixture<EntityDisplayGroupComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ EntityDisplayGroupComponent ]
-    })
-    .compileComponents();
+      declarations: [EntityDisplayGroupComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('EntityDisplayGroupComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

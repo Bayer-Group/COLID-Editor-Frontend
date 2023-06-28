@@ -1,25 +1,27 @@
-import { Component, OnInit, forwardRef, Input } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { FormItemInputBaseComponent } from '../form-item-input-base/form-item-input-base.component';
-import { Constants } from 'src/app/shared/constants';
-import { Observable } from 'rxjs';
-import { PidUriTemplateResultDTO } from 'src/app/shared/models/pidUriTemplates/pid-uri-template-result-dto';
-import { Entity } from 'src/app/shared/models/Entities/entity';
+import { Component, OnInit, forwardRef, Input } from "@angular/core";
+import { NG_VALUE_ACCESSOR } from "@angular/forms";
+import { FormItemInputBaseComponent } from "../form-item-input-base/form-item-input-base.component";
+import { Constants } from "src/app/shared/constants";
+import { Observable } from "rxjs";
+import { PidUriTemplateResultDTO } from "src/app/shared/models/pidUriTemplates/pid-uri-template-result-dto";
+import { Entity } from "src/app/shared/models/Entities/entity";
 
 @Component({
-  selector: 'app-form-item-input-pid-uri',
-  templateUrl: './form-item-input-pid-uri.component.html',
-  styleUrls: ['./form-item-input-pid-uri.component.scss'],
+  selector: "app-form-item-input-pid-uri",
+  templateUrl: "./form-item-input-pid-uri.component.html",
+  styleUrls: ["./form-item-input-pid-uri.component.scss"],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => FormItemInputPidUriComponent),
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
-export class FormItemInputPidUriComponent extends FormItemInputBaseComponent implements OnInit {
-
+export class FormItemInputPidUriComponent
+  extends FormItemInputBaseComponent
+  implements OnInit
+{
   @Input() debounceTime: number;
 
   prefix = Constants.PidUriTemplate.BaseUrl;
@@ -36,7 +38,9 @@ export class FormItemInputPidUriComponent extends FormItemInputBaseComponent imp
   entity: Entity;
 
   get publicValue() {
-    const trimmedInternalValue = this.internalValue ? this.internalValue.trim() : null;
+    const trimmedInternalValue = this.internalValue
+      ? this.internalValue.trim()
+      : null;
 
     if (trimmedInternalValue) {
       if (this.externalSelected) {
@@ -64,7 +68,7 @@ export class FormItemInputPidUriComponent extends FormItemInputBaseComponent imp
       this.entity = <Entity>(Array.isArray(value) ? value[0] : value);
       if (this.entity != null) {
         if (this.entity.id != null) {
-          this.internalValue = this.entity.id.replace(this.prefix, '');
+          this.internalValue = this.entity.id.replace(this.prefix, "");
           this.setExternalSelected();
         }
         this.setSelectedPreset();
@@ -73,7 +77,7 @@ export class FormItemInputPidUriComponent extends FormItemInputBaseComponent imp
     }
   }
 
-  setExternalSelected(){
+  setExternalSelected() {
     this.externalSelected = !this.entity.id.includes(this.prefix);
   }
 
@@ -99,25 +103,37 @@ export class FormItemInputPidUriComponent extends FormItemInputBaseComponent imp
       this.entity = new Entity();
     }
 
-    this.entity.properties[Constants.Metadata.EntityType] = [Constants.Identifier.Type];
+    this.entity.properties[Constants.Metadata.EntityType] = [
+      Constants.Identifier.Type,
+    ];
 
     this.entity.id = this.publicValue;
 
     if (this.selectedPreset != null) {
-      this.entity.properties[Constants.Metadata.HasUriTemplate] = [this.selectedPreset];
+      this.entity.properties[Constants.Metadata.HasUriTemplate] = [
+        this.selectedPreset,
+      ];
     }
 
-    this.entity.properties[Constants.Metadata.EntityType] = [Constants.Identifier.Type];
+    this.entity.properties[Constants.Metadata.EntityType] = [
+      Constants.Identifier.Type,
+    ];
 
-    this.handleValueChanged(Array.isArray(this.entity) ? this.entity : [this.entity]);
+    this.handleValueChanged(
+      Array.isArray(this.entity) ? this.entity : [this.entity]
+    );
   }
 
   get isPresetSelected() {
     return this.selectedPreset != null;
   }
 
-  getSelectedPresetName(pidUriTemplateResultDTOs: Array<PidUriTemplateResultDTO>) {
-    const template = pidUriTemplateResultDTOs.find(t => t.id === this.selectedPreset);
+  getSelectedPresetName(
+    pidUriTemplateResultDTOs: Array<PidUriTemplateResultDTO>
+  ) {
+    const template = pidUriTemplateResultDTOs.find(
+      (t) => t.id === this.selectedPreset
+    );
     return template != null ? template.name : null;
   }
 

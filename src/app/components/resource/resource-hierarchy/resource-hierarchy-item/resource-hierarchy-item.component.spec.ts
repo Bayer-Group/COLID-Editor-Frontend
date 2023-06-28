@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { ResourceHierarchyItemComponent } from './resource-hierarchy-item.component';
+import { ResourceHierarchyItemComponent } from "./resource-hierarchy-item.component";
 
-describe('ResourceHierarchyItemComponent', () => {
+describe("ResourceHierarchyItemComponent", () => {
   let component: ResourceHierarchyItemComponent;
   let fixture: ComponentFixture<ResourceHierarchyItemComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ResourceHierarchyItemComponent ]
-    })
-    .compileComponents();
+      declarations: [ResourceHierarchyItemComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('ResourceHierarchyItemComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

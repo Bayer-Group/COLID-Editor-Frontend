@@ -1,10 +1,22 @@
-<div attr.data-testing-id="hierarchy-element-{{item.id}}" class="row px-2">
-      <ds-icon iconType="S3" *ngIf="item.instantiable" [tooltipDisabled]="false" class="col-auto pe-0" [delay]="300" [icon]="item.id"></ds-icon>
-  
-  <div class="col"> 
+<div attr.data-testing-id="hierarchy-element-{{ item.id }}" class="row px-2">
+  <ds-icon
+    iconType="S3"
+    *ngIf="item.instantiable"
+    [tooltipDisabled]="false"
+    class="col-auto pe-0"
+    [delay]="300"
+    [icon]="item.id"
+  ></ds-icon>
+
+  <div class="col">
     <div class="row">
-      <div  class="col-12 d-flex justify-content-between">
-        <strong id='{{item.label | removeWhiteSpaces}}'>{{item.label}} <ng-container *ngIf="defaultItem === item.id">(Preselected Type)</ng-container></strong>
+      <div class="col-12 d-flex justify-content-between">
+        <strong id="{{ item.label | removeWhiteSpaces }}"
+          >{{ item.label }}
+          <ng-container *ngIf="defaultItem === item.id"
+            >(Preselected Type)</ng-container
+          ></strong
+        >
       </div>
       <div class="col-12">
         <small [innerHTML]="item.description"></small>

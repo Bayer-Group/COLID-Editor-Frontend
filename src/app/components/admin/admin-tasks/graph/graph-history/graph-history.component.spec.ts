@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { GraphHistoryComponent } from './graph-history.component';
+import { GraphHistoryComponent } from "./graph-history.component";
 
-describe('GraphHistoryComponent', () => {
+describe("GraphHistoryComponent", () => {
   let component: GraphHistoryComponent;
   let fixture: ComponentFixture<GraphHistoryComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ GraphHistoryComponent ]
-    })
-    .compileComponents();
+      declarations: [GraphHistoryComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('GraphHistoryComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

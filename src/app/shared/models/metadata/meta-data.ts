@@ -1,8 +1,8 @@
-import { MetaDataProperty } from './meta-data-property';
+import { MetaDataProperty } from "./meta-data-property";
 
 export class Metadata {
-    key: string;
-    label: string;
-    description: string;
-    properties: MetaDataProperty[];
+  key: string;
+  label: string;
+  description: string;
+  properties: MetaDataProperty[];
 }

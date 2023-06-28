@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { ExtendedUriTemplateEditComponent } from './extended-uri-template-edit.component';
+import { ExtendedUriTemplateEditComponent } from "./extended-uri-template-edit.component";
 
-describe('ExtendedUriTemplateEditComponent', () => {
+describe("ExtendedUriTemplateEditComponent", () => {
   let component: ExtendedUriTemplateEditComponent;
   let fixture: ComponentFixture<ExtendedUriTemplateEditComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ExtendedUriTemplateEditComponent ]
-    })
-    .compileComponents();
+      declarations: [ExtendedUriTemplateEditComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('ExtendedUriTemplateEditComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

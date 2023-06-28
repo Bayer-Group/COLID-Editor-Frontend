@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { GraphFormComponent } from './graph-form.component';
+import { GraphFormComponent } from "./graph-form.component";
 
-describe('GraphFormComponent', () => {
+describe("GraphFormComponent", () => {
   let component: GraphFormComponent;
   let fixture: ComponentFixture<GraphFormComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ GraphFormComponent ]
-    })
-    .compileComponents();
+      declarations: [GraphFormComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('GraphFormComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

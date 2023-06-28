@@ -1,20 +1,16 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { ResourceEditComponent } from './resource-edit.component';
-import { RouterTestingModule } from '@angular/router/testing';
-import { ResourceFormComponent} from '../resource-form/resource-form.component';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ResourceEditComponent } from "./resource-edit.component";
+import { RouterTestingModule } from "@angular/router/testing";
+import { ResourceFormComponent } from "../resource-form/resource-form.component";
 
-describe('ResourceEditComponent', () => {
-  let component: ResourceEditComponent;
+describe("ResourceEditComponent", () => {
   let fixture: ComponentFixture<ResourceEditComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ResourceEditComponent, ResourceFormComponent],
-      imports: [
-        RouterTestingModule.withRoutes([])
-      ]
-    })
-      .compileComponents();
+      imports: [RouterTestingModule.withRoutes([])],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

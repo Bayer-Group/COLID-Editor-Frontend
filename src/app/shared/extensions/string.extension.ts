@@ -1,7 +1,6 @@
-import { Constants } from 'src/app/shared/constants';
+import { Constants } from "src/app/shared/constants";
 
 export class StringExtension {
-
   public static ExtractGuid(str: string): string {
     const reg_guid = Constants.Regex.Guid;
     return reg_guid.test(str) ? reg_guid.exec(str)[0] : null;
@@ -9,9 +8,9 @@ export class StringExtension {
 
   public static ReplaceSpecialCharacterFromText(str: string): string {
     if (str == null) {
-      return '';
+      return "";
     }
-    
+
     str = str.replace(/[ÀÁÂÃÅ]/g, "A");
     str = str.replace(/[ÈÉÊË]/g, "E");
     str = str.replace(/[ÌÍÎ]/g, "I");
@@ -35,7 +34,7 @@ export class StringExtension {
 
   public static ReplaceHtmlToText(str: string): string {
     str = this.ReplaceSpecialCharacterFromText(str);
-    str = str.replace(/\n|<.*?>/g,'');
+    str = str.replace(/\n|<.*?>/g, "");
 
     return str;
   }

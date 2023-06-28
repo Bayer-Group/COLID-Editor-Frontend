@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { FormItemInputNumberComponent } from './form-item-input-number.component';
+import { FormItemInputNumberComponent } from "./form-item-input-number.component";
 
-describe('FormItemInputNumberComponent', () => {
+describe("FormItemInputNumberComponent", () => {
   let component: FormItemInputNumberComponent;
   let fixture: ComponentFixture<FormItemInputNumberComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormItemInputNumberComponent ]
-    })
-    .compileComponents();
+      declarations: [FormItemInputNumberComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('FormItemInputNumberComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

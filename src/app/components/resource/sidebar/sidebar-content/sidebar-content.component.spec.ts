@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { SidebarContentComponent } from './sidebar-content.component';
+import { SidebarContentComponent } from "./sidebar-content.component";
 
-describe('SidebarContentComponent', () => {
+describe("SidebarContentComponent", () => {
   let component: SidebarContentComponent;
   let fixture: ComponentFixture<SidebarContentComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SidebarContentComponent ]
-    })
-    .compileComponents();
+      declarations: [SidebarContentComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('SidebarContentComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

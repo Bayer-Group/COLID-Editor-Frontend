@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { SystemUnavailableComponent } from './system-unavailable.component';
+import { SystemUnavailableComponent } from "./system-unavailable.component";
 
-describe('SystemUnavailableComponent', () => {
+describe("SystemUnavailableComponent", () => {
   let component: SystemUnavailableComponent;
   let fixture: ComponentFixture<SystemUnavailableComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SystemUnavailableComponent ]
-    })
-    .compileComponents();
+      declarations: [SystemUnavailableComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('SystemUnavailableComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

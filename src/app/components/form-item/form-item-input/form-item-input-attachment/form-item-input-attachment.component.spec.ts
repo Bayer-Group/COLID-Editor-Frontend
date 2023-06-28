@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { FormItemInputAttachmentComponent } from './form-item-input-attachment.component';
+import { FormItemInputAttachmentComponent } from "./form-item-input-attachment.component";
 
-describe('FormItemInputAttachmentComponent', () => {
+describe("FormItemInputAttachmentComponent", () => {
   let component: FormItemInputAttachmentComponent;
   let fixture: ComponentFixture<FormItemInputAttachmentComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormItemInputAttachmentComponent ]
-    })
-    .compileComponents();
+      declarations: [FormItemInputAttachmentComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('FormItemInputAttachmentComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

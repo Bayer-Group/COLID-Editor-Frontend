@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { FormItemCreateDistributionComponent } from './form-item-create-distribution.component';
+import { FormItemCreateDistributionComponent } from "./form-item-create-distribution.component";
 
-describe('FormItemCreateDistributionComponent', () => {
+describe("FormItemCreateDistributionComponent", () => {
   let component: FormItemCreateDistributionComponent;
   let fixture: ComponentFixture<FormItemCreateDistributionComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormItemCreateDistributionComponent ]
-    })
-    .compileComponents();
+      declarations: [FormItemCreateDistributionComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('FormItemCreateDistributionComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

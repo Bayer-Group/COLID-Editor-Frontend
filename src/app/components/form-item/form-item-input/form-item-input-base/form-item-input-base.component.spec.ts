@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { FormItemInputBaseComponent } from './form-item-input-base.component';
+import { FormItemInputBaseComponent } from "./form-item-input-base.component";
 
-describe('FormItemInputBaseComponent', () => {
+describe("FormItemInputBaseComponent", () => {
   let component: FormItemInputBaseComponent;
   let fixture: ComponentFixture<FormItemInputBaseComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormItemInputBaseComponent ]
-    })
-    .compileComponents();
+      declarations: [FormItemInputBaseComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('FormItemInputBaseComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

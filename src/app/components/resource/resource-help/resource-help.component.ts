@@ -1,25 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { StatusState } from 'src/app/state/status.state';
-import { BuildInformationDto } from 'src/app/shared/models/status/build-information-dto';
-import { Observable } from 'rxjs';
-import { Select } from '@ngxs/store';
-import { BUILD } from '../../../../assets/build-variables';
-import { environment } from 'src/environments/environment';
-import { Constants } from 'src/app/shared/constants';
+import { Component } from "@angular/core";
+import { StatusState } from "src/app/state/status.state";
+import { StatusBuildInformationDto } from "src/app/shared/models/status/status-build-information-dto";
+import { Observable } from "rxjs";
+import { Select } from "@ngxs/store";
+import { environment } from "src/environments/environment";
+import { Constants } from "src/app/shared/constants";
 
 @Component({
-  selector: 'app-help',
-  templateUrl: './resource-help.component.html',
-  styleUrls: ['./resource-help.component.scss']
+  selector: "app-help",
+  templateUrl: "./resource-help.component.html",
+  styleUrls: ["./resource-help.component.scss"],
 })
-export class ResourceHelpComponent implements OnInit {
-  @Select(StatusState.getBuildInformation) buildInformation$: Observable<BuildInformationDto>;
-  
-  frontendBuildInformation = BUILD;
+export class ResourceHelpComponent {
+  @Select(StatusState.getBuildInformation)
+  buildInformation$: Observable<StatusBuildInformationDto>;
+
   releaseNotesUrl = environment.releaseNotesUrl;
   imageUrl = Constants.Assets.Logo;
 
-  constructor() { }
-
-  ngOnInit() { }
+  constructor() {}
 }

@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { DeleteItemDialogComponent } from './delete-item-dialog.component';
+import { DeleteItemDialogComponent } from "./delete-item-dialog.component";
 
-describe('DeleteItemDialogComponent', () => {
+describe("DeleteItemDialogComponent", () => {
   let component: DeleteItemDialogComponent;
   let fixture: ComponentFixture<DeleteItemDialogComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ DeleteItemDialogComponent ]
-    })
-    .compileComponents();
+      declarations: [DeleteItemDialogComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('DeleteItemDialogComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

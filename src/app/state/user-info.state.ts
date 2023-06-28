@@ -1,294 +1,394 @@
-import { ConsumerGroupResultDTO } from '../shared/models/consumerGroups/consumer-group-result-dto';
-import { Selector, State, StateContext, Action, Store } from '@ngxs/store';
-import { tap, catchError } from 'rxjs/operators';
-import { ConsumerGroupApiService } from '../core/http/consumer-group.api.service';
-import { UserDto } from '../shared/models/user/user-dto';
-import { UserInfoApiService } from '../core/http/user-info.api.service';
-import { of } from 'rxjs';
-import { ColidEntrySubscriptionDto } from '../shared/models/user/colid-entry-subscription-dto';
-import { ResourceOverviewState, SetSidebarSearch } from './resource-overview.state';
-import { MessageConfigDto } from '../shared/models/user/message-config-dto';
-import { FetchColidEntrySubscriptionNumbers } from './colid-entry-subcriber-count.state';
-import { Injectable } from '@angular/core';
-import { Constants } from '../shared/constants';
+import { ConsumerGroupResultDTO } from "../shared/models/consumerGroups/consumer-group-result-dto";
+import { Selector, State, StateContext, Action, Store } from "@ngxs/store";
+import { tap, catchError } from "rxjs/operators";
+import { ConsumerGroupApiService } from "../core/http/consumer-group.api.service";
+import { UserDto } from "../shared/models/user/user-dto";
+import { UserInfoApiService } from "../core/http/user-info.api.service";
+import { of } from "rxjs";
+import { ColidEntrySubscriptionDto } from "../shared/models/user/colid-entry-subscription-dto";
+import { ResourceOverviewState } from "./resource-overview.state";
+import { MessageConfigDto } from "../shared/models/user/message-config-dto";
+import { FetchColidEntrySubscriptionNumbers } from "./colid-entry-subcriber-count.state";
+import { Injectable } from "@angular/core";
+import { Constants } from "../shared/constants";
 
 export class FetchUser {
-    static readonly type = '[User] Fetch User';
-    constructor(public id: string, public emailAddress: string) { }
+  static readonly type = "[User] Fetch User";
+  constructor(public id: string, public emailAddress: string) {}
 }
 
 export class ReloadUser {
-    static readonly type = '[User] Reload User';
-    constructor() { }
+  static readonly type = "[User] Reload User";
+  constructor() {}
 }
 
 export class SetLastLoginEditor {
-    static readonly type = '[User] Select Last Login Editor';
-    constructor() { }
+  static readonly type = "[User] Select Last Login Editor";
+  constructor() {}
 }
 
 export class FetchConsumerGroupsByUser {
-    static readonly type = '[User] Fetch consumerGroups by user';
-    constructor() { }
+  static readonly type = "[User] Fetch consumerGroups by user";
+  constructor() {}
 }
 
 export class SelectConsumerGroup {
-    static readonly type = '[User] Select consumerGroup';
-    constructor(public consumerGroupId: string, public consumerGroupDefaulReviewCyclePolicy?: string) { }
+  static readonly type = "[User] Select consumerGroup";
+  constructor(
+    public consumerGroupId: string,
+    public consumerGroupDefaulReviewCyclePolicy?: string
+  ) {}
 }
 
 export class SetDefaultConsumerGroupForUser {
-    static readonly type = '[UserI] Set default ConsumerGroup';
-    constructor(public selectedConsumerGroupId: string) { }
+  static readonly type = "[UserI] Set default ConsumerGroup";
+  constructor(public selectedConsumerGroupId: string) {}
 }
 
 export class SetMessageConfig {
-    static readonly type = '[User] Set MessageConfig';
-    constructor(public messageConfig: MessageConfigDto) { }
+  static readonly type = "[User] Set MessageConfig";
+  constructor(public messageConfig: MessageConfigDto) {}
 }
 
 export class SetSearchFilterEditor {
-    static readonly type = '[User] Set search filter editor';
-    constructor() { }
+  static readonly type = "[User] Set search filter editor";
+  constructor() {}
 }
 
 export class AddColidEntrySubscription {
-    static readonly type = '[User] Add Colid Entry Subscription';
-    constructor(public colidEntrySubscriptionDto: ColidEntrySubscriptionDto) { }
+  static readonly type = "[User] Add Colid Entry Subscription";
+  constructor(public colidEntrySubscriptionDto: ColidEntrySubscriptionDto) {}
 }
 
 export class RemoveColidEntrySubscription {
-    static readonly type = '[User] Remove Colid Entry Subscription';
-    constructor(public colidEntrySubscriptionDto: ColidEntrySubscriptionDto) { }
+  static readonly type = "[User] Remove Colid Entry Subscription";
+  constructor(public colidEntrySubscriptionDto: ColidEntrySubscriptionDto) {}
 }
 
 export class UserInfoStateModel {
-    user: UserDto;
-    consumerGroups: ConsumerGroupResultDTO[];
-    selectedConsumerGroupId: string;
-    selectedConsumerGroupDefaultReviewCyclePolicy: string;
-    fetched: boolean;
+  user: UserDto;
+  consumerGroups: ConsumerGroupResultDTO[];
+  selectedConsumerGroupId: string;
+  selectedConsumerGroupDefaultReviewCyclePolicy: string;
+  fetched: boolean;
 }
 
 @State<UserInfoStateModel>({
-    name: 'UserInfo',
-    defaults: {
-        user: null,
-        consumerGroups: null,
-        selectedConsumerGroupId: null,
-        selectedConsumerGroupDefaultReviewCyclePolicy: null,
-        fetched: false
-    }
+  name: "UserInfo",
+  defaults: {
+    user: null,
+    consumerGroups: null,
+    selectedConsumerGroupId: null,
+    selectedConsumerGroupDefaultReviewCyclePolicy: null,
+    fetched: false,
+  },
 })
 @Injectable()
 export class UserInfoState {
-    constructor(private store: Store, private userInfoApiService: UserInfoApiService, private consumerGroupService: ConsumerGroupApiService) { }
+  constructor(
+    private store: Store,
+    private userInfoApiService: UserInfoApiService,
+    private consumerGroupService: ConsumerGroupApiService
+  ) {}
 
-    @Selector()
-    public static getConsumerGroups(state: UserInfoStateModel) {
-        return state.consumerGroups;
-    }
+  @Selector()
+  public static getUser(state: UserInfoStateModel) {
+    return state.user;
+  }
 
-    @Selector()
-    public static getSelectedConsumerGroupId(state: UserInfoStateModel) {
-        return state.selectedConsumerGroupId;
-    }
+  @Selector()
+  public static getConsumerGroups(state: UserInfoStateModel) {
+    return state.consumerGroups;
+  }
 
-    @Selector()
-    public static getSelectedConsumerGroupDefaultReviewCyclePolicy(state: UserInfoStateModel) {
-        return state.selectedConsumerGroupDefaultReviewCyclePolicy;
-    }
-    
-    @Selector()
-    public static getDefaultConsumerGroup(state: UserInfoStateModel) {
-        return state.user.defaultConsumerGroup;
-    }
+  @Selector()
+  public static getSelectedConsumerGroupId(state: UserInfoStateModel) {
+    return state.selectedConsumerGroupId;
+  }
 
-    @Selector()
-    public static getSearchFilterEditor(state: UserInfoStateModel) {
-        return state.user.searchFilterEditor;
-    }
+  @Selector()
+  public static getSelectedConsumerGroupDefaultReviewCyclePolicy(
+    state: UserInfoStateModel
+  ) {
+    return state.selectedConsumerGroupDefaultReviewCyclePolicy;
+  }
 
-    @Selector()
-    public static getMessageConfig(state: UserInfoStateModel) {
-        return state.user.messageConfig;
-    }
+  @Selector()
+  public static getDefaultConsumerGroup(state: UserInfoStateModel) {
+    return state.user.defaultConsumerGroup;
+  }
 
-    @Selector()
-    public static getColidEntrySubscriptions(state: UserInfoStateModel) {
-        return state.user.colidEntrySubscriptions;
-    }
+  @Selector()
+  public static getSearchFilterEditor(state: UserInfoStateModel) {
+    return state.user.searchFilterEditor;
+  }
 
-    @Selector()
-    public static getIsFetched(state: UserInfoStateModel) {
-        return state.fetched;
-    }
+  @Selector()
+  public static getMessageConfig(state: UserInfoStateModel) {
+    return state.user.messageConfig;
+  }
 
-    @Action(FetchUser)
-    fetchUser({ patchState, dispatch }: StateContext<UserInfoStateModel>, { id, emailAddress }: FetchUser) {
-        return this.userInfoApiService.getUser(id)
-            .pipe(
-                tap((res: UserDto) => {
-                    const defaultConsumerGroup = res.defaultConsumerGroup;
+  @Selector()
+  public static getColidEntrySubscriptions(state: UserInfoStateModel) {
+    return state.user.colidEntrySubscriptions;
+  }
 
-                    if (defaultConsumerGroup != null) {
-                        patchState({
-                            selectedConsumerGroupId: defaultConsumerGroup.uri
-                        });
-                    }
+  @Selector()
+  public static getIsFetched(state: UserInfoStateModel) {
+    return state.fetched;
+  }
 
-                    patchState({
-                        user: res
-                    });
-                    if (res.searchFilterEditor != null) {
+  @Action(FetchUser)
+  fetchUser(
+    { patchState }: StateContext<UserInfoStateModel>,
+    { id, emailAddress }: FetchUser
+  ) {
+    return this.userInfoApiService.getUser(id).pipe(
+      tap((res: UserDto) => {
+        const defaultConsumerGroup = res.defaultConsumerGroup;
 
-                        if(res.searchFilterEditor.filterJson.searchText != null || res.searchFilterEditor.filterJson.consumerGroup != null || res.searchFilterEditor.filterJson.lastChangeUser != null || res.searchFilterEditor.filterJson.published|| res.searchFilterEditor.filterJson.draft ){
-
-                            // dispatch([new SetSidebarSearch(res.searchFilterEditor.filterJson)]).subscribe();
-                        }
-
-                    }
-                }),
-                catchError(err => {
-                    if (err.status === 404) {
-                        return this.userInfoApiService.createUser(id, emailAddress).pipe(tap((res: UserDto) => {
-                            patchState({
-                                user: res
-                            });
-                        }))
-                    }
-                    return of(null);
-                })
-            );
-    }
-
-    @Action(ReloadUser)
-    reloadUser(ctx: StateContext<UserInfoStateModel>, action: ReloadUser) {
-        const user = ctx.getState().user;
-        ctx.dispatch(new FetchUser(user.id, user.emailAddress)).subscribe();
-    }
-
-    @Action(SetLastLoginEditor)
-    setLastLoginEditor({ getState, patchState }: StateContext<UserInfoStateModel>, { }: SetLastLoginEditor) {
-        const user = getState().user;
-        const loginDate = new Date();
-        if (user != null) {
-            return this.userInfoApiService.setLastLoginEditor(user.id, loginDate).pipe(
-                tap(res => {
-                    user.lastLoginEditor = loginDate;
-                    patchState({
-                        user: user
-                    });
-                })
-            );
+        if (defaultConsumerGroup != null) {
+          patchState({
+            selectedConsumerGroupId: defaultConsumerGroup.uri,
+          });
         }
-    }
 
-    @Action(FetchConsumerGroupsByUser)
-    fetchConsumerGroupsByUser({ patchState, getState }: StateContext<UserInfoStateModel>, { }: FetchConsumerGroupsByUser) {
-        return this.consumerGroupService.getActiveEntities().pipe(tap((activeConsumerGroups: ConsumerGroupResultDTO[]) => {
-            let selectedConsumerGroupId = getState().selectedConsumerGroupId;
-            let selectedConsumerGroupDefaultReviewCyclePolicy = getState().selectedConsumerGroupDefaultReviewCyclePolicy;
-
-            if (activeConsumerGroups.length > 0) {
-                // Use the first consumer group as the selected one, if it has not been set yet (e.g. through from the default consumer group)
-                // If it has been set before, then the selected consumer group is available in the list of active consumer groups.
-                // The consumer group could be inactive or have been deleted, whiel the user had it selected as the default consumer group
-                if (selectedConsumerGroupId == null) {
-                    selectedConsumerGroupId = activeConsumerGroups[0].id;
-                    selectedConsumerGroupDefaultReviewCyclePolicy = activeConsumerGroups[0].properties[Constants.ConsumerGroup.HasDefaultReviewCyclePolicy]
-                        ? activeConsumerGroups[0].properties[Constants.ConsumerGroup.HasDefaultReviewCyclePolicy][0]
-                        : null;
-                } else {
-                    const activeSelectedCG = activeConsumerGroups.find(acg => acg.id === selectedConsumerGroupId);
-
-                    if (activeSelectedCG == null) {
-                        selectedConsumerGroupId = activeConsumerGroups[0].id;
-                        selectedConsumerGroupDefaultReviewCyclePolicy = activeConsumerGroups[0].properties[Constants.ConsumerGroup.HasDefaultReviewCyclePolicy]
-                        ? activeConsumerGroups[0].properties[Constants.ConsumerGroup.HasDefaultReviewCyclePolicy][0]
-                        : null;
-                    } else {
-                        selectedConsumerGroupDefaultReviewCyclePolicy = activeSelectedCG.properties[Constants.ConsumerGroup.HasDefaultReviewCyclePolicy]
-                            ? activeSelectedCG.properties[Constants.ConsumerGroup.HasDefaultReviewCyclePolicy][0]
-                            : null;
-                    }
-                }
-            }
-
-            patchState({
-                fetched: true,
-                consumerGroups: activeConsumerGroups,
-                selectedConsumerGroupId: selectedConsumerGroupId,
-                selectedConsumerGroupDefaultReviewCyclePolicy: selectedConsumerGroupDefaultReviewCyclePolicy
-            });
-        }));
-    }
-
-    @Action(SelectConsumerGroup)
-    SelectConsumerGroup({ patchState }: StateContext<UserInfoStateModel>, { consumerGroupId, consumerGroupDefaulReviewCyclePolicy }: SelectConsumerGroup) {
         patchState({
-            selectedConsumerGroupId: consumerGroupId,
-            selectedConsumerGroupDefaultReviewCyclePolicy: consumerGroupDefaulReviewCyclePolicy
+          user: res,
         });
-    }
+        if (res.searchFilterEditor != null) {
+          if (
+            res.searchFilterEditor.filterJson.searchText != null ||
+            res.searchFilterEditor.filterJson.consumerGroup != null ||
+            res.searchFilterEditor.filterJson.lastChangeUser != null ||
+            res.searchFilterEditor.filterJson.published ||
+            res.searchFilterEditor.filterJson.draft
+          ) {
+            // dispatch([new SetSidebarSearch(res.searchFilterEditor.filterJson)]).subscribe();
+          }
+        }
+      }),
+      catchError((err) => {
+        if (err.status === 404) {
+          return this.userInfoApiService.createUser(id, emailAddress).pipe(
+            tap((res: UserDto) => {
+              patchState({
+                user: res,
+              });
+            })
+          );
+        }
+        return of(null);
+      })
+    );
+  }
 
-    @Action(SetDefaultConsumerGroupForUser)
-    SetDefaultConsumerGroupForUser({ patchState, getState }: StateContext<UserInfoStateModel>, { selectedConsumerGroupId }: SetDefaultConsumerGroupForUser) {
-        const user = getState().user;
-        return this.userInfoApiService.setDefaultConsumerGroup(user.id, selectedConsumerGroupId).pipe(tap((res: UserDto) => {
-            user.defaultConsumerGroup = res.defaultConsumerGroup;
+  @Action(ReloadUser)
+  reloadUser(ctx: StateContext<UserInfoStateModel>) {
+    const user = ctx.getState().user;
+    ctx.dispatch(new FetchUser(user.id, user.emailAddress)).subscribe();
+  }
+
+  @Action(SetLastLoginEditor)
+  setLastLoginEditor(
+    { getState, patchState }: StateContext<UserInfoStateModel>,
+    {}: SetLastLoginEditor
+  ) {
+    const user = getState().user;
+    const loginDate = new Date();
+    if (user != null) {
+      return this.userInfoApiService
+        .setLastLoginEditor(user.id, loginDate)
+        .pipe(
+          tap((_) => {
+            user.lastLoginEditor = loginDate;
             patchState({
-                user: user
+              user: user,
             });
-        }));
+          })
+        );
     }
+  }
 
-    @Action(SetMessageConfig)
-    SetMessageConfig({ patchState, getState }: StateContext<UserInfoStateModel>, { messageConfig }: SetMessageConfig) {
-        const user = getState().user;
-        return this.userInfoApiService.setMessageConfig(user.id, messageConfig).pipe(tap((res: UserDto) => {
-            user.messageConfig = res.messageConfig;
-            patchState({
-                user: user
-            });
-        }));
-    }
+  @Action(FetchConsumerGroupsByUser)
+  fetchConsumerGroupsByUser(
+    { patchState, getState }: StateContext<UserInfoStateModel>,
+    {}: FetchConsumerGroupsByUser
+  ) {
+    return this.consumerGroupService.getActiveEntities().pipe(
+      tap((activeConsumerGroups: ConsumerGroupResultDTO[]) => {
+        let selectedConsumerGroupId = getState().selectedConsumerGroupId;
+        let selectedConsumerGroupDefaultReviewCyclePolicy =
+          getState().selectedConsumerGroupDefaultReviewCyclePolicy;
 
-    @Action(SetSearchFilterEditor)
-    SetSearchFilterEditorForUser({ patchState, getState }: StateContext<UserInfoStateModel>, {  }: SetSearchFilterEditor) {
-        const user = getState().user;
-        const searchFilter = this.store.selectSnapshot(ResourceOverviewState.resourceOverviewSearch);
-        searchFilter.searchText = null;
+        if (activeConsumerGroups.length > 0) {
+          // Use the first consumer group as the selected one, if it has not been set yet (e.g. through from the default consumer group)
+          // If it has been set before, then the selected consumer group is available in the list of active consumer groups.
+          // The consumer group could be inactive or have been deleted, whiel the user had it selected as the default consumer group
+          if (selectedConsumerGroupId == null) {
+            selectedConsumerGroupId = activeConsumerGroups[0].id;
+            selectedConsumerGroupDefaultReviewCyclePolicy =
+              activeConsumerGroups[0].properties[
+                Constants.ConsumerGroup.HasDefaultReviewCyclePolicy
+              ]
+                ? activeConsumerGroups[0].properties[
+                    Constants.ConsumerGroup.HasDefaultReviewCyclePolicy
+                  ][0]
+                : null;
+          } else {
+            const activeSelectedCG = activeConsumerGroups.find(
+              (acg) => acg.id === selectedConsumerGroupId
+            );
 
-        return this.userInfoApiService.setSearchFilterEditor(user.id, searchFilter).pipe(tap((res: UserDto) => {
-            user.searchFilterEditor = res.searchFilterEditor;
-            patchState({
-                user: user
-            });
-        }));
-    }
+            if (activeSelectedCG == null) {
+              selectedConsumerGroupId = activeConsumerGroups[0].id;
+              selectedConsumerGroupDefaultReviewCyclePolicy =
+                activeConsumerGroups[0].properties[
+                  Constants.ConsumerGroup.HasDefaultReviewCyclePolicy
+                ]
+                  ? activeConsumerGroups[0].properties[
+                      Constants.ConsumerGroup.HasDefaultReviewCyclePolicy
+                    ][0]
+                  : null;
+            } else {
+              selectedConsumerGroupDefaultReviewCyclePolicy = activeSelectedCG
+                .properties[Constants.ConsumerGroup.HasDefaultReviewCyclePolicy]
+                ? activeSelectedCG.properties[
+                    Constants.ConsumerGroup.HasDefaultReviewCyclePolicy
+                  ][0]
+                : null;
+            }
+          }
+        }
 
-    @Action(AddColidEntrySubscription)
-    AddColidEntrySubscription({ patchState, getState }: StateContext<UserInfoStateModel>, { colidEntrySubscriptionDto }: AddColidEntrySubscription) {
-        const user = getState().user;
-        return this.userInfoApiService.addColidEntrySubscription(user.id, colidEntrySubscriptionDto).pipe(tap((res: UserDto) => {
-            user.colidEntrySubscriptions = res.colidEntrySubscriptions;
-            patchState({
-                user: user
-            });
-            this.store.dispatch(new FetchColidEntrySubscriptionNumbers(colidEntrySubscriptionDto.colidPidUri))
-        }));
-    }
+        patchState({
+          fetched: true,
+          consumerGroups: activeConsumerGroups,
+          selectedConsumerGroupId: selectedConsumerGroupId,
+          selectedConsumerGroupDefaultReviewCyclePolicy:
+            selectedConsumerGroupDefaultReviewCyclePolicy,
+        });
+      })
+    );
+  }
 
-    @Action(RemoveColidEntrySubscription)
-    RemoveColidEntrySubscription({ patchState, getState }: StateContext<UserInfoStateModel>, { colidEntrySubscriptionDto }: RemoveColidEntrySubscription) {
-        const user = getState().user;
-        return this.userInfoApiService.removeColidEntrySubscription(user.id, colidEntrySubscriptionDto).pipe(tap((res: UserDto) => {
-            user.colidEntrySubscriptions = res.colidEntrySubscriptions;
-            patchState({
-                user: user
-            });
-            this.store.dispatch(new FetchColidEntrySubscriptionNumbers(colidEntrySubscriptionDto.colidPidUri))
-        }));
-    }
+  @Action(SelectConsumerGroup)
+  SelectConsumerGroup(
+    { patchState }: StateContext<UserInfoStateModel>,
+    {
+      consumerGroupId,
+      consumerGroupDefaulReviewCyclePolicy,
+    }: SelectConsumerGroup
+  ) {
+    patchState({
+      selectedConsumerGroupId: consumerGroupId,
+      selectedConsumerGroupDefaultReviewCyclePolicy:
+        consumerGroupDefaulReviewCyclePolicy,
+    });
+  }
+
+  @Action(SetDefaultConsumerGroupForUser)
+  SetDefaultConsumerGroupForUser(
+    { patchState, getState }: StateContext<UserInfoStateModel>,
+    { selectedConsumerGroupId }: SetDefaultConsumerGroupForUser
+  ) {
+    const user = getState().user;
+    return this.userInfoApiService
+      .setDefaultConsumerGroup(user.id, selectedConsumerGroupId)
+      .pipe(
+        tap((res: UserDto) => {
+          user.defaultConsumerGroup = res.defaultConsumerGroup;
+          patchState({
+            user: user,
+          });
+        })
+      );
+  }
+
+  @Action(SetMessageConfig)
+  SetMessageConfig(
+    { patchState, getState }: StateContext<UserInfoStateModel>,
+    { messageConfig }: SetMessageConfig
+  ) {
+    const user = getState().user;
+    return this.userInfoApiService
+      .setMessageConfig(user.id, messageConfig)
+      .pipe(
+        tap((res: UserDto) => {
+          user.messageConfig = res.messageConfig;
+          patchState({
+            user: user,
+          });
+        })
+      );
+  }
+
+  @Action(SetSearchFilterEditor)
+  SetSearchFilterEditorForUser(
+    { patchState, getState }: StateContext<UserInfoStateModel>,
+    {}: SetSearchFilterEditor
+  ) {
+    const user = getState().user;
+    const searchFilter = this.store.selectSnapshot(
+      ResourceOverviewState.resourceOverviewSearch
+    );
+    searchFilter.searchText = null;
+
+    return this.userInfoApiService
+      .setSearchFilterEditor(user.id, searchFilter)
+      .pipe(
+        tap((res: UserDto) => {
+          user.searchFilterEditor = res.searchFilterEditor;
+          patchState({
+            user: user,
+          });
+        })
+      );
+  }
+
+  @Action(AddColidEntrySubscription)
+  AddColidEntrySubscription(
+    { patchState, getState }: StateContext<UserInfoStateModel>,
+    { colidEntrySubscriptionDto }: AddColidEntrySubscription
+  ) {
+    const user = getState().user;
+    return this.userInfoApiService
+      .addColidEntrySubscription(user.id, colidEntrySubscriptionDto)
+      .pipe(
+        tap((res: UserDto) => {
+          user.colidEntrySubscriptions = res.colidEntrySubscriptions;
+          patchState({
+            user: user,
+          });
+          this.store.dispatch(
+            new FetchColidEntrySubscriptionNumbers(
+              colidEntrySubscriptionDto.colidPidUri
+            )
+          );
+        })
+      );
+  }
+
+  @Action(RemoveColidEntrySubscription)
+  RemoveColidEntrySubscription(
+    { patchState, getState }: StateContext<UserInfoStateModel>,
+    { colidEntrySubscriptionDto }: RemoveColidEntrySubscription
+  ) {
+    const user = getState().user;
+    return this.userInfoApiService
+      .removeColidEntrySubscription(user.id, colidEntrySubscriptionDto)
+      .pipe(
+        tap((res: UserDto) => {
+          user.colidEntrySubscriptions = res.colidEntrySubscriptions;
+          patchState({
+            user: user,
+          });
+          this.store.dispatch(
+            new FetchColidEntrySubscriptionNumbers(
+              colidEntrySubscriptionDto.colidPidUri
+            )
+          );
+        })
+      );
+  }
 }

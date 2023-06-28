@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { EntityHeaderComponent } from './entity-header.component';
+import { EntityHeaderComponent } from "./entity-header.component";
 
-describe('EntityHeaderComponent', () => {
+describe("EntityHeaderComponent", () => {
   let component: EntityHeaderComponent;
   let fixture: ComponentFixture<EntityHeaderComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ EntityHeaderComponent ]
-    })
-    .compileComponents();
+      declarations: [EntityHeaderComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('EntityHeaderComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

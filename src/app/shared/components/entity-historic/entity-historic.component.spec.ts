@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { EntityHistoricComponent } from './entity-historic.component';
+import { EntityHistoricComponent } from "./entity-historic.component";
 
-describe('EntityHistoricComponent', () => {
+describe("EntityHistoricComponent", () => {
   let component: EntityHistoricComponent;
   let fixture: ComponentFixture<EntityHistoricComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ EntityHistoricComponent ]
-    })
-    .compileComponents();
+      declarations: [EntityHistoricComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('EntityHistoricComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

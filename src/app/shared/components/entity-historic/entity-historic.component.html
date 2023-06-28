@@ -1,7 +1,10 @@
 <ng-container *ngIf="entities; else loading">
   <ng-container *ngIf="entities.length !== 0; else empty">
     <ng-container *ngIf="selectedStep != null; else loading">
-      <mat-vertical-stepper [selectedIndex]="selectedStep" (selectionChange)="handleSelectionChanged($event)">
+      <mat-vertical-stepper
+        [selectedIndex]="selectedStep"
+        (selectionChange)="handleSelectionChanged($event)"
+      >
         <ng-template matStepperIcon="history">
           <mat-icon>history</mat-icon>
         </ng-template>
@@ -11,22 +14,36 @@
         <ng-template matStepperIcon="published">
           <mat-icon>cloud_upload</mat-icon>
         </ng-template>
-        <mat-step *ngFor="let entity of entities; let i = index" completed="false" [state]="getState(entity)">
+        <mat-step
+          *ngFor="let entity of entities; let i = index"
+          completed="false"
+          [state]="getState(entity)"
+        >
           <ng-template matStepLabel>
-            <span>{{getHeader(entity) | date:'yyyy-MM-dd HH:mm'}}
-              <span class="badge badge-pill badge-primary ms-1" *ngIf="getState(entity) === 'published'">
-                <ds-icon iconType="Mapping" [tooltipDisabled]="false" [delay]="300"
-                  [icon]="constants.Resource.LifeCycleStatus.Published"></ds-icon>
+            <span
+              >{{ getHeader(entity) | date : "yyyy-MM-dd HH:mm" }}
+              <span
+                class="badge badge-pill badge-primary ms-1"
+                *ngIf="getState(entity) === 'published'"
+              >
+                <ds-icon
+                  iconType="Mapping"
+                  [tooltipDisabled]="false"
+                  [delay]="300"
+                  [icon]="constants.Resource.LifeCycleStatus.Published"
+                ></ds-icon>
               </span>
             </span>
-            <br>
-            <small>{{getSubHeader(entity)}}</small>
+            <br />
+            <small>{{ getSubHeader(entity) }}</small>
           </ng-template>
           <div *ngIf="historicEntities.get(entity.id); else loading">
-            <app-entity-display [entityVersions]="historicEntities.get(entity.id )?.versions"
+            <app-entity-display
+              [entityVersions]="historicEntities.get(entity.id)?.versions"
               [entity]="historicEntities.get(entity.id)"
               [metadata]="metadataRelease(historicEntities.get(entity.id))"
-              (versionClick)="handleVersionClick($event)">
+              (versionClick)="handleVersionClick($event)"
+            >
             </app-entity-display>
           </div>
         </mat-step>
@@ -39,7 +56,7 @@
   <div class="mt-4 row">
     <div class="col">
       <div class="mt-4 text-center">
-        <mat-icon style="font-size: 5rem;" [inline]="true">history</mat-icon>
+        <mat-icon style="font-size: 5rem" [inline]="true">history</mat-icon>
         <h4>Currently there are no historical entries yet</h4>
       </div>
     </div>

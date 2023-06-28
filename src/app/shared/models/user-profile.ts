@@ -1,4 +1,4 @@
 export class UserProfile {
-    cwid: string;
-    name: string;
+  cwid: string;
+  name: string;
 }

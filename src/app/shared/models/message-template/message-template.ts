@@ -1,5 +1,5 @@
 export class MessageTemplate {
-    type: string;
-    subject: string;
-    body: string;
+  type: string;
+  subject: string;
+  body: string;
 }

@@ -1,42 +1,41 @@
-import { State, Action, StateContext, Selector } from '@ngxs/store';
-import { GraphApiService } from 'src/app/core/http/graph.api.service';
-import { tap } from 'rxjs/operators';
-import { GraphOverViewDto } from 'src/app/shared/models/graphs/graph-overview-dto';
-import { GraphResultDTO } from 'src/app/shared/models/graphs/graph-result-dto';
-import { MetaDataProperty } from 'src/app/shared/models/metadata/meta-data-property';
-import { GraphRequestDTO } from 'src/app/shared/models/graphs/graph-request-dto';
-import { MetaDataApiService } from 'src/app/core/http/meta-data.api.service';
-import { Constants } from 'src/app/shared/constants';
-import { Injectable } from '@angular/core';
+import { State, Action, StateContext, Selector } from "@ngxs/store";
+import { GraphApiService } from "src/app/core/http/graph.api.service";
+import { tap } from "rxjs/operators";
+import { GraphOverViewDto } from "src/app/shared/models/graphs/graph-overview-dto";
+import { GraphResultDTO } from "src/app/shared/models/graphs/graph-result-dto";
+import { MetaDataProperty } from "src/app/shared/models/metadata/meta-data-property";
+import { GraphRequestDTO } from "src/app/shared/models/graphs/graph-request-dto";
+import { MetaDataApiService } from "src/app/core/http/meta-data.api.service";
+import { Constants } from "src/app/shared/constants";
+import { Injectable } from "@angular/core";
 
 export class FetchGraph {
-  static readonly type = '[Graph] Fetch graph';
-  constructor() { }
+  static readonly type = "[Graph] Fetch graph";
+  constructor() {}
 }
 
 export class FetchHistory {
-  static readonly type = '[Graph] Fetch history';
-  constructor() { }
+  static readonly type = "[Graph] Fetch history";
+  constructor() {}
 }
 
 export class FetchGraphMetadata {
-  static readonly type = '[Graph] Fetch metadata';
-  constructor() { }
+  static readonly type = "[Graph] Fetch metadata";
+  constructor() {}
 }
 
 export class FetchHistoricGraph {
-  static readonly type = '[Graph] Fetch historic graph';
-  constructor(public payload: string) { }
+  static readonly type = "[Graph] Fetch historic graph";
+  constructor(public payload: string) {}
 }
 
 export class CreateGraph {
-  static readonly type = '[Graph] Create graph';
-  constructor(public payload: GraphRequestDTO) { }
+  static readonly type = "[Graph] Create graph";
+  constructor(public payload: GraphRequestDTO) {}
 }
 
 export class UnselectHistoricGraph {
-  static readonly type = '[Graph] UnselectHistoricGraph';
-
+  static readonly type = "[Graph] UnselectHistoricGraph";
 }
 
 export class GraphStateModel {
@@ -48,18 +47,21 @@ export class GraphStateModel {
 }
 
 @State<GraphStateModel>({
-  name: 'graphs',
+  name: "graphs",
   defaults: {
     history: null,
     historicGraphs: new Map<string, GraphResultDTO>(),
     selectedHistoricGraph: null,
     actualGraph: null,
-    metadata: null
-  }
+    metadata: null,
+  },
 })
 @Injectable()
 export class GraphState {
-  constructor(private graphApiService: GraphApiService, private metadataService: MetaDataApiService) { }
+  constructor(
+    private graphApiService: GraphApiService,
+    private metadataService: MetaDataApiService
+  ) {}
 
   @Selector()
   public static getHistory(state: GraphStateModel) {
@@ -87,75 +89,101 @@ export class GraphState {
   }
 
   @Action(FetchHistoricGraph)
-  fetchHistoricGraph({ getState, patchState }: StateContext<GraphStateModel>, { payload }: FetchHistoricGraph) {
+  fetchHistoricGraph(
+    { getState, patchState }: StateContext<GraphStateModel>,
+    { payload }: FetchHistoricGraph
+  ) {
     const historicGraphs = getState().historicGraphs;
 
     if (historicGraphs.has(payload)) {
       patchState({
-        selectedHistoricGraph: payload
+        selectedHistoricGraph: payload,
       });
       return;
     }
 
-    return this.graphApiService.getHistoricGraph(payload).pipe(tap(res => {
-      historicGraphs.set(payload, res);
-      patchState({
-        historicGraphs: historicGraphs,
-        selectedHistoricGraph: payload
-      });
-    }));
+    return this.graphApiService.getHistoricGraph(payload).pipe(
+      tap((res) => {
+        historicGraphs.set(payload, res);
+        patchState({
+          historicGraphs: historicGraphs,
+          selectedHistoricGraph: payload,
+        });
+      })
+    );
   }
 
   @Action(FetchGraph)
-  fetchGraph({ patchState }: StateContext<GraphStateModel>, { }: FetchGraph) {
+  fetchGraph({ patchState }: StateContext<GraphStateModel>, {}: FetchGraph) {
     patchState({
-      actualGraph: null
+      actualGraph: null,
     });
-    
-    return this.graphApiService.getGraph().pipe(tap(res => {
-      patchState({
-        actualGraph: res
-      });
-    }));
+
+    return this.graphApiService.getGraph().pipe(
+      tap((res) => {
+        patchState({
+          actualGraph: res,
+        });
+      })
+    );
   }
 
   @Action(UnselectHistoricGraph)
-  unselectHistoricGraph({ patchState }: StateContext<GraphStateModel>, { }: UnselectHistoricGraph) {
+  unselectHistoricGraph(
+    { patchState }: StateContext<GraphStateModel>,
+    {}: UnselectHistoricGraph
+  ) {
     patchState({
-      selectedHistoricGraph: null
+      selectedHistoricGraph: null,
     });
   }
 
   @Action(FetchHistory)
-  fetchHistory({ patchState }: StateContext<GraphStateModel>, { }: FetchHistory) {
-    return this.graphApiService.getHistory().pipe(tap(res => {
-      patchState({
-        history: res
-      });
-    }));
+  fetchHistory(
+    { patchState }: StateContext<GraphStateModel>,
+    {}: FetchHistory
+  ) {
+    return this.graphApiService.getHistory().pipe(
+      tap((res) => {
+        patchState({
+          history: res,
+        });
+      })
+    );
   }
 
   @Action(FetchGraphMetadata)
-  fetchGraphMetadata({ getState, patchState }: StateContext<GraphStateModel>, { }: FetchGraphMetadata) {
-    if (getState().metadata != null) { return; }
+  fetchGraphMetadata(
+    { getState, patchState }: StateContext<GraphStateModel>,
+    {}: FetchGraphMetadata
+  ) {
+    if (getState().metadata != null) {
+      return;
+    }
 
-    return this.metadataService.getMetaData(Constants.ResourceTypes.MetadataGraphConfiguration).pipe(tap(res => {
-      patchState({
-        metadata: res
-      });
-    }));
+    return this.metadataService
+      .getMetaData(Constants.ResourceTypes.MetadataGraphConfiguration)
+      .pipe(
+        tap((res) => {
+          patchState({
+            metadata: res,
+          });
+        })
+      );
   }
 
   @Action(CreateGraph)
-  createGraph({ dispatch, patchState }: StateContext<GraphStateModel>, { payload }: CreateGraph) {
-    return this.graphApiService.createGraph(payload)
-      .pipe(
-        tap(res => {
-          dispatch(new FetchHistory());
-          patchState({
-            actualGraph: res.entity
-          })
-        })
-      );
+  createGraph(
+    { dispatch, patchState }: StateContext<GraphStateModel>,
+    { payload }: CreateGraph
+  ) {
+    return this.graphApiService.createGraph(payload).pipe(
+      tap((res) => {
+        dispatch(new FetchHistory());
+        patchState({
+          actualGraph: res.entity,
+        });
+      })
+    );
   }
 }

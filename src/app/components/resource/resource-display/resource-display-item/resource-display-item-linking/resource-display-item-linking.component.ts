@@ -1,15 +1,14 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { ResourceOverviewDTO } from 'src/app/shared/models/resources/resource-overview-dto';
-import { ResourceApiService } from 'src/app/core/http/resource.api.service';
-import { ResourceSearchDTO } from 'src/app/shared/models/search/resource-search-dto';
+import { Component, Input } from "@angular/core";
+import { ResourceOverviewDTO } from "src/app/shared/models/resources/resource-overview-dto";
+import { ResourceApiService } from "src/app/core/http/resource.api.service";
+import { ResourceSearchDTO } from "src/app/shared/models/search/resource-search-dto";
 
 @Component({
-  selector: 'app-resource-display-item-linking',
-  templateUrl: './resource-display-item-linking.component.html',
-  styleUrls: ['./resource-display-item-linking.component.css']
+  selector: "app-resource-display-item-linking",
+  templateUrl: "./resource-display-item-linking.component.html",
+  styleUrls: ["./resource-display-item-linking.component.css"],
 })
-export class ResourceDisplayItemLinkingComponent implements OnInit {
-
+export class ResourceDisplayItemLinkingComponent {
   _linkedEntities: ResourceOverviewDTO[];
 
   @Input() set linkedEntities(pidUris: string[]) {
@@ -22,10 +21,7 @@ export class ResourceDisplayItemLinkingComponent implements OnInit {
 
   fetching = false;
 
-  constructor(private resourceApiService: ResourceApiService) { }
-
-  ngOnInit() {
-  }
+  constructor(private resourceApiService: ResourceApiService) {}
 
   createResourceOverviewDTOs(pidUris: string[]): ResourceOverviewDTO[] {
     if (pidUris == null) {
@@ -36,22 +32,23 @@ export class ResourceDisplayItemLinkingComponent implements OnInit {
 
     const resourceSearch = new ResourceSearchDTO();
     resourceSearch.pidUris = pidUris;
-    resourceSearch.limit =  pidUris.length;
+    resourceSearch.limit = pidUris.length;
     resourceSearch.published = true;
 
     this.fetching = true;
     this.resourceApiService.getFilteredResources(resourceSearch).subscribe(
-      res => {
+      (res) => {
         this._linkedEntities = res.items;
         this.fetching = false;
       },
-      error => {
-        this._linkedEntities = pidUris.map(pidUri => {
+      (_) => {
+        this._linkedEntities = pidUris.map((pidUri) => {
           const resourceOverviewDTO = new ResourceOverviewDTO();
           resourceOverviewDTO.pidUri = pidUri;
           return resourceOverviewDTO;
         });
         this.fetching = false;
-      });
+      }
+    );
   }
 }

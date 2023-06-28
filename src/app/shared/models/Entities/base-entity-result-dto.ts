@@ -1,9 +1,9 @@
-import { Entity } from './entity';
+import { Entity } from "./entity";
 
 export class BaseEntityResultDTO extends Entity {
-    name: string;
+  name: string;
 
-    constructor() {
-        super();
-    }
+  constructor() {
+    super();
+  }
 }

@@ -1,14 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from "@angular/core";
 
 @Component({
-  selector: 'app-consumer-group-new',
-  templateUrl: './consumer-group-new.component.html',
-  styleUrls: ['./consumer-group-new.component.css']
+  selector: "app-consumer-group-new",
+  templateUrl: "./consumer-group-new.component.html",
+  styleUrls: ["./consumer-group-new.component.css"],
 })
-export class ConsumerGroupNewComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {}
-
+export class ConsumerGroupNewComponent {
+  constructor() {}
 }

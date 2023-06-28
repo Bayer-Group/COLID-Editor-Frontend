@@ -1,15 +1,14 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { ResourceWelcomeComponent } from './resource-welcome.component';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ResourceWelcomeComponent } from "./resource-welcome.component";
 
-describe('ResourceWelcomeComponent', () => {
+describe("ResourceWelcomeComponent", () => {
   let component: ResourceWelcomeComponent;
   let fixture: ComponentFixture<ResourceWelcomeComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ResourceWelcomeComponent]
-    })
-      .compileComponents();
+      declarations: [ResourceWelcomeComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -18,7 +17,7 @@ describe('ResourceWelcomeComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

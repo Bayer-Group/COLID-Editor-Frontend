@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { BroadcastMessageComponent } from './broadcast-message.component';
+import { BroadcastMessageComponent } from "./broadcast-message.component";
 
-describe('BroadcastMessageComponent', () => {
+describe("BroadcastMessageComponent", () => {
   let component: BroadcastMessageComponent;
   let fixture: ComponentFixture<BroadcastMessageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BroadcastMessageComponent ]
-    })
-    .compileComponents();
+      declarations: [BroadcastMessageComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('BroadcastMessageComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

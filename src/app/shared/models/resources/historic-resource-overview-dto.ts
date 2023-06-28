@@ -1,23 +1,21 @@
-import { Constants } from 'src/app/shared/constants';import { Entity } from '../Entities/entity';
-import { MetaDataProperty } from '../metadata/meta-data-property';
-import { VersionProperty } from './version-property';
-;
-
+import { Constants } from "src/app/shared/constants";
+import { Entity } from "../Entities/entity";
+import { MetaDataProperty } from "../metadata/meta-data-property";
+import { VersionProperty } from "./version-property";
 export class HistoricResourceOverviewDTO {
   id: string;
   pidUri: string;
   lastChangeDateTime: string;
   lastChangeUser: string;
   lifeCycleStatus: string = Constants.Resource.LifeCycleStatus.Historic;
-
 }
 export class ResourcRevisionHistory {
-  name:string;
-  additionals:object;
-  removals:object;
+  name: string;
+  additionals: object;
+  removals: object;
 }
 
-export class ResourceRevisionHistoryUI{
+export class ResourceRevisionHistoryUI {
   metadata: ResourceRevisionHistoryParams<MetaDataProperty[]>;
   entity: ResourceRevisionHistoryParams<Entity>;
   entityVersions: ResourceRevisionHistoryParams<VersionProperty[]>;

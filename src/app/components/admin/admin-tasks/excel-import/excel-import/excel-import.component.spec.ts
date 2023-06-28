@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { ExcelImportComponent } from './excel-import.component';
+import { ExcelImportComponent } from "./excel-import.component";
 
-describe('ExcelImportComponent', () => {
+describe("ExcelImportComponent", () => {
   let component: ExcelImportComponent;
   let fixture: ComponentFixture<ExcelImportComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ExcelImportComponent ]
-    })
-    .compileComponents();
+      declarations: [ExcelImportComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('ExcelImportComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });
