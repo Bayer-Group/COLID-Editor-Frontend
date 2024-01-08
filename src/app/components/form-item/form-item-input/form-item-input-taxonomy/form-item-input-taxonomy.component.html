@@ -1,43 +1,54 @@
 <ng-container>
   <div
     *ngIf="!readOnly"
-    class="input-group"
-    id="input-group-taxonomy"
-    (clickOutside)="taxonomyMenuOpened = false"
+    class="d-flex align-items-center"
     (click)="taxonomyMenuOpened = !taxonomyMenuOpened"
+    (clickOutside)="closeTaxonomyMenu()"
   >
-    <div
-      class="form-control ng-value-container"
-      style="border-right: none !important"
-      [class.border-bottom-0]="taxonomyMenuOpened"
-    >
-      <div *ngFor="let taxonomy of _internalValue" class="ng-value">
+    <div class="input-group" id="input-group-taxonomy">
+      <div
+        class="form-control ng-value-container"
+        style="border-right: none !important"
+        [class.border-bottom-0]="taxonomyMenuOpened"
+      >
+        <div *ngFor="let taxonomy of _internalValue" class="ng-value">
+          <span
+            aria-hidden="true"
+            class="ng-value-icon left"
+            (click)="removeTaxonomy(taxonomy)"
+            >×</span
+          >
+          <span class="ng-value-label">{{ taxonomy.name }}</span>
+        </div>
+      </div>
+      <div
+        class="input-group-append"
+        [class.border-bottom-0]="taxonomyMenuOpened"
+      >
         <span
-          aria-hidden="true"
-          class="ng-value-icon left"
-          (click)="removeTaxonomy(taxonomy); taxonomyMenuOpened = false"
+          class="close"
+          (click)="removeItems()"
+          *ngIf="_internalValue?.length !== 0"
           >×</span
         >
-        <span class="ng-value-label">{{ taxonomy.name }}</span>
+        <mat-icon>{{
+          taxonomyMenuOpened ? "arrow_drop_up" : "arrow_drop_down"
+        }}</mat-icon>
       </div>
     </div>
-    <div
-      class="input-group-append"
-      [class.border-bottom-0]="taxonomyMenuOpened"
+
+    <button
+      mat-icon-button
+      (click)="openTaxonomyDetailsDialog()"
+      matTooltip="Open field details dialog"
+      [disabled]="readOnly"
     >
-      <span
-        class="close"
-        (click)="removeItems()"
-        *ngIf="_internalValue?.length !== 0"
-        >×</span
-      >
-      <mat-icon>{{
-        taxonomyMenuOpened ? "arrow_drop_up" : "arrow_drop_down"
-      }}</mat-icon>
-    </div>
+      <mat-icon>expand</mat-icon>
+    </button>
   </div>
-  <div style="position: relative">
-    <div class="ng-dropdown-panel" [hidden]="!taxonomyMenuOpened">
+
+  <div class="dropdown-container" *ngIf="taxonomyMenuOpened">
+    <div class="ng-dropdown-panel">
       <div #scroll class="ng-dropdown-panel-items scroll-host">
         <div #padding [class.total-padding]="true"></div>
         <div #content>
@@ -54,6 +65,7 @@
       </div>
     </div>
   </div>
+
   <div
     class="form-control ng-value-container disabled"
     id="input-group-taxonomy"

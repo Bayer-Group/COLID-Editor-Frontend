@@ -1,13 +1,24 @@
-import { Component, forwardRef, Input, OnInit } from "@angular/core";
+import {
+  ChangeDetectorRef,
+  Component,
+  forwardRef,
+  Input,
+  OnInit,
+} from "@angular/core";
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
 import { TaxonomyState, FetchTaxonomyList } from "src/app/state/taxonomy.state";
-import { Observable } from "rxjs";
+import { BehaviorSubject, combineLatest, Observable } from "rxjs";
 import { Select, Store } from "@ngxs/store";
 import { TaxonomyResultDTO } from "src/app/shared/models/taxonomy/taxonomy-result-dto";
 import { FormItemInputBaseComponent } from "../form-item-input-base/form-item-input-base.component";
 import { MetaDataProperty } from "src/app/shared/models/metadata/meta-data-property";
 import { Constants } from "src/app/shared/constants";
 import { TreeViewSelectionChangeEvent } from "src/app/shared/models/tree-view-selection-change-event";
+import { MatDialog } from "@angular/material/dialog";
+import {
+  TaxonomyDetailsDialogComponent,
+  TaxonomyDialogData,
+} from "../../taxonomy-details-dialog/taxonomy-details-dialog.component";
 
 @Component({
   selector: "app-form-item-input-taxonomy",
@@ -30,7 +41,6 @@ export class FormItemInputTaxonomyComponent
   >;
 
   getTaxonomyList: TaxonomyResultDTO[];
-  getTaxonomyByType: TaxonomyResultDTO;
 
   taxonomyMenuOpened: boolean = false;
 
@@ -39,18 +49,110 @@ export class FormItemInputTaxonomyComponent
 
   _internalValue: TaxonomyResultDTO[] = [];
 
+  initialTaxonomies: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(
+    []
+  );
+
   get taxonomyType(): string {
     return this.metadata.properties[Constants.Metadata.Range];
   }
 
-  constructor(private store: Store) {
+  closeTaxonomyMenu() {
+    this.taxonomyMenuOpened = false;
+    this.changeDetection.detectChanges();
+  }
+
+  writeValue(value: any): void {
+    if (value != null) {
+      this.internalValue = value;
+      this.initialTaxonomies.next(value);
+    }
+  }
+
+  constructor(
+    private store: Store,
+    private dialog: MatDialog,
+    private changeDetection: ChangeDetectorRef
+  ) {
     super();
   }
 
   ngOnInit() {
-    this.store.dispatch(new FetchTaxonomyList(this.taxonomyType));
-    this.taxonomyList$.subscribe((res) => {
-      this.getTaxonomyList = res.get(this.taxonomyType);
+    let initialValuesSet: boolean = false;
+    const taxonomyObservable = this.store.dispatch(
+      new FetchTaxonomyList(this.taxonomyType)
+    );
+    const initialTaxonomyObservable = this.initialTaxonomies.asObservable();
+
+    let that = this;
+    combineLatest([taxonomyObservable, initialTaxonomyObservable]).subscribe(
+      function ([_, initialTaxonomieIds]) {
+        let taxonomyListAll = that.store.selectSnapshot(
+          TaxonomyState.getTaxonomyList
+        );
+        let taxonomyList = taxonomyListAll.get(that.taxonomyType);
+        that.getTaxonomyList = taxonomyList;
+        if (
+          taxonomyList &&
+          initialTaxonomieIds.length > 0 &&
+          !initialValuesSet
+        ) {
+          let initialTaxonomies: TaxonomyResultDTO[] = [];
+          taxonomyList.forEach(function (taxonomy) {
+            that.setInitialValue(
+              taxonomy,
+              initialTaxonomieIds,
+              initialTaxonomies
+            );
+          });
+          that.handleSelectionChanged({
+            initialChange: true,
+            values: initialTaxonomies,
+          });
+          initialValuesSet = true;
+        }
+      }
+    );
+  }
+
+  private setInitialValue(
+    taxonomy: TaxonomyResultDTO,
+    initialTaxonomieIds: string[],
+    initialTaxonomies: TaxonomyResultDTO[]
+  ) {
+    if (initialTaxonomieIds.includes(taxonomy.id)) {
+      initialTaxonomies.push(taxonomy);
+    }
+
+    if (taxonomy.hasChild) {
+      taxonomy.children.forEach((childTaxonomy) => {
+        this.setInitialValue(
+          childTaxonomy,
+          initialTaxonomieIds,
+          initialTaxonomies
+        );
+      });
+    }
+  }
+
+  openTaxonomyDetailsDialog() {
+    const dialogRef = this.dialog.open(TaxonomyDetailsDialogComponent, {
+      width: "80vw",
+      minHeight: "80vh",
+      data: {
+        taxonomyList: this.getTaxonomyList,
+        taxonomyType: this.taxonomyType,
+        singleSelection: this.singleSelection,
+        selectedNodeIds: this.internalValue,
+      } as TaxonomyDialogData,
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result && result.selectedNodes) {
+        this.handleSelectionChanged({
+          initialChange: false,
+          values: result.selectedNodes,
+        });
+      }
     });
   }
 
@@ -59,7 +161,6 @@ export class FormItemInputTaxonomyComponent
       event.values
     );
     let nodesAsString = this._internalValue.map((x) => x.id);
-
     /*
       If it is an initial change, the value is written from the upper component and
       already stored as value in the form.
@@ -138,13 +239,6 @@ export class FormItemInputTaxonomyComponent
     } catch (error) {
       console.log(error);
     }
-  }
-  handleMenuOpened() {
-    this.taxonomyMenuOpened = true;
-  }
-
-  handleMenuClosed() {
-    this.taxonomyMenuOpened = false;
   }
 
   removeItems() {

@@ -24,6 +24,18 @@ export class TaxonomyService {
     return this.httpClient.get<TaxonomyResultDTO>(url, { params });
   }
 
+  searchTaxonomy(
+    taxonomyType: string,
+    searchTerm: string
+  ): Observable<TaxonomyResultDTO[]> {
+    const url = `${environment.colidApiUrl}/searchTaxonomy/${encodeURIComponent(
+      taxonomyType
+    )}`;
+    let params = new HttpParams();
+    params = params.append("searchTerm", searchTerm);
+    return this.httpClient.get<TaxonomyResultDTO[]>(url, { params: params });
+  }
+
   toHttpParams(obj: Object): HttpParams {
     return Object.getOwnPropertyNames(obj).reduce((p, key) => {
       const value = obj[key];

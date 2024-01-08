@@ -19,6 +19,8 @@ import { MapPipe } from "./pipes/map.pipe";
 import { BypassSanitizerPipe } from "./pipes/bypassSanitizer.pipe";
 import { ConfirmationDialogComponent } from "./components/confirmation-dialog/confirmation-dialog.component";
 import { AppMaterialModule } from "../app-material.module";
+import { TaxonomyDetailsFilterPipe } from "./pipes/taxonomy-details-filter.pipe";
+import { TaxonomyLabelTranslater } from "./pipes/taxonomy-label-translater.pipe";
 
 @NgModule({
   declarations: [
@@ -36,6 +38,8 @@ import { AppMaterialModule } from "../app-material.module";
     LastIndexStringPipe,
     ActionButtonComponent,
     ConfirmationDialogComponent,
+    TaxonomyDetailsFilterPipe,
+    TaxonomyLabelTranslater,
   ],
   imports: [CommonModule, AppMaterialModule],
   exports: [
@@ -53,6 +57,8 @@ import { AppMaterialModule } from "../app-material.module";
     RemoveWhiteSpacesPipe,
     LastIndexStringPipe,
     ConfirmationDialogComponent,
+    TaxonomyDetailsFilterPipe,
+    TaxonomyLabelTranslater,
   ],
 })
 export class SharedModule {}

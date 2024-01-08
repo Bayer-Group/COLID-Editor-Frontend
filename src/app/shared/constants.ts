@@ -38,6 +38,7 @@ export const Constants = {
     },
     NodeKind: "http://www.w3.org/ns/shacl#nodeKind",
     EntityType: "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+    SkosBroader: "http://www.w3.org/2004/02/skos/core#broader",
     HasBaseUri: `https://pid.${environment.baseUrl}/kos/19050/hasBaseURI`,
     DateCreated: `https://pid.${environment.baseUrl}/kos/19050/dateCreated`,
     LastChangeDateTime: `https://pid.${environment.baseUrl}/kos/19050/lastChangeDateTime`,

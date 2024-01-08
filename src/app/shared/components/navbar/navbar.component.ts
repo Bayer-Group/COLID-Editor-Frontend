@@ -5,7 +5,6 @@ import { environment } from "src/environments/environment";
 import { AuthService } from "src/app/modules/authentication/services/auth.service";
 import {
   UserInfoState,
-  FetchConsumerGroupsByUser,
   SelectConsumerGroup,
   SetDefaultConsumerGroupForUser,
   SetSearchFilterEditor,
@@ -61,7 +60,6 @@ export class NavbarComponent implements OnInit {
       this.newNotifications =
         n != null ? n.filter((t) => t.readOn == null).length : 0;
     });
-    this.store.dispatch(new FetchConsumerGroupsByUser()).subscribe();
 
     this.consumerGroups$.subscribe((consumerGroups) => {
       this.consumerGroups = consumerGroups;

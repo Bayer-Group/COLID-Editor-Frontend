@@ -28,6 +28,9 @@ export const environment = {
       "http://localhost:51800": [
         "<search service client id>/Resource.Search.All",
       ],
+      "https://placeholder.org/": [
+        "<agent squirrel client id>/Read.All",
+      ],
     },
     postLogoutRedirectUri: "http://localhost:4200/",
   },
@@ -48,4 +51,5 @@ export const environment = {
   rrmUrl: "http://localhost:4305/",
   deploymentInfoUrl:
     "https://info.dev.colid.int.bayer.com/current_deployment.json",
+  agentStatisticsApi: "https://placeholder.org/",
 };

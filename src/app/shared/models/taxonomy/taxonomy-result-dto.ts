@@ -5,6 +5,8 @@ export class TaxonomyResultDTO extends BaseEntityResultDTO {
   hasChild: boolean;
   children: TaxonomyResultDTO[];
   level: number = 0;
+  foundInSearch: boolean = false;
+  expanded: boolean = false;
 
   public constructor() {
     super();

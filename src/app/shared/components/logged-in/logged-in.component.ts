@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
 import { AuthService } from "src/app/modules/authentication/services/auth.service";
 import { EnsureBrowserSupportService } from "src/app/modules/browser-support/services/ensure-browser-support.service";
@@ -20,13 +20,11 @@ export class LoggedInComponent implements OnInit, OnDestroy {
   checkAccountSubscribtion: Subscription;
   imageUrl = Constants.Assets.Logo;
 
-  ngOnInit() {
-    if (this.isBrowserSupported) {
-      this.checkAccountSubscribtion = this.authService.subscribeCheckAccount();
-    }
+  ngOnInit(): void {
+    this.checkAccountSubscribtion = this.authService.subscribeCheckAccount();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.checkAccountSubscribtion.unsubscribe();
   }
 

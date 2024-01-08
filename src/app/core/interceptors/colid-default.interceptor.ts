@@ -82,7 +82,9 @@ export class ColidDefaultInterceptor implements HttpInterceptor {
       (errorStatus == 404 &&
         url.startsWith(`${environment.appDataApiUrl}/activeDirectory/`)) ||
       (errorStatus == 409 &&
-        url.startsWith(`${environment.colidApiUrl}/attachment`))
+        url.startsWith(`${environment.colidApiUrl}/attachment`)) ||
+      (errorStatus == 404 &&
+        url.startsWith(`${environment.colidApiUrl}/graph/graphType`))
     );
   }
 

@@ -1,5 +1,5 @@
 import { Observable, Subscription } from "rxjs";
-import { map } from "rxjs/operators";
+import { distinctUntilChanged, map } from "rxjs/operators";
 import { Select } from "@ngxs/store";
 import {
   UserInfoStateModel,
@@ -41,7 +41,7 @@ export class AuthService {
     );
   }
 
-  get isLoggedIn$(): Observable<boolean> {
+  get isLoggedIn$(): Observable<boolean | null> {
     return this.identityProvider.isLoggedIn$;
   }
 
@@ -97,12 +97,13 @@ export class AuthService {
   }
 
   subscribeCheckAccount(): Subscription {
-    return this.isLoggedIn$.subscribe((val) => {
+    // val is on startup of the application null, in this case we do nothing
+    return this.isLoggedIn$.pipe(distinctUntilChanged()).subscribe((val) => {
       console.log("Subscribe check account", val, this.loginInProgress);
-      if (!val && !this.loginInProgress) {
+      if (val === false) {
         console.log("Login ready");
         this.login();
-      } else {
+      } else if (val === true) {
         console.log("Redirecting");
         this.redirect();
       }
@@ -110,8 +111,8 @@ export class AuthService {
   }
 
   redirect() {
-    const redirectPathString = window.localStorage.getItem("url");
-    const queryParamString = window.localStorage.getItem("queryParams");
+    const redirectPathString = window.sessionStorage.getItem("url");
+    const queryParamString = window.sessionStorage.getItem("queryParams");
 
     if (redirectPathString == null && queryParamString == null) {
       this.router.navigate(["resource", "welcome"]);
@@ -129,5 +130,9 @@ export class AuthService {
 
   logout() {
     this.identityProvider.logout();
+  }
+
+  cleanup() {
+    this.identityProvider.cleanup();
   }
 }

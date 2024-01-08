@@ -1,6 +1,14 @@
 import { SelectionModel } from "@angular/cdk/collections";
 import { FlatTreeControl } from "@angular/cdk/tree";
-import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  SimpleChanges,
+  OnChanges,
+} from "@angular/core";
 import {
   MatTreeFlatDataSource,
   MatTreeFlattener,
@@ -17,10 +25,11 @@ import { MatCheckboxChange } from "@angular/material/checkbox";
   templateUrl: "colid-tree-view.component.html",
   styleUrls: ["colid-tree-view.component.scss"],
 })
-export class ColidTreeViewComponent implements OnInit {
-  @Input() name: string;
+export class ColidTreeViewComponent implements OnInit, OnChanges {
   @Input() singleSelection: boolean = false;
   @Input() TREE_DATA: TaxonomyResultDTO[] = [];
+  @Input() taxonomysToExpand: TaxonomyResultDTO[] = [];
+  @Input() highlightSelectedNode: boolean = false;
 
   @Input() set selectedNodes(values: string[]) {
     if (values != null) {
@@ -31,8 +40,17 @@ export class ColidTreeViewComponent implements OnInit {
     }
   }
 
+  @Input() set highlightedTaxonomyDetail(value: TaxonomyResultDTO | null) {
+    if (value != null) {
+      this.selectedNodeIdentifier = value.id;
+    }
+  }
+
   @Output() selectionChanged: EventEmitter<TreeViewSelectionChangeEvent> =
     new EventEmitter<TreeViewSelectionChangeEvent>();
+
+  @Output() showDetails: EventEmitter<TaxonomyResultDTO> =
+    new EventEmitter<TaxonomyResultDTO>();
 
   _selectedNodes: string[] = [];
 
@@ -52,6 +70,8 @@ export class ColidTreeViewComponent implements OnInit {
   checklistSelection: SelectionModel<TaxonomyResultDTO>;
 
   allSelected = false;
+
+  selectedNodeIdentifier: string = "";
 
   get isTaxonomy(): boolean {
     return this.TREE_DATA.some((t) => t.hasChild);
@@ -89,6 +109,27 @@ export class ColidTreeViewComponent implements OnInit {
     /** Writing the value from the upper component takes place before the components are initialized,
      * so no data is available yet. The data must be written intially here. */
     this.handleInputSelectionChanged(this._selectedNodes);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes["TREE_DATA"] && !changes["TREE_DATA"].firstChange) {
+      this.dataSource.data = this.TREE_DATA;
+      this.taxonomysToExpand.forEach((taxonomy) => {
+        this.treeControl.expand(taxonomy);
+      });
+      this.handleInputSelectionChanged(this._selectedNodes);
+
+      // added some delay so that the DOM can get updated
+      setTimeout(() => {
+        let nodeElements = document.getElementsByClassName("searchhit");
+        if (nodeElements.length > 0) {
+          nodeElements[0].scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        }
+      }, 500);
+    }
   }
 
   getLevel = (node: TaxonomyResultDTO) => node.level;
@@ -147,17 +188,37 @@ export class ColidTreeViewComponent implements OnInit {
   itemSelectionToggle(node: TaxonomyResultDTO, initial: boolean = false): void {
     this.checklistSelection.toggle(node);
     const descendants = this.treeControl.getDescendants(node);
+    const descendantIds = this.treeControl
+      .getDescendants(node)
+      .map((n) => n.id);
+    // nodes can appear in multiple parents, so have to find all affected nodes of a selection
+    const affectedNodes = this.treeControl.dataNodes.filter((n) =>
+      descendantIds.includes(n.id)
+    );
+    // depending on selection or deselection all the nodes have to be added or removed
+    let selectedNodes = this.checklistSelection.isSelected(node)
+      ? this.checklistSelection.selected.concat(affectedNodes)
+      : this.checklistSelection.selected.filter(
+          (n) => !affectedNodes.includes(n)
+        );
+
+    // on deselection have to make sure that all parents of the deselected nodes are also deselected
+    if (!this.checklistSelection.isSelected(node)) {
+      affectedNodes.forEach((node) => {
+        selectedNodes = this.removeTaxonomy(node, selectedNodes);
+      });
+    }
+
     this.checklistSelection.isSelected(node)
       ? this.checklistSelection.select(...descendants)
       : this.checklistSelection.deselect(...descendants);
 
     // Force update for the parent
-    descendants.every((child) => this.checklistSelection.isSelected(child));
     this.checkAllParentsSelection(node);
 
     this.selectionChanged.emit({
       initialChange: initial,
-      values: this.checklistSelection.selected,
+      values: selectedNodes,
     });
   }
 
@@ -168,10 +229,71 @@ export class ColidTreeViewComponent implements OnInit {
   ): void {
     this.checklistSelection.toggle(node);
     this.checkAllParentsSelection(node);
+
+    // filter out the nodes, that got the same id like the one which got selected
+    let valuesSelected = this.checklistSelection.selected;
+    if (!this.checklistSelection.isSelected(node) && !initial) {
+      valuesSelected = this.removeTaxonomy(
+        node,
+        this.checklistSelection.selected
+      );
+    }
     this.selectionChanged.emit({
       initialChange: initial,
-      values: this.checklistSelection.selected,
+      values: valuesSelected,
     });
+  }
+
+  private removeTaxonomy(
+    taxonomy: TaxonomyResultDTO,
+    selectedItems: TaxonomyResultDTO[]
+  ) {
+    //remove the X'ed ID.
+    var selectedValues: TaxonomyResultDTO[] = selectedItems.filter(
+      (t) => t.id !== taxonomy.id
+    );
+    //remove all the children if any.
+    taxonomy.children
+      .map((t) => t.id)
+      .forEach((idToDelete) => {
+        const index = selectedValues.findIndex(({ id }) => id === idToDelete);
+        selectedValues.splice(index, 1);
+      });
+    //remove all the parents and grandparents from selection if any.
+    if (taxonomy.hasParent) {
+      /* Bug Fix 
+        this recursive function returns true for parents & grandparents of the X'd taxonomyID
+        and thus those parent entities could be removed from selection because
+        entire parent shouldn't be shown as selected if "at the least" a single child is removed (X'd) */
+      selectedValues.forEach((item) => {
+        this.removeParentsAndGrandparents(item, taxonomy.id)
+          ? (selectedValues = selectedValues.filter((t) => t.id !== item.id))
+          : selectedValues;
+      });
+    }
+    return selectedValues;
+  }
+
+  removeParentsAndGrandparents(
+    taxonomyList: TaxonomyResultDTO,
+    taxonomyID: string
+  ) {
+    try {
+      if (taxonomyList.children.some((x) => x.id == taxonomyID)) {
+        return true;
+      } else if (taxonomyList.children.length > 0) {
+        for (var i = 0; i < taxonomyList.children.length; i++) {
+          return this.removeParentsAndGrandparents(
+            taxonomyList.children[i],
+            taxonomyID
+          );
+        }
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   /* Checks all the parents when a leaf node is selected/unselected */
@@ -237,5 +359,10 @@ export class ColidTreeViewComponent implements OnInit {
         this.handleNodeList(identifiers, t.children);
       }
     });
+  }
+
+  showDetailsForTaxonomy(node: TaxonomyResultDTO) {
+    this.selectedNodeIdentifier = node.id;
+    this.showDetails.emit(node);
   }
 }

@@ -1,19 +1,25 @@
-<div style="padding-left: 40px; padding-top: 0.2rem">
-  <mat-checkbox
-    color="primary"
-    [checked]="allSelected"
-    (change)="selectAll($event)"
-    >Select all</mat-checkbox
-  >
-</div>
-
-<mat-divider></mat-divider>
+<ng-container *ngIf="!singleSelection">
+  <div style="padding-left: 40px; padding-top: 0.2rem">
+    <mat-checkbox
+      color="primary"
+      [checked]="allSelected"
+      (change)="selectAll($event)"
+      >Select all</mat-checkbox
+    >
+  </div>
+  <mat-divider></mat-divider>
+</ng-container>
 
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
   <mat-tree-node
     *matTreeNodeDef="let node"
     matTreeNodeToggle
     matTreeNodePadding
+    [class.searchhit]="node.foundInSearch"
+    [class.selected-node]="
+      highlightSelectedNode && selectedNodeIdentifier === node.id
+    "
+    (click)="showDetailsForTaxonomy(node)"
   >
     <button mat-icon-button disabled></button>
     <mat-checkbox
@@ -25,7 +31,15 @@
     >
   </mat-tree-node>
 
-  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+  <mat-tree-node
+    *matTreeNodeDef="let node; when: hasChild"
+    matTreeNodePadding
+    [class.searchhit]="node.foundInSearch"
+    [class.selected-node]="
+      highlightSelectedNode && selectedNodeIdentifier === node.id
+    "
+    (click)="showDetailsForTaxonomy(node)"
+  >
     <button mat-icon-button matTreeNodeToggle>
       <mat-icon>
         {{ treeControl.isExpanded(node) ? "expand_more" : "chevron_right" }}
