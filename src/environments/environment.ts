@@ -4,10 +4,10 @@ export const environment = {
   allowAnonymous: true,
   enableIndexSearch: true,
   baseUrl: "bayer.com",
-  colidApiUrl: "http://localhost:51770/api/v3",
-  appDataApiUrl: "http://localhost:51810/api",
+  colidApiUrl: "http://localhost:51771/api/v3",
+  appDataApiUrl: "http://localhost:51811/api",
   reportingApiUrl: "http://localhost:51910/api",
-  searchApiUrl: "http://localhost:51800/api",
+  searchApiUrl: "http://localhost:51801/api",
   loggingUrl: "http://localhost:51770/api/v3/log",
   releaseNotesUrl: "https://placeholder.org/",
   adalConfig: {
@@ -27,6 +27,9 @@ export const environment = {
       ],
       "http://localhost:51800": [
         "<search service client id>/Resource.Search.All",
+      ],
+      "https://placeholder.org/": [
+        "<agent squirrel client id>/Read.All",
       ],
     },
     postLogoutRedirectUri: "http://localhost:4201/",
@@ -48,4 +51,5 @@ export const environment = {
   rrmUrl: "http://localhost:4305/",
   deploymentInfoUrl:
     "https://info.dev.colid.int.bayer.com/current_deployment.json",
+  agentStatisticsApi: "https://placeholder.org/",
 };

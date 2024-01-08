@@ -7,4 +7,5 @@ export interface IdentityProvider {
   isLoggedIn$: Observable<boolean>;
   login(): void;
   logout(): void;
+  cleanup(): void;
 }

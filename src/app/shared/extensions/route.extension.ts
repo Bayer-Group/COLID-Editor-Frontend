@@ -2,18 +2,17 @@ import { ActivatedRouteSnapshot } from "@angular/router";
 
 export class RouteExtension {
   public static SetRouteInStorage(route: ActivatedRouteSnapshot) {
-    console.log("Setting route in storage");
-
+    window.sessionStorage.removeItem("url");
+    window.sessionStorage.removeItem("queryParams");
     const urlSegments = new Array<string>();
     this.getUrlSegment(urlSegments, route);
-    console.log("URL Segments are", urlSegments);
 
     if (urlSegments.length !== 0) {
-      window.localStorage.setItem("url", JSON.stringify(urlSegments));
+      window.sessionStorage.setItem("url", JSON.stringify(urlSegments));
     }
 
     if (route.queryParams != null) {
-      window.localStorage.setItem(
+      window.sessionStorage.setItem(
         "queryParams",
         JSON.stringify(route.queryParams)
       );

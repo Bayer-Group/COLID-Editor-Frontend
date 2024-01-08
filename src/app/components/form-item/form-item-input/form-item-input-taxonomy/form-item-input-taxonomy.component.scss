@@ -198,3 +198,8 @@ span.close:hover {
       opacity: 1;
   }
 }
+
+.dropdown-container {
+  position: relative;
+  width: calc(100% - 40px);
+}

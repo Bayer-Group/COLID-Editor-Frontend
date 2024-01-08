@@ -1,0 +1,73 @@
+<h3 mat-dialog-title>Field Details Dialog</h3>
+<div mat-dialog-content>
+  <div class="d-flex align-items-center pb-2">
+    <mat-form-field class="searchbar">
+      <mat-label>Search for field details</mat-label>
+      <input matInput #searchbar />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+    <div *ngIf="searchTriggered && totalSearchItems === 0">
+      <span>No search results found</span>
+    </div>
+    <div
+      class="d-flex justify-content-between align-items-center"
+      *ngIf="searchTriggered && totalSearchItems > 0"
+    >
+      <span class="mr-2"
+        >{{ currentSearchItem + 1 }} of {{ totalSearchItems }} results</span
+      >
+      <div>
+        <button mat-icon-button (click)="showPreviousSearchResult()">
+          <mat-icon>arrow_upward</mat-icon>
+        </button>
+        <button mat-icon-button (click)="showNextSearchResult()">
+          <mat-icon>arrow_downward</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="d-flex w-100">
+    <div class="taxonomy-list">
+      <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+      <colid-tree-view
+        (click)="$event.stopPropagation()"
+        (showDetails)="showDetailsForTaxonomy($event)"
+        (selectionChanged)="handleSelectionChanged($event)"
+        [TREE_DATA]="displayedTaxonomyList"
+        [singleSelection]="singleSelection"
+        [selectedNodes]="selectedNodeIds"
+        [highlightedTaxonomyDetail]="highlightedTaxonomyDetail"
+        [highlightSelectedNode]="true"
+        [taxonomysToExpand]="taxonomysToExpand"
+      ></colid-tree-view>
+    </div>
+    <div class="taxonomy-details px-4">
+      <ng-container *ngIf="highlightedTaxonomyDetail != null; else startSearch">
+        <ng-container
+          *ngFor="
+            let prop of highlightedTaxonomyDetail.properties
+              | taxonomyDetailsFilter
+              | keyvalue
+          "
+        >
+          <div class="d-flex">
+            <label class="taxonomy-description">{{
+              prop.key | taxonomyLabelTranslater
+            }}</label>
+            <span class="taxonomy-value">{{ prop.value }}</span>
+          </div>
+          <mat-divider class="my-1"></mat-divider>
+        </ng-container>
+      </ng-container>
+      <ng-template #startSearch>
+        Click an elment in the list or do a search to get detailled information
+      </ng-template>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-raised-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" (click)="applySelectedValues()">
+    Apply
+  </button>
+</div>

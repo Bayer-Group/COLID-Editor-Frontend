@@ -1,0 +1,28 @@
+.searchbar {
+    min-width: 400px;
+    margin-right: 2rem;
+}
+
+.taxonomy-list {
+    flex: 1;
+    height: calc(65vh - 70px);
+    overflow-y: auto;
+}
+
+.taxonomy-details {
+    flex: 1;
+    max-width: 50%;
+    overflow: auto;
+}
+
+.taxonomy-description {
+    color: grey;
+    flex: 1;
+    min-width: 50%;
+}
+
+.taxonomy-value {
+    flex: 1;
+    min-width: 50%;
+    word-wrap: break-word;
+}

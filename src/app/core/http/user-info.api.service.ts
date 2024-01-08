@@ -6,6 +6,7 @@ import { UserDto } from "src/app/shared/models/user/user-dto";
 import { ColidEntrySubscriptionDto } from "src/app/shared/models/user/colid-entry-subscription-dto";
 import { MessageConfigDto } from "src/app/shared/models/user/message-config-dto";
 import { MessageDto } from "src/app/shared/models/user/message-dto";
+import { HierarchicalData } from "src/app/shared/models/user/hiearchical-dto";
 
 @Injectable({
   providedIn: "root",
@@ -84,5 +85,10 @@ export class UserInfoApiService {
   getUserMessages(id: string): Observable<MessageDto[]> {
     const url = `${environment.appDataApiUrl}/Users/${id}/messages`;
     return this.httpClient.get<MessageDto[]>(url);
+  }
+
+  getUserDepartmentsFlowView(): Observable<HierarchicalData> {
+    const url = `${environment.searchApiUrl}/User/userDepartmentsFlowView`;
+    return this.httpClient.get<HierarchicalData>(url);
   }
 }

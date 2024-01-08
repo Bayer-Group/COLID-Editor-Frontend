@@ -30,6 +30,7 @@ export class LogService {
       location: window.location.toString(),
       hostname: "",
       userId: "",
+      department: "",
       elapsedMilliseconds: null,
       additionalInfo: {},
     };
@@ -43,6 +44,18 @@ export class LogService {
           !(additionalInfo[property] instanceof Function)
         ) {
           logEntry.additionalInfo[property] = additionalInfo[property];
+        }
+        if (
+          additionalInfo[property][0] != undefined &&
+          additionalInfo[property][0].hasOwnProperty("department")
+        ) {
+          logEntry.department = additionalInfo[property][0]["department"];
+        }
+        if (
+          additionalInfo[property][0] != undefined &&
+          additionalInfo[property][0].hasOwnProperty("department")
+        ) {
+          logEntry.department = additionalInfo[property][0]["department"];
         }
       }
     }

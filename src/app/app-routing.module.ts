@@ -167,6 +167,30 @@ const adminRoute: Route = {
         ),
       canActivate: [AuthGuardSuperAdminService],
     },
+    {
+      path: "agent-statistics",
+      loadChildren: () =>
+        import("./modules/agent-statistics/agent-statistics.module").then(
+          (m) => m.AgentStatisticsModule
+        ),
+      canActivate: [AuthGuardSuperAdminService],
+    },
+    {
+      path: "user-statistics",
+      loadChildren: () =>
+        import("./modules/user-statistics/user-statistics.module").then(
+          (m) => m.UserStatisticsModule
+        ),
+      canActivate: [AuthGuardSuperAdminService],
+    },
+    {
+      path: "keyword-management",
+      loadChildren: () =>
+        import(
+          "./modules/keyword-administration/keyword-administration.module"
+        ).then((m) => m.KeywordAdministrationModule),
+      canActivate: [AuthGuardSuperAdminService],
+    },
     { path: "", pathMatch: "full", redirectTo: "/admin/consumerGroups" },
   ],
   canActivate: [AuthGuardAdminService],
@@ -224,7 +248,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
-      onSameUrlNavigation: "reload",
+      onSameUrlNavigation: "ignore",
       relativeLinkResolution: "legacy",
     }),
   ],

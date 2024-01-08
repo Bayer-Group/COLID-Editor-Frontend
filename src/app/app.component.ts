@@ -1,11 +1,12 @@
-import { Component, OnInit, HostListener } from "@angular/core";
+import { Component, OnInit, HostListener, OnDestroy } from "@angular/core";
 import { Store, Select } from "@ngxs/store";
 import { Router, NavigationEnd } from "@angular/router";
-import { Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import {
   UserInfoState,
   FetchUser,
   SetLastLoginEditor,
+  FetchConsumerGroupsByUser,
 } from "./state/user-info.state";
 import { ConsumerGroupResultDTO } from "./shared/models/consumerGroups/consumer-group-result-dto";
 import { environment } from "../environments/environment";
@@ -27,6 +28,7 @@ import { AuthService } from "./modules/authentication/services/auth.service";
 import { FetchNotifications } from "./modules/notification/notification.state";
 import { of } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
+import { FetchEntityLabelMapping } from "./state/entity-label-mapping.state";
 
 @Component({
   selector: "app-root",
@@ -34,7 +36,7 @@ import { map, switchMap } from "rxjs/operators";
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.scss"],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   @Select(UserInfoState.getConsumerGroups) consumerGroups$: Observable<
     ConsumerGroupResultDTO[]
   >;
@@ -44,6 +46,7 @@ export class AppComponent implements OnInit {
     Map<string, TaxonomyResultDTO[]>
   >;
 
+  masterSub: Subscription = new Subscription();
   environmentLabel = environment.Label;
   isBrowserSupported = false;
 
@@ -102,42 +105,44 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     if (this.isBrowserSupported) {
-      this.isLoggedIn$
-        .pipe(
-          switchMap((isAuth) => {
-            return isAuth ? this.authService.currentIdentity$ : of(null);
-          })
-        )
-        .pipe(
-          switchMap((identity) => {
-            if (identity) {
-              console.log("Dispatching after identity found");
-              return this.store.dispatch([
-                new FetchUser(identity.accountIdentifier, identity.email),
-                new FetchNotifications(identity.accountIdentifier),
-                new FetchBuildInformation(),
-                new FetchTaxonomyList(Constants.OWL.Class),
-              ]);
-            }
-          })
-        )
-        .pipe(
-          switchMap(() => {
-            return this.store.dispatch(new SetLastLoginEditor());
-          })
-        )
-        .subscribe();
+      this.masterSub.add(
+        this.isLoggedIn$
+          .pipe(
+            switchMap((isAuth) => {
+              console.log("isAuth", isAuth);
+              return isAuth ? this.authService.currentIdentity$ : of(null);
+            })
+          )
+          .pipe(
+            switchMap((identity) => {
+              console.log("identity", identity);
+              if (identity) {
+                return this.store.dispatch([
+                  new FetchUser(identity.accountIdentifier, identity.email),
+                  new FetchNotifications(identity.accountIdentifier),
+                  new FetchBuildInformation(),
+                  new FetchTaxonomyList(Constants.OWL.Class),
+                  new FetchEntityLabelMapping(),
+                  new SetLastLoginEditor(),
+                  new FetchConsumerGroupsByUser(),
+                ]);
+              } else {
+                return of(null);
+              }
+            })
+          )
+          .subscribe()
+      );
 
-      const taxonomyListSubscription = this.taxonomyList$.subscribe(
-        (taxonomies) => {
+      this.masterSub.add(
+        this.taxonomyList$.subscribe((taxonomies) => {
           if (taxonomies.has(Constants.OWL.Class)) {
             var types = taxonomies
               .get(Constants.OWL.Class)
               .map((v) => new CustomMaterialIcon(v.id, v.id, v.name));
             this.appIconService.registerColidIcons(types);
-            taxonomyListSubscription.unsubscribe();
           }
-        }
+        })
       );
     }
   }
@@ -158,5 +163,10 @@ export class AppComponent implements OnInit {
 
   createSupportTicket() {
     window.open(environment.appSupportFeedBack.supportTicketLink);
+  }
+
+  ngOnDestroy(): void {
+    this.masterSub.unsubscribe();
+    this.authService.cleanup();
   }
 }

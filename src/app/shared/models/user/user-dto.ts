@@ -11,6 +11,7 @@ export class UserDto {
   searchFilterEditor: SearchFilterEditor;
   colidEntrySubscriptions: ColidEntrySubscriptionDto[];
   messageConfig: MessageConfigDto;
+  department: string;
 
   public constructor(id: string, emailAddress: string) {
     this.id = id;

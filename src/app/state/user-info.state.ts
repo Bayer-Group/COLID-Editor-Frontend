@@ -138,6 +138,11 @@ export class UserInfoState {
     return state.fetched;
   }
 
+  @Selector()
+  public static getUserDepartment(state: UserInfoStateModel) {
+    return state.user.department;
+  }
+
   @Action(FetchUser)
   fetchUser(
     { patchState }: StateContext<UserInfoStateModel>,

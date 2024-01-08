@@ -87,6 +87,9 @@ export class FormItemInputPidUriComponent
   }
 
   handleInputValueChanged(userInputTextChanged: boolean) {
+    if (this.internalValue) {
+      this.internalValue = decodeURIComponent(this.internalValue);
+    }
     if (userInputTextChanged) {
       this.selectedPreset = null;
       if (this.entity.properties[Constants.Metadata.HasUriTemplate]) {

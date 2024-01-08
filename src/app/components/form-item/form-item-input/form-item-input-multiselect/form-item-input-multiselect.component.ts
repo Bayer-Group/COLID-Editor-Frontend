@@ -10,6 +10,11 @@ import { MultiselectSettings } from "src/app/shared/models/form/multi-select-set
 import { Store, Select } from "@ngxs/store";
 import { FetchTaxonomyList, TaxonomyState } from "src/app/state/taxonomy.state";
 import { TaxonomyResultDTO } from "src/app/shared/models/taxonomy/taxonomy-result-dto";
+import { MatDialog } from "@angular/material/dialog";
+import {
+  TaxonomyDetailsDialogComponent,
+  TaxonomyDialogData,
+} from "../../taxonomy-details-dialog/taxonomy-details-dialog.component";
 
 @Component({
   selector: "app-form-item-input-multiselect",
@@ -48,7 +53,7 @@ export class FormItemInputMultiselectComponent
 
   public addTagNowRef: (name) => void;
 
-  constructor(private store: Store) {
+  constructor(private store: Store, private dialog: MatDialog) {
     super();
     this.addTagNowRef = this.addTagPromise.bind(this);
   }
@@ -89,5 +94,26 @@ export class FormItemInputMultiselectComponent
 
   trackByFn(item: BaseEntityResultDTO) {
     return item.id;
+  }
+
+  openTaxonomyDetailsDialog() {
+    const dialogRef = this.dialog.open(TaxonomyDetailsDialogComponent, {
+      width: "80vw",
+      minHeight: "80vh",
+      data: {
+        taxonomyList: this.entityList,
+        taxonomyType: this.range,
+        singleSelection: !this.multiselectSettings.multiple,
+        selectedNodeIds: this.internalValue,
+      } as TaxonomyDialogData,
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result && result.selectedNodes) {
+        const valueList = result.selectedNodes.map((node) => node.id);
+        this.internalValue = this.multiselectSettings.multiple
+          ? valueList
+          : valueList[0];
+      }
+    });
   }
 }

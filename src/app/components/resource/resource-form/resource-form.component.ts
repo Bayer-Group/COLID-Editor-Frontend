@@ -211,6 +211,7 @@ export class ResourceFormComponent
     private location: Location
   ) {
     super(store);
+    this.setPlaceholder();
   }
 
   // convenience getter for easy access to form fields
@@ -232,7 +233,6 @@ export class ResourceFormComponent
     if (this.resourceType) {
       this.placeholder[Constants.Metadata.EntityType] = this.resourceType;
     }
-
     this.setSelectedPidUriTemplateByTemplate(
       this.resourceFormService.DefaultPidUriTemplateKey
     );

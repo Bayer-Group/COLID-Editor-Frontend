@@ -53,6 +53,7 @@ import { ExtendedUriTemplateState } from "./state/extended-uri-template.state";
 import { WelcomeMessageState } from "./state/welcome-message.state";
 import { MessageTemplateState } from "./state/message-template.state";
 import { ColidEntrySubscriberCountState } from "./state/colid-entry-subcriber-count.state";
+import { EntityLabelMappingState } from "./state/entity-label-mapping.state";
 
 // Config
 import { MAT_MOMENT_DATE_ADAPTER_OPTIONS } from "@angular/material-moment-adapter";
@@ -170,6 +171,7 @@ import {
 import { ExcelImportComponent } from "./components/admin/admin-tasks/excel-import/excel-import/excel-import.component";
 import { LinkHistoryViewComponent } from "./components/admin/link-history-view/link-history-view.component";
 import { LinkHistoryComponent } from "./components/admin/link-history-view/link-history/link-history.component";
+import { KeywordManagementState } from "./state/keyword-management.state";
 
 // Global quill config for form items
 const globalQuillConfig: QuillConfig = {
@@ -351,6 +353,8 @@ const protectedResourceMap = new Map(
       ColidEntrySubscriptionsState,
       MessageTemplateState,
       ColidEntrySubscriberCountState,
+      EntityLabelMappingState,
+      KeywordManagementState,
     ]),
     NgxsRouterPluginModule.forRoot(),
     NgxsReduxDevtoolsPluginModule.forRoot(),

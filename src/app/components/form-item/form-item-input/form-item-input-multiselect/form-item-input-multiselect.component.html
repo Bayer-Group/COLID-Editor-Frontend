@@ -1,16 +1,27 @@
-<ng-select
-  [addTag]="multiselectSettings.addTag ? addTagNowRef : false"
-  [loading]="loading"
-  [items]="entityList"
-  [multiple]="multiselectSettings.multiple"
-  [disabled]="readOnly"
-  [maxSelectedItems]="multiselectSettings.maxSelectedItems"
-  [hideSelected]="multiselectSettings.hideSelected"
-  bindLabel="name"
-  bindValue="id"
-  [(ngModel)]="internalValue"
-  (change)="handleValueChanged(internalValue)"
-  [trackByFn]="trackByFn"
-  [typeahead]="multiInput$"
->
-</ng-select>
+<div class="d-flex align-items-center">
+  <ng-select
+    class="flex-fill"
+    [addTag]="multiselectSettings.addTag ? addTagNowRef : false"
+    [loading]="loading"
+    [items]="entityList"
+    [multiple]="multiselectSettings.multiple"
+    [disabled]="readOnly"
+    [maxSelectedItems]="multiselectSettings.maxSelectedItems"
+    [hideSelected]="multiselectSettings.hideSelected"
+    bindLabel="name"
+    bindValue="id"
+    [(ngModel)]="internalValue"
+    (change)="handleValueChanged(internalValue)"
+    [trackByFn]="trackByFn"
+    [typeahead]="multiInput$"
+  >
+  </ng-select>
+  <button
+    mat-icon-button
+    (click)="openTaxonomyDetailsDialog()"
+    matTooltip="Open field details dialog"
+    [disabled]="readOnly"
+  >
+    <mat-icon>expand</mat-icon>
+  </button>
+</div>
