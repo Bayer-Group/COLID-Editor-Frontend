@@ -1,13 +1,13 @@
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
-import { TitleComponent } from "./title.component";
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { TitleComponent } from './title.component';
 
-describe("TitleComponent", () => {
+describe('TitleComponent', () => {
   let component: TitleComponent;
   let fixture: ComponentFixture<TitleComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [TitleComponent],
+      declarations: [TitleComponent]
     }).compileComponents();
   }));
 
@@ -17,7 +17,7 @@ describe("TitleComponent", () => {
     fixture.detectChanges();
   });
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

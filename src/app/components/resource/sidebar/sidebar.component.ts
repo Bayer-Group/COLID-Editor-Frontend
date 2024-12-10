@@ -1,22 +1,22 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { Store, Select } from "@ngxs/store";
-import { Subscription } from "rxjs";
-import { LogService } from "src/app/core/logging/log.service";
-import { Router } from "@angular/router";
-import { ResourceSearchDTO } from "src/app/shared/models/search/resource-search-dto";
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Store, Select } from '@ngxs/store';
+import { Subscription } from 'rxjs';
+import { LogService } from 'src/app/core/logging/log.service';
+import { Router } from '@angular/router';
+import { ResourceSearchDTO } from 'src/app/shared/models/search/resource-search-dto';
 import {
   ResourceOverviewState,
   FetchNextResourceBatch,
-  SetSidebarSearch,
-} from "src/app/state/resource-overview.state";
-import { Observable, Subject } from "rxjs";
-import { SidebarState, ClickedSidebarLink } from "src/app/state/sidebar.state";
-import { SearchResult } from "src/app/shared/models/search/search-result";
+  SetSidebarSearch
+} from 'src/app/state/resource-overview.state';
+import { Observable, Subject } from 'rxjs';
+import { SidebarState, ClickedSidebarLink } from 'src/app/state/sidebar.state';
+import { SearchResult } from 'src/app/shared/models/search/search-result';
 
 @Component({
-  selector: "app-sidebar",
-  templateUrl: "./sidebar.component.html",
-  styleUrls: ["./sidebar.component.scss"],
+  selector: 'app-sidebar',
+  templateUrl: './sidebar.component.html',
+  styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit, OnDestroy {
   @Select(ResourceOverviewState.searchResult)
@@ -38,7 +38,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.currentPageStatus = "listSideNav";
+    this.currentPageStatus = 'listSideNav';
     this.initialLoadSub = this.initialLoad$.subscribe(
       (initialLoad: boolean) => {
         if (initialLoad) {
@@ -53,12 +53,12 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   handleResourceSelectionChanged(selectedResourcePidUri: string) {
-    this.logger.info("PID_SIDEBAR_FILTER_RESOURCE_SELECTED", {
-      resourcePidUri: selectedResourcePidUri,
+    this.logger.info('PID_SIDEBAR_FILTER_RESOURCE_SELECTED', {
+      resourcePidUri: selectedResourcePidUri
     });
     this.router
-      .navigate(["resource"], {
-        queryParams: { pidUri: selectedResourcePidUri },
+      .navigate(['resource'], {
+        queryParams: { pidUri: selectedResourcePidUri }
       })
       .then((t) => {
         if (t) {
@@ -72,7 +72,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   handleResourceSearchChanged(resourceSearchObject: ResourceSearchDTO) {
     this.resetScrolling.next();
-    this.store.dispatch(new SetSidebarSearch(resourceSearchObject)).subscribe();
+    console.log('navbar', resourceSearchObject);
+    this.store.dispatch(new SetSidebarSearch(resourceSearchObject));
   }
 
   handleNextResourceBatch(offset: number) {

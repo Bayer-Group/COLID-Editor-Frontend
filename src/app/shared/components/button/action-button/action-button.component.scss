@@ -1,15 +1,17 @@
 button[action] div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-    app-colid-spinner {
-        margin-left: 5px;
-    }
+  app-colid-spinner {
+    margin-left: 5px;
+  }
 }
 
 button[mat-icon-button] {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  height: 2.25rem;
+  width: 2.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

@@ -1,14 +1,14 @@
-import { Pipe, PipeTransform } from "@angular/core";
-import { Constants } from "src/app/shared/constants";
+import { Pipe, PipeTransform } from '@angular/core';
+import { Constants } from 'src/app/shared/constants';
 
 @Pipe({
-  name: "taxonomyDetailsFilter",
+  name: 'taxonomyDetailsFilter'
 })
 export class TaxonomyDetailsFilterPipe implements PipeTransform {
   transform(properties: Object): any {
     const ignoredTaxonomyKeys = [
       Constants.Metadata.EntityType,
-      Constants.Metadata.SkosBroader,
+      Constants.Metadata.SkosBroader
     ];
 
     return Object.keys(properties)

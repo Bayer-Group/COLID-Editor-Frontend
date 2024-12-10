@@ -1,28 +1,24 @@
-import { Component, OnInit, Output, EventEmitter } from "@angular/core";
-import { Store, Select } from "@ngxs/store";
-import { Router } from "@angular/router";
-import { environment } from "src/environments/environment";
-import { AuthService } from "src/app/modules/authentication/services/auth.service";
+import { Component, OnInit } from '@angular/core';
+import { Store, Select } from '@ngxs/store';
+import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
+import { AuthService } from 'src/app/modules/authentication/services/auth.service';
 import {
   UserInfoState,
   SelectConsumerGroup,
-  SetDefaultConsumerGroupForUser,
-  SetSearchFilterEditor,
-} from "src/app/state/user-info.state";
-import { ToggleSidebar } from "src/app/state/sidebar.state";
-import { ConsumerGroupResultDTO } from "src/app/shared/models/consumerGroups/consumer-group-result-dto";
-import { Observable, of } from "rxjs";
-import { Title } from "@angular/platform-browser";
-import { DefaultConsumerGroupDto } from "../../models/user/default-consumer-group-dto";
-import { ColidMatSnackBarService } from "src/app/modules/colid-mat-snack-bar/colid-mat-snack-bar.service";
-import { NotificationState } from "src/app/modules/notification/notification.state";
-import { MessageDto } from "../../models/user/message-dto";
-import { Constants } from "../../constants";
+  SetDefaultConsumerGroupForUser
+} from 'src/app/state/user-info.state';
+import { ToggleSidebar } from 'src/app/state/sidebar.state';
+import { ConsumerGroupResultDTO } from 'src/app/shared/models/consumerGroups/consumer-group-result-dto';
+import { Observable, combineLatest, of } from 'rxjs';
+import { Title } from '@angular/platform-browser';
+import { ColidMatSnackBarService } from 'src/app/modules/colid-mat-snack-bar/colid-mat-snack-bar.service';
+import { Constants } from '../../constants';
 
 @Component({
-  selector: "app-navbar",
-  templateUrl: "./navbar.component.html",
-  styleUrls: ["./navbar.component.scss"],
+  selector: 'app-navbar',
+  templateUrl: './navbar.component.html',
+  styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
   @Select(UserInfoState.getConsumerGroups) consumerGroups$: Observable<
@@ -30,20 +26,11 @@ export class NavbarComponent implements OnInit {
   >;
   @Select(UserInfoState.getSelectedConsumerGroupId)
   selectedConsumerGroupId$: Observable<string>;
-  @Select(UserInfoState.getDefaultConsumerGroup)
-  defaultConsumerGroup$: Observable<DefaultConsumerGroupDto>;
-  @Select(NotificationState.getNotifications) notifications$: Observable<
-    MessageDto[]
-  >;
-
-  @Output() toggleNotification: EventEmitter<any> = new EventEmitter();
 
   consumerGroups: ConsumerGroupResultDTO[];
-  defaultConsumerGroup: DefaultConsumerGroupDto;
   selectedConsumerGroup: ConsumerGroupResultDTO;
   selectedConsumerGroupId: string;
   environmentLabel = environment.Label;
-  newNotifications: number = 0;
 
   constructor(
     private authService: AuthService,
@@ -52,48 +39,25 @@ export class NavbarComponent implements OnInit {
     private router: Router,
     private store: Store
   ) {
-    this.titleService.setTitle("COLID Editor " + this.environmentLabel);
+    this.titleService.setTitle('COLID Editor ' + this.environmentLabel);
   }
 
   ngOnInit() {
-    this.notifications$.subscribe((n) => {
-      this.newNotifications =
-        n != null ? n.filter((t) => t.readOn == null).length : 0;
-    });
-
-    this.consumerGroups$.subscribe((consumerGroups) => {
+    combineLatest([
+      this.consumerGroups$,
+      this.selectedConsumerGroupId$
+    ]).subscribe(([consumerGroups, selectedConsumerGroupId]) => {
       this.consumerGroups = consumerGroups;
-
-      if (this.selectedConsumerGroupId != null) {
-        this.selectedConsumerGroup = this.consumerGroups.find(
+      if (selectedConsumerGroupId != null && consumerGroups != null) {
+        console.log('cg groups', consumerGroups);
+        console.log('cg id', selectedConsumerGroupId);
+        this.selectedConsumerGroupId = selectedConsumerGroupId;
+        this.selectedConsumerGroup = consumerGroups.find(
           (cg) => cg.id === this.selectedConsumerGroupId
         );
-      }
-
-      if (
-        consumerGroups != null &&
-        consumerGroups.length > 0 &&
-        this.defaultConsumerGroup == null
-      ) {
-        this.defaultConsumerGroup = new DefaultConsumerGroupDto(
-          consumerGroups[0].id
-        );
-      }
-    });
-
-    this.selectedConsumerGroupId$.subscribe((selectedConsumerGroupId) => {
-      this.selectedConsumerGroupId = selectedConsumerGroupId;
-
-      if (this.consumerGroups != null) {
-        this.selectedConsumerGroup = this.consumerGroups.find(
-          (cg) => cg.id === selectedConsumerGroupId
-        );
-      }
-    });
-
-    this.defaultConsumerGroup$.subscribe((defaultConsumerGroup) => {
-      if (defaultConsumerGroup != null) {
-        this.defaultConsumerGroup = defaultConsumerGroup;
+        if (this.selectedConsumerGroup === undefined) {
+          this.selectedConsumerGroup = consumerGroups[0];
+        }
       }
     });
   }
@@ -115,7 +79,7 @@ export class NavbarComponent implements OnInit {
   }
 
   get currentName$(): Observable<string> {
-    return this.authService.currentName$ || of("Unknown User");
+    return this.authService.currentName$ || of('Unknown User');
   }
 
   get hasAdminPrivilege$(): Observable<boolean> {
@@ -124,12 +88,7 @@ export class NavbarComponent implements OnInit {
 
   registerNewResource() {
     //this.store.dispatch(new CreateResource()).subscribe(() =>
-    this.router.navigate(["resource", "hierarchy"]); //);
-  }
-
-  goToDataMarketplace() {
-    const url = environment.dmpUrl;
-    window.open(url, "_blank");
+    this.router.navigate(['resource', 'hierarchy']); //);
   }
 
   selectConsumerGroup(event: any) {
@@ -160,41 +119,16 @@ export class NavbarComponent implements OnInit {
       .subscribe(
         () => {
           this.snackbar.success(
-            "Default Consumer Group",
-            "The default consumer group has been set successfully."
+            'Default Consumer Group',
+            'The default consumer group has been set successfully.'
           );
         },
         (error) => {
           if (error.status === 404) {
-            this.snackbar.error("Default Consumer Group", error.error.message);
+            this.snackbar.error('Default Consumer Group', error.error.message);
           }
         }
       );
-  }
-
-  goToRRM() {
-    const url = environment.rrmUrl;
-    window.open(url, "_blank");
-  }
-
-  setDefaultSidebarFilters() {
-    this.store.dispatch(new SetSearchFilterEditor()).subscribe(
-      () => {
-        this.snackbar.success(
-          "Default Search Filters",
-          "The default search filters have been set successfully."
-        );
-      },
-      (error) => {
-        if (error.status === 404) {
-          this.snackbar.error("Default Search Filters", error.error.message);
-        }
-      }
-    );
-  }
-
-  createSupportTicket() {
-    window.open(environment.appSupportFeedBack.supportTicketLink);
   }
 
   toggleNavbar() {

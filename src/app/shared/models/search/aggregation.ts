@@ -1,5 +1,5 @@
-import { AggregationBucket } from "./aggregation-bucket";
-import { AggregationType } from "./aggregation-type";
+import { AggregationBucket } from './aggregation-bucket';
+import { AggregationType } from './aggregation-type';
 
 export class Aggregation {
   key: string;

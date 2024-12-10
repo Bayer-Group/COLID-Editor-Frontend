@@ -1,19 +1,19 @@
-import { Observable, Subscription } from "rxjs";
-import { distinctUntilChanged, map } from "rxjs/operators";
-import { Select } from "@ngxs/store";
+import { Observable, Subscription } from 'rxjs';
+import { distinctUntilChanged, filter, map } from 'rxjs/operators';
+import { Select } from '@ngxs/store';
 import {
   UserInfoStateModel,
-  UserInfoState,
-} from "src/app/state/user-info.state";
-import { Router } from "@angular/router";
-import { RolePermissions } from "../role-permissions";
-import { IdentityProvider } from "./identity-provider.service";
-import { ColidAccount } from "../models/colid-account.model";
-import { Injectable, Inject } from "@angular/core";
-import { IDENT_PROV } from "src/app/shared/constants";
+  UserInfoState
+} from 'src/app/state/user-info.state';
+import { Router } from '@angular/router';
+import { RolePermissions } from '../role-permissions';
+import { IdentityProvider } from './identity-provider.service';
+import { ColidAccount } from '../models/colid-account.model';
+import { Injectable, Inject } from '@angular/core';
+import { IDENT_PROV } from 'src/app/shared/constants';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root'
 })
 export class AuthService {
   @Select(UserInfoState) userInfoState$: Observable<UserInfoStateModel>;
@@ -78,6 +78,7 @@ export class AuthService {
 
   get hasCreatePrivilege$(): Observable<boolean> {
     return this.userInfoState$.pipe(
+      filter((userInfo) => userInfo.fetched),
       map((userInfo) => {
         return userInfo.fetched && userInfo.consumerGroups.length > 0;
       })
@@ -93,29 +94,29 @@ export class AuthService {
   }
 
   get accessToken(): string {
-    return localStorage.getItem("msal.idtoken");
+    return sessionStorage.getItem('msal.idtoken');
   }
 
   subscribeCheckAccount(): Subscription {
     // val is on startup of the application null, in this case we do nothing
     return this.isLoggedIn$.pipe(distinctUntilChanged()).subscribe((val) => {
-      console.log("Subscribe check account", val, this.loginInProgress);
+      console.log('Subscribe check account', val, this.loginInProgress);
       if (val === false) {
-        console.log("Login ready");
+        console.log('Login ready');
         this.login();
       } else if (val === true) {
-        console.log("Redirecting");
+        console.log('Redirecting');
         this.redirect();
       }
     });
   }
 
   redirect() {
-    const redirectPathString = window.sessionStorage.getItem("url");
-    const queryParamString = window.sessionStorage.getItem("queryParams");
+    const redirectPathString = window.sessionStorage.getItem('url');
+    const queryParamString = window.sessionStorage.getItem('queryParams');
 
     if (redirectPathString == null && queryParamString == null) {
-      this.router.navigate(["resource", "welcome"]);
+      this.router.navigate(['resource', 'welcome']);
       return;
     }
 

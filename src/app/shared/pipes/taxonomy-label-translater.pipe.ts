@@ -1,9 +1,9 @@
-import { Pipe, PipeTransform } from "@angular/core";
-import { Store } from "@ngxs/store";
-import { EntityLabelMappingState } from "src/app/state/entity-label-mapping.state";
+import { Pipe, PipeTransform } from '@angular/core';
+import { Store } from '@ngxs/store';
+import { EntityLabelMappingState } from 'src/app/state/entity-label-mapping.state';
 
 @Pipe({
-  name: "taxonomyLabelTranslater",
+  name: 'taxonomyLabelTranslater'
 })
 export class TaxonomyLabelTranslater implements PipeTransform {
   labelMapping: Map<string, string> = new Map();

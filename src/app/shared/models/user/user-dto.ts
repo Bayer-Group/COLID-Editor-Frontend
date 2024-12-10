@@ -1,7 +1,6 @@
-import { DefaultConsumerGroupDto } from "./default-consumer-group-dto";
-import { ColidEntrySubscriptionDto } from "./colid-entry-subscription-dto";
-import { SearchFilterEditor } from "./search-filter-editor";
-import { MessageConfigDto } from "./message-config-dto";
+import { DefaultConsumerGroupDto } from './default-consumer-group-dto';
+import { ColidEntrySubscriptionDto } from './colid-entry-subscription-dto';
+import { SearchFilterEditor } from './search-filter-editor';
 
 export class UserDto {
   id: string;
@@ -10,7 +9,6 @@ export class UserDto {
   defaultConsumerGroup: DefaultConsumerGroupDto;
   searchFilterEditor: SearchFilterEditor;
   colidEntrySubscriptions: ColidEntrySubscriptionDto[];
-  messageConfig: MessageConfigDto;
   department: string;
 
   public constructor(id: string, emailAddress: string) {

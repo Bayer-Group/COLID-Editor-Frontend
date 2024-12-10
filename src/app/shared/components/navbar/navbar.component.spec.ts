@@ -1,24 +1,72 @@
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NavbarComponent } from "./navbar.component";
+import { NavbarComponent } from './navbar.component';
+import { NgxsModule } from '@ngxs/store';
+import { Title } from '@angular/platform-browser';
+import { ColidMatSnackBarService } from 'src/app/modules/colid-mat-snack-bar/colid-mat-snack-bar.service';
+import { RouterModule } from '@angular/router';
+import { AuthService } from 'src/app/modules/authentication/services/auth.service';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { Component, Input } from '@angular/core';
 
-describe("NavbarComponent", () => {
+describe('NavbarComponent', () => {
   let component: NavbarComponent;
   let fixture: ComponentFixture<NavbarComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [NavbarComponent],
-    }).compileComponents();
-  }));
+  class MockAuthService {}
+
+  class MockColidMatSnackBarService {}
+
+  @Component({
+    selector: 'app-title',
+    template: ''
+  })
+  class MockTitleComponent {
+    @Input() iconColor: string;
+  }
 
   beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [NavbarComponent, MockTitleComponent],
+      imports: [
+        NgxsModule.forRoot([]),
+        RouterModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatIconModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        FormsModule,
+        MatTooltipModule
+      ],
+      providers: [
+        {
+          provide: AuthService,
+          useClass: MockAuthService
+        },
+        {
+          provide: ColidMatSnackBarService,
+          useClass: MockColidMatSnackBarService
+        },
+        {
+          provide: Title,
+          useClass: Title
+        }
+      ]
+    }).compileComponents();
+
     fixture = TestBed.createComponent(NavbarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { Selector, State, StateContext, Action } from "@ngxs/store";
+import { Injectable } from '@angular/core';
+import { Selector, State, StateContext, Action } from '@ngxs/store';
 
 // Actions
 export class SetResourceFormTouched {
-  static readonly type = "[ResourceForm] Set resource form touched";
+  static readonly type = '[ResourceForm] Set resource form touched';
 
   constructor(public payload: boolean) {}
 }
@@ -13,10 +13,10 @@ export class ResourceFormStateModel {
 }
 
 @State<ResourceFormStateModel>({
-  name: "ResourceForm",
+  name: 'ResourceForm',
   defaults: {
-    touched: false,
-  },
+    touched: false
+  }
 })
 @Injectable()
 export class ResourceFormState {
@@ -33,7 +33,7 @@ export class ResourceFormState {
     { payload }: SetResourceFormTouched
   ) {
     patchState({
-      touched: payload,
+      touched: payload
     });
   }
 }

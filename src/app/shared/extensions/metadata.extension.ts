@@ -1,6 +1,6 @@
-import { MetaDataProperty } from "../models/metadata/meta-data-property";
-import { MetaDataPropertyGroup } from "../models/metadata/meta-data-property-group";
-import { Constants } from "../constants";
+import { MetaDataProperty } from '../models/metadata/meta-data-property';
+import { MetaDataPropertyGroup } from '../models/metadata/meta-data-property-group';
+import { Constants } from '../constants';
 
 export class MetadataExtension {
   public static isIgnoredProperty(metaDataProperty: MetaDataProperty) {

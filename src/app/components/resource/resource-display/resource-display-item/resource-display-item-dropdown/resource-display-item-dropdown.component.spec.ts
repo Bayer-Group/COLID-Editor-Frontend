@@ -1,24 +1,30 @@
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ResourceDisplayItemDropdownComponent } from "./resource-display-item-dropdown.component";
+import { ResourceDisplayItemDropdownComponent } from './resource-display-item-dropdown.component';
+import { EntityApiService } from 'src/app/core/http/entity.api.service';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing';
 
-describe("ResourceDisplayItemDropdownComponent", () => {
+describe('ResourceDisplayItemDropdownComponent', () => {
   let component: ResourceDisplayItemDropdownComponent;
   let fixture: ComponentFixture<ResourceDisplayItemDropdownComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ResourceDisplayItemDropdownComponent],
-    }).compileComponents();
-  }));
+  class MockEntityApiService {
+    getEntities() {}
+  }
 
   beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [ResourceDisplayItemDropdownComponent],
+      imports: [FontAwesomeTestingModule],
+      providers: [{ provide: EntityApiService, useClass: MockEntityApiService }]
+    }).compileComponents();
+
     fixture = TestBed.createComponent(ResourceDisplayItemDropdownComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

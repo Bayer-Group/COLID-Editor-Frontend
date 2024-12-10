@@ -1,4 +1,4 @@
-import { SearchHit } from "./search-hit";
+import { SearchHit } from './search-hit';
 
 export class SearchHits {
   hits: SearchHit[] = [];

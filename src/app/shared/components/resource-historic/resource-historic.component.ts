@@ -5,21 +5,21 @@ import {
   OnChanges,
   Output,
   SimpleChanges,
-  ViewChild,
-} from "@angular/core";
-import { MatExpansionPanel } from "@angular/material/expansion";
-import { Router } from "@angular/router";
-import { Observable } from "rxjs";
-import { Constants } from "../../constants";
-import { Entity } from "../../models/Entities/entity";
-import { MetaDataProperty } from "../../models/metadata/meta-data-property";
-import { HistoryEntity } from "../../models/resources/history-entity";
-import { VersionProperty } from "../../models/resources/version-property";
+  ViewChild
+} from '@angular/core';
+import { MatExpansionPanel } from '@angular/material/expansion';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { Constants } from '../../constants';
+import { Entity } from '../../models/Entities/entity';
+import { MetaDataProperty } from '../../models/metadata/meta-data-property';
+import { HistoryEntity } from '../../models/resources/history-entity';
+import { VersionProperty } from '../../models/resources/version-property';
 
 @Component({
-  selector: "app-resource-historic",
-  templateUrl: "./resource-historic.component.html",
-  styleUrls: ["./resource-historic.component.css"],
+  selector: 'app-resource-historic',
+  templateUrl: './resource-historic.component.html',
+  styleUrls: ['./resource-historic.component.css']
 })
 export class ResourceHistoricComponent implements OnChanges {
   @Input() entities: Array<Entity>;
@@ -50,7 +50,7 @@ export class ResourceHistoricComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     //check for entity changes
     for (const propName in changes) {
-      if (propName == "entities") {
+      if (propName == 'entities') {
         //do the processing
         this.historyEntity = [];
 
@@ -78,14 +78,14 @@ export class ResourceHistoricComponent implements OnChanges {
   getPreLastchangeUser(startIndex: number) {
     for (let index = startIndex; index >= 0; index--) {
       if (
-        this.entities[index]["additionals"][
+        this.entities[index]['additionals'][
           Constants.Metadata.HasLastChangeUser
         ]
       ) {
-        this.entities[index]["additionals"][
+        this.entities[index]['additionals'][
           Constants.Metadata.HasLastChangeUser
         ];
-        return this.entities[index]["additionals"][
+        return this.entities[index]['additionals'][
           Constants.Metadata.HasLastChangeUser
         ];
       }

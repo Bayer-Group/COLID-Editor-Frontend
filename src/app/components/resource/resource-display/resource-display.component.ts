@@ -1,18 +1,18 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { Router } from "@angular/router";
-import { Observable, Subscription } from "rxjs";
-import { Select } from "@ngxs/store";
-import { MetaDataState } from "../../../state/meta-data.state";
-import { ResourceState } from "../../../state/resource.state";
-import { Constants } from "src/app/shared/constants";
-import { Resource } from "../../../shared/models/resources/resource";
-import { VersionProperty } from "src/app/shared/models/resources/version-property";
-import { MetaDataProperty } from "src/app/shared/models/metadata/meta-data-property";
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
+import { Select } from '@ngxs/store';
+import { MetaDataState } from '../../../state/meta-data.state';
+import { ResourceState } from '../../../state/resource.state';
+import { Constants } from 'src/app/shared/constants';
+import { Resource } from '../../../shared/models/resources/resource';
+import { VersionProperty } from 'src/app/shared/models/resources/version-property';
+import { MetaDataProperty } from 'src/app/shared/models/metadata/meta-data-property';
 
 @Component({
-  selector: "app-resource-display",
-  templateUrl: "./resource-display.component.html",
-  styleUrls: ["./resource-display.component.scss"],
+  selector: 'app-resource-display',
+  templateUrl: './resource-display.component.html',
+  styleUrls: ['./resource-display.component.scss']
 })
 export class ResourceDisplayComponent implements OnInit, OnDestroy {
   @Select(ResourceState.activeResource) activeResource$: Observable<Resource>;
@@ -57,8 +57,8 @@ export class ResourceDisplayComponent implements OnInit, OnDestroy {
   }
 
   versionClicked(event: VersionProperty) {
-    this.router.navigate(["/resource"], {
-      queryParams: { pidUri: event.pidUri },
+    this.router.navigate(['/resource'], {
+      queryParams: { pidUri: event.pidUri }
     });
   }
 

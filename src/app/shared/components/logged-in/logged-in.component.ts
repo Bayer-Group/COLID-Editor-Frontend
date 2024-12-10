@@ -1,13 +1,13 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
-import { Subscription } from "rxjs";
-import { AuthService } from "src/app/modules/authentication/services/auth.service";
-import { EnsureBrowserSupportService } from "src/app/modules/browser-support/services/ensure-browser-support.service";
-import { Constants } from "../../constants";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/modules/authentication/services/auth.service';
+import { EnsureBrowserSupportService } from 'src/app/modules/browser-support/services/ensure-browser-support.service';
+import { Constants } from '../../constants';
 
 @Component({
-  selector: "app-logged-in",
-  templateUrl: "./logged-in.component.html",
-  styleUrls: ["./logged-in.component.css"],
+  selector: 'app-logged-in',
+  templateUrl: './logged-in.component.html',
+  styleUrls: ['./logged-in.component.css']
 })
 export class LoggedInComponent implements OnInit, OnDestroy {
   isBrowserSupported = false;
@@ -25,7 +25,7 @@ export class LoggedInComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.checkAccountSubscribtion.unsubscribe();
+    this.checkAccountSubscribtion?.unsubscribe();
   }
 
   redirect() {

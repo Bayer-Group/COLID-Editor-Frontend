@@ -1,4 +1,4 @@
-import { Metadata } from "./meta-data";
+import { Metadata } from './meta-data';
 
 export class MetaDataProperty {
   key: string;

@@ -1,13 +1,13 @@
 <div class="d-flex align-items-center">
   <ng-select
     class="flex-fill"
-    [addTag]="multiselectSettings.addTag ? addTagNowRef : false"
+    [addTag]="multiselectSettings?.addTag ? addTagNowRef : false"
     [loading]="loading"
     [items]="entityList"
-    [multiple]="multiselectSettings.multiple"
+    [multiple]="multiselectSettings?.multiple"
     [disabled]="readOnly"
-    [maxSelectedItems]="multiselectSettings.maxSelectedItems"
-    [hideSelected]="multiselectSettings.hideSelected"
+    [maxSelectedItems]="multiselectSettings?.maxSelectedItems"
+    [hideSelected]="multiselectSettings?.hideSelected"
     bindLabel="name"
     bindValue="id"
     [(ngModel)]="internalValue"

@@ -9,4 +9,8 @@
   background-color: var(--bayer-dark-blue);
 }
 
+.mat-mdc-standard-chip {
+  --mdc-chip-label-text-color: white
+}
+
 .c-pointer { cursor: pointer; }

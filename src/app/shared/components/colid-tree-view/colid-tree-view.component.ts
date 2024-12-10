@@ -1,5 +1,5 @@
-import { SelectionModel } from "@angular/cdk/collections";
-import { FlatTreeControl } from "@angular/cdk/tree";
+import { SelectionModel } from '@angular/cdk/collections';
+import { FlatTreeControl } from '@angular/cdk/tree';
 import {
   Component,
   Input,
@@ -7,23 +7,23 @@ import {
   EventEmitter,
   OnInit,
   SimpleChanges,
-  OnChanges,
-} from "@angular/core";
+  OnChanges
+} from '@angular/core';
 import {
   MatTreeFlatDataSource,
-  MatTreeFlattener,
-} from "@angular/material/tree";
-import { TaxonomyResultDTO } from "../../models/taxonomy/taxonomy-result-dto";
-import { TreeViewSelectionChangeEvent } from "../../models/tree-view-selection-change-event";
-import { MatCheckboxChange } from "@angular/material/checkbox";
+  MatTreeFlattener
+} from '@angular/material/tree';
+import { TaxonomyResultDTO } from '../../models/taxonomy/taxonomy-result-dto';
+import { TreeViewSelectionChangeEvent } from '../../models/tree-view-selection-change-event';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 
 /**
  * @title Tree with checkboxes
  */
 @Component({
-  selector: "colid-tree-view",
-  templateUrl: "colid-tree-view.component.html",
-  styleUrls: ["colid-tree-view.component.scss"],
+  selector: 'colid-tree-view',
+  templateUrl: 'colid-tree-view.component.html',
+  styleUrls: ['colid-tree-view.component.scss']
 })
 export class ColidTreeViewComponent implements OnInit, OnChanges {
   @Input() singleSelection: boolean = false;
@@ -71,7 +71,7 @@ export class ColidTreeViewComponent implements OnInit, OnChanges {
 
   allSelected = false;
 
-  selectedNodeIdentifier: string = "";
+  selectedNodeIdentifier: string = '';
 
   get isTaxonomy(): boolean {
     return this.TREE_DATA.some((t) => t.hasChild);
@@ -112,7 +112,7 @@ export class ColidTreeViewComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes["TREE_DATA"] && !changes["TREE_DATA"].firstChange) {
+    if (changes['TREE_DATA'] && !changes['TREE_DATA'].firstChange) {
       this.dataSource.data = this.TREE_DATA;
       this.taxonomysToExpand.forEach((taxonomy) => {
         this.treeControl.expand(taxonomy);
@@ -121,11 +121,11 @@ export class ColidTreeViewComponent implements OnInit, OnChanges {
 
       // added some delay so that the DOM can get updated
       setTimeout(() => {
-        let nodeElements = document.getElementsByClassName("searchhit");
+        let nodeElements = document.getElementsByClassName('searchhit');
         if (nodeElements.length > 0) {
           nodeElements[0].scrollIntoView({
-            behavior: "smooth",
-            block: "center",
+            behavior: 'smooth',
+            block: 'center'
           });
         }
       }, 500);
@@ -162,7 +162,7 @@ export class ColidTreeViewComponent implements OnInit, OnChanges {
     }
     this.selectionChanged.emit({
       initialChange: false,
-      values: this.checklistSelection.selected,
+      values: this.checklistSelection.selected
     });
   }
 
@@ -218,7 +218,7 @@ export class ColidTreeViewComponent implements OnInit, OnChanges {
 
     this.selectionChanged.emit({
       initialChange: initial,
-      values: selectedNodes,
+      values: selectedNodes
     });
   }
 
@@ -240,7 +240,7 @@ export class ColidTreeViewComponent implements OnInit, OnChanges {
     }
     this.selectionChanged.emit({
       initialChange: initial,
-      values: valuesSelected,
+      values: valuesSelected
     });
   }
 

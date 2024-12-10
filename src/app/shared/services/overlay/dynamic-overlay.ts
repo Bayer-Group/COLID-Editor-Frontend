@@ -4,8 +4,8 @@ import {
   OverlayPositionBuilder,
   ScrollStrategyOptions,
   OverlayRef,
-  OverlayOutsideClickDispatcher,
-} from "@angular/cdk/overlay";
+  OverlayOutsideClickDispatcher
+} from '@angular/cdk/overlay';
 import {
   ComponentFactoryResolver,
   Inject,
@@ -13,14 +13,14 @@ import {
   NgZone,
   Renderer2,
   RendererFactory2,
-  Injectable,
-} from "@angular/core";
-import { DynamicOverlayContainer } from "./dynamic-overlay-container.service";
-import { Directionality } from "@angular/cdk/bidi";
-import { DOCUMENT, Location } from "@angular/common";
+  Injectable
+} from '@angular/core';
+import { DynamicOverlayContainer } from './dynamic-overlay-container.service';
+import { Directionality } from '@angular/cdk/bidi';
+import { DOCUMENT, Location } from '@angular/common';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root'
 })
 export class DynamicOverlay extends Overlay {
   private readonly _dynamicOverlayContainer: DynamicOverlayContainer;
@@ -59,7 +59,7 @@ export class DynamicOverlay extends Overlay {
   }
 
   setContainerElement(containerElement: HTMLElement): void {
-    this.renderer.setStyle(containerElement, "transform", "translateZ(0)");
+    this.renderer.setStyle(containerElement, 'transform', 'translateZ(0)');
     this._dynamicOverlayContainer.setContainerElement(containerElement);
   }
 
@@ -70,7 +70,7 @@ export class DynamicOverlay extends Overlay {
         .global()
         .centerHorizontally()
         .centerVertically(),
-      hasBackdrop: true,
+      hasBackdrop: true
     });
   }
 }

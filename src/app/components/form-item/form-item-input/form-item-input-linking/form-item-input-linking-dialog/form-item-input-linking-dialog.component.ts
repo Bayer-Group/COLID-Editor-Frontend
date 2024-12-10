@@ -1,20 +1,20 @@
-import { Component, OnInit, Inject, OnDestroy } from "@angular/core";
-import { BehaviorSubject, Observable, Subject, Subscription } from "rxjs";
-import { ResourceSearchDTO } from "src/app/shared/models/search/resource-search-dto";
-import { MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { ActivatedRoute } from "@angular/router";
-import { SearchResult } from "src/app/shared/models/search/search-result";
-import { SearchService } from "src/app/core/http/search.service";
-import { Select } from "@ngxs/store";
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
+import { ResourceSearchDTO } from 'src/app/shared/models/search/resource-search-dto';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
+import { SearchResult } from 'src/app/shared/models/search/search-result';
+import { SearchService } from 'src/app/core/http/search.service';
+import { Select } from '@ngxs/store';
 import {
   MetaDataState,
-  MetaDataStateModel,
-} from "src/app/state/meta-data.state";
+  MetaDataStateModel
+} from 'src/app/state/meta-data.state';
 
 @Component({
-  selector: "app-form-item-input-linking-dialog",
-  templateUrl: "./form-item-input-linking-dialog.component.html",
-  styleUrls: ["./form-item-input-linking-dialog.component.scss"],
+  selector: 'app-form-item-input-linking-dialog',
+  templateUrl: './form-item-input-linking-dialog.component.html',
+  styleUrls: ['./form-item-input-linking-dialog.component.scss']
 })
 export class FormItemInputLinkingDialogComponent implements OnInit, OnDestroy {
   resetScrolling = new Subject<void>();
@@ -41,8 +41,8 @@ export class FormItemInputLinkingDialogComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.actualPidUri = this.route.snapshot.queryParamMap.get("pidUri");
-    this.currentPageStatus = "listCreateLink";
+    this.actualPidUri = this.route.snapshot.queryParamMap.get('pidUri');
+    this.currentPageStatus = 'listCreateLink';
     this.linkResourcesTypesSubscription = this.linkResourcesTypes$.subscribe(
       (result) => (this.linkResourceTypes = result)
     );
@@ -93,7 +93,7 @@ export class FormItemInputLinkingDialogComponent implements OnInit, OnDestroy {
           ) {
             searchResult.hits.hits = [
               ...searchResultState.hits.hits,
-              ...searchResult.hits.hits,
+              ...searchResult.hits.hits
             ];
 
             this.searchResultState$.next({ ...searchResult });

@@ -1,11 +1,11 @@
-import { Injectable } from "@angular/core";
-import { Action, Selector, State, StateContext } from "@ngxs/store";
-import { EntityApiService } from "../core/http/entity.api.service";
-import { tap } from "rxjs/operators";
+import { Injectable } from '@angular/core';
+import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { EntityApiService } from '../core/http/entity.api.service';
+import { tap } from 'rxjs/operators';
 
 export class FetchEntityLabelMapping {
   static readonly type =
-    "[EntityLabelMapping] Fetch label mapping for entities";
+    '[EntityLabelMapping] Fetch label mapping for entities';
   constructor() {}
 }
 
@@ -14,10 +14,10 @@ export class EntityLabelStateModel {
 }
 
 @State<EntityLabelStateModel>({
-  name: "EntityLabelMapping",
+  name: 'EntityLabelMapping',
   defaults: {
-    labels: new Map(),
-  },
+    labels: new Map()
+  }
 })
 @Injectable()
 export class EntityLabelMappingState {
@@ -32,7 +32,7 @@ export class EntityLabelMappingState {
     return this.entityApiService.getEntityLabelsMapping().pipe(
       tap((res) => {
         patchState({
-          labels: new Map(res.map((entity) => [entity.id, entity.labelName])),
+          labels: new Map(res.map((entity) => [entity.id, entity.labelName]))
         });
       })
     );

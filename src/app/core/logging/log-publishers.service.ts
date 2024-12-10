@@ -1,8 +1,8 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { LogPublisher } from "./publishers/log-publisher";
-import { LogConsole } from "./publishers/log-console";
-import { LogColidApi } from "./publishers/log-colid-api";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { LogPublisher } from './publishers/log-publisher';
+import { LogConsole } from './publishers/log-console';
+import { LogColidApi } from './publishers/log-colid-api';
 
 @Injectable()
 export class LogPublishersService {

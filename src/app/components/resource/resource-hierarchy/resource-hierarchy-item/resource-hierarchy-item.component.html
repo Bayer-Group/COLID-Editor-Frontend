@@ -1,25 +1,42 @@
-<div attr.data-testing-id="hierarchy-element-{{ item.id }}" class="row px-2">
+<div attr.data-testing-id="hierarchy-element-{{ item?.id }}" class="row px-2">
   <ds-icon
     iconType="S3"
-    *ngIf="item.instantiable"
+    *ngIf="item?.instantiable"
     [tooltipDisabled]="false"
     class="col-auto pe-0"
     [delay]="300"
-    [icon]="item.id"
+    [icon]="item?.id"
   ></ds-icon>
 
   <div class="col">
     <div class="row">
       <div class="col-12 d-flex justify-content-between">
-        <strong id="{{ item.label | removeWhiteSpaces }}"
-          >{{ item.label }}
-          <ng-container *ngIf="defaultItem === item.id"
+        <strong id="{{ item?.label | removeWhiteSpaces }}"
+          >{{ item?.label }}
+          <ng-container *ngIf="defaultItem === item?.id"
             >(Preselected Type)</ng-container
           ></strong
         >
       </div>
       <div class="col-12">
-        <small [innerHTML]="item.description"></small>
+        <small [innerHTML]="item?.description"></small>
+      </div>
+      <div
+        class="col-12"
+        *ngIf="item?.resourceTypeTemplates && !isCopyOrNewVersion"
+      >
+        <mat-form-field style="width: 500px" (click)="$event.stopPropagation()"
+          ><mat-label>Select template</mat-label
+          ><mat-select [(ngModel)]="item.selectedResourceTypeTemplate">
+            <mat-option [value]="''">Dont use template</mat-option>
+            <mat-option
+              *ngFor="let templatePidUri of item?.resourceTypeTemplates"
+              [value]="templatePidUri.resourcePidUri"
+            >
+              {{ templatePidUri.templateName }}</mat-option
+            >
+          </mat-select></mat-form-field
+        >
       </div>
     </div>
   </div>

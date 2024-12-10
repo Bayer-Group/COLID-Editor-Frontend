@@ -1,4 +1,4 @@
-import { SuggestOption } from "./suggest-option";
+import { SuggestOption } from './suggest-option';
 
 export class Suggest {
   text: string;

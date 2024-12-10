@@ -1,4 +1,4 @@
-import { DocumentMap } from "./document-map";
+import { DocumentMap } from './document-map';
 
 export class SearchHit {
   id: string;

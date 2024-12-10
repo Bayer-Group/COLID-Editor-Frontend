@@ -1,4 +1,4 @@
-import { MetaDataProperty } from "../metadata/meta-data-property";
+import { MetaDataProperty } from '../metadata/meta-data-property';
 
 export class HistoryEntityDirection {
   metadata: Array<MetaDataProperty>;

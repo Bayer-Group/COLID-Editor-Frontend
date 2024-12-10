@@ -1,12 +1,12 @@
-import { Component, Input } from "@angular/core";
-import { ResourceOverviewDTO } from "src/app/shared/models/resources/resource-overview-dto";
-import { ResourceApiService } from "src/app/core/http/resource.api.service";
-import { ResourceSearchDTO } from "src/app/shared/models/search/resource-search-dto";
+import { Component, Input } from '@angular/core';
+import { ResourceOverviewDTO } from 'src/app/shared/models/resources/resource-overview-dto';
+import { ResourceApiService } from 'src/app/core/http/resource.api.service';
+import { ResourceSearchDTO } from 'src/app/shared/models/search/resource-search-dto';
 
 @Component({
-  selector: "app-resource-display-item-linking",
-  templateUrl: "./resource-display-item-linking.component.html",
-  styleUrls: ["./resource-display-item-linking.component.css"],
+  selector: 'app-resource-display-item-linking',
+  templateUrl: './resource-display-item-linking.component.html',
+  styleUrls: ['./resource-display-item-linking.component.css']
 })
 export class ResourceDisplayItemLinkingComponent {
   _linkedEntities: ResourceOverviewDTO[];

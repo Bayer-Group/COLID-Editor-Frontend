@@ -4,18 +4,18 @@ import {
   Input,
   Output,
   EventEmitter,
-  OnDestroy,
-} from "@angular/core";
-import { Entity } from "src/app/shared/models/Entities/entity";
-import { MetaDataProperty } from "src/app/shared/models/metadata/meta-data-property";
-import { StepperSelectionEvent } from "@angular/cdk/stepper";
-import { Constants } from "src/app/shared/constants";
-import { Observable, Subscription } from "rxjs";
+  OnDestroy
+} from '@angular/core';
+import { Entity } from 'src/app/shared/models/Entities/entity';
+import { MetaDataProperty } from 'src/app/shared/models/metadata/meta-data-property';
+import { StepperSelectionEvent } from '@angular/cdk/stepper';
+import { Constants } from 'src/app/shared/constants';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
-  selector: "app-entity-historic",
-  templateUrl: "./entity-historic.component.html",
-  styleUrls: ["./entity-historic.component.css"],
+  selector: 'app-entity-historic',
+  templateUrl: './entity-historic.component.html',
+  styleUrls: ['./entity-historic.component.css']
 })
 export class EntityHistoricComponent implements OnInit, OnDestroy {
   @Input() entities: Array<Entity>;
@@ -45,10 +45,8 @@ export class EntityHistoricComponent implements OnInit, OnDestroy {
     return this.metadata as Array<MetaDataProperty>;
   }
 
-  constructor() {}
-
   ngOnInit() {
-    this.selectedEntitySubscription = this.selectedEntity.subscribe((id) => {
+    this.selectedEntitySubscription = this.selectedEntity?.subscribe((id) => {
       if (id == null) {
         if (this.entities && this.entities.length !== 0) {
           this.selectionChange.emit(this.entities[this.entities.length - 1]);
@@ -62,14 +60,14 @@ export class EntityHistoricComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.selectedEntitySubscription.unsubscribe();
+    this.selectedEntitySubscription?.unsubscribe();
   }
 
   getState(overview: any): string {
     return overview.lifeCycleStatus ===
       Constants.Resource.LifeCycleStatus.Published
-      ? "published"
-      : "history";
+      ? 'published'
+      : 'history';
   }
 
   getHeader(entity: any): string {

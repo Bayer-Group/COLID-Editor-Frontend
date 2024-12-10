@@ -40,6 +40,7 @@
             <app-resource-hierarchy-item
               [item]="node"
               [defaultItem]="defaultItem"
+              [creationType]="creationType"
             ></app-resource-hierarchy-item>
           </li>
         </mat-tree-node>
@@ -53,6 +54,7 @@
               <app-resource-hierarchy-item
                 [item]="node"
                 [defaultItem]="defaultItem"
+                [creationType]="creationType"
               ></app-resource-hierarchy-item>
               <button
                 mat-icon-button
@@ -61,8 +63,8 @@
                 <mat-icon class="mat-icon-rtl-mirror">
                   {{
                     treeControl.isExpanded(node)
-                      ? "expand_more"
-                      : "chevron_left"
+                      ? 'expand_more'
+                      : 'chevron_left'
                   }}
                 </mat-icon>
               </button>
@@ -134,7 +136,7 @@
         mat-raised-button
         color="primary"
         id="createNewResource"
-        (click)="copyResource()"
+        (click)="copyResourceRaw()"
         [disabled]="activeItem === null || !activeItem?.instantiable"
       >
         <mat-icon fontSet="material-icons-outlined">content_copy</mat-icon>

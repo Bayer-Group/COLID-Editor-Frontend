@@ -1,15 +1,13 @@
-import { Injectable } from "@angular/core";
-import { environment } from "src/environments/environment";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Observable } from "rxjs";
-import { UserDto } from "src/app/shared/models/user/user-dto";
-import { ColidEntrySubscriptionDto } from "src/app/shared/models/user/colid-entry-subscription-dto";
-import { MessageConfigDto } from "src/app/shared/models/user/message-config-dto";
-import { MessageDto } from "src/app/shared/models/user/message-dto";
-import { HierarchicalData } from "src/app/shared/models/user/hiearchical-dto";
+import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { UserDto } from 'src/app/shared/models/user/user-dto';
+import { ColidEntrySubscriptionDto } from 'src/app/shared/models/user/colid-entry-subscription-dto';
+import { HierarchicalData } from 'src/app/shared/models/user/hiearchical-dto';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root'
 })
 export class UserInfoApiService {
   constructor(private httpClient: HttpClient) {}
@@ -42,11 +40,6 @@ export class UserInfoApiService {
     return this.httpClient.put(url, { uri: defaultConsumerGroupUri });
   }
 
-  setSearchFilterEditor(id: string, searchFilter: any): Observable<any> {
-    const url = `${environment.appDataApiUrl}/Users/${id}/searchFilterEditor`;
-    return this.httpClient.put(url, searchFilter);
-  }
-
   addColidEntrySubscription(
     id: string,
     colidEntrySubscriptionDto: ColidEntrySubscriptionDto
@@ -62,29 +55,11 @@ export class UserInfoApiService {
     const url = `${environment.appDataApiUrl}/Users/${id}/colidEntrySubscriptions`;
 
     const httpOptions = {
-      headers: new HttpHeaders({ "Content-Type": "application/json" }),
-      body: colidEntrySubscriptionDto,
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      body: colidEntrySubscriptionDto
     };
 
     return this.httpClient.delete(url, httpOptions);
-  }
-
-  getMessageConfig(id: string): Observable<MessageConfigDto> {
-    const url = `${environment.appDataApiUrl}/Users/${id}/messageconfig`;
-    return this.httpClient.get<MessageConfigDto>(url);
-  }
-
-  setMessageConfig(
-    id: string,
-    messageConfigDto: MessageConfigDto
-  ): Observable<any> {
-    const url = `${environment.appDataApiUrl}/Users/${id}/messageconfig`;
-    return this.httpClient.put(url, messageConfigDto);
-  }
-
-  getUserMessages(id: string): Observable<MessageDto[]> {
-    const url = `${environment.appDataApiUrl}/Users/${id}/messages`;
-    return this.httpClient.get<MessageDto[]>(url);
   }
 
   getUserDepartmentsFlowView(): Observable<HierarchicalData> {

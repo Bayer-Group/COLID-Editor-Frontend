@@ -1,24 +1,24 @@
-import { Injectable } from "@angular/core";
-import { ValidationResult } from "../../../shared/models/validation/validation-result";
-import { ResourceRequestDTO } from "src/app/shared/models/resources/requests/resource-request-dto";
-import { Store } from "@ngxs/store";
-import { Constants } from "src/app/shared/constants";
-import { ConsumerGroupResultDTO } from "src/app/shared/models/consumerGroups/consumer-group-result-dto";
-import { FormExtension } from "src/app/shared/extensions/form.extension";
-import { PidUriTemplateResultDTO } from "src/app/shared/models/pidUriTemplates/pid-uri-template-result-dto";
-import { Entity } from "src/app/shared/models/Entities/entity";
-import { UserInfoStateModel } from "src/app/state/user-info.state";
-import { ValidationResultSeverity } from "src/app/shared/models/validation/validation-result-severity";
+import { Injectable } from '@angular/core';
+import { ValidationResult } from '../../../shared/models/validation/validation-result';
+import { ResourceRequestDTO } from 'src/app/shared/models/resources/requests/resource-request-dto';
+import { Store } from '@ngxs/store';
+import { Constants } from 'src/app/shared/constants';
+import { ConsumerGroupResultDTO } from 'src/app/shared/models/consumerGroups/consumer-group-result-dto';
+import { FormExtension } from 'src/app/shared/extensions/form.extension';
+import { PidUriTemplateResultDTO } from 'src/app/shared/models/pidUriTemplates/pid-uri-template-result-dto';
+import { Entity } from 'src/app/shared/models/Entities/entity';
+import { UserInfoStateModel } from 'src/app/state/user-info.state';
+import { ValidationResultSeverity } from 'src/app/shared/models/validation/validation-result-severity';
 
 export enum OPERATION {
-  SAVE = "save",
-  SAVEANDPUBLISH = "saveAndPublish",
-  PUBLISH = "publish",
-  REVERT = "revert",
+  SAVE = 'save',
+  SAVEANDPUBLISH = 'saveAndPublish',
+  PUBLISH = 'publish',
+  REVERT = 'revert'
 }
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root'
 })
 export class ResourceFormService {
   constructor(private store: Store) {}
@@ -194,47 +194,47 @@ export class ResourceFormService {
   ): any {
     const isSaveAndPublishedOperation = operation === OPERATION.SAVEANDPUBLISH;
     const operationAsString: string[] = new Array<string>();
-    operationAsString[OPERATION.SAVE] = "saved";
+    operationAsString[OPERATION.SAVE] = 'saved';
     operationAsString[OPERATION.SAVEANDPUBLISH] = success
-      ? "saved successfully, but could not be published"
-      : "saved and published";
-    operationAsString[OPERATION.PUBLISH] = "saved and published";
+      ? 'saved successfully, but could not be published'
+      : 'saved and published';
+    operationAsString[OPERATION.PUBLISH] = 'saved and published';
 
     const operationSubString = success
-      ? "has been " +
+      ? 'has been ' +
         operationAsString[operation] +
-        (isSaveAndPublishedOperation ? "" : " successfully")
-      : "could not be " + operationAsString[operation];
+        (isSaveAndPublishedOperation ? '' : ' successfully')
+      : 'could not be ' + operationAsString[operation];
 
     if (operation === OPERATION.SAVEANDPUBLISH) {
       return {
-        level: "error",
-        titel: "Resource",
+        level: 'error',
+        titel: 'Resource',
         message:
-          "Resource " + operationSubString + ", because the validation failed.",
+          'Resource ' + operationSubString + ', because the validation failed.'
       };
     } else if (
       validationResult.conforms ||
       validationResult.severity === ValidationResultSeverity.INFO
     ) {
       return {
-        level: "success",
-        titel: "Resource",
-        message: "Resource " + operationSubString + ".",
+        level: 'success',
+        titel: 'Resource',
+        message: 'Resource ' + operationSubString + '.'
       };
     } else if (validationResult.severity === ValidationResultSeverity.WARNING) {
       return {
-        level: isSaveAndPublishedOperation ? "error" : "warn",
-        titel: "Resource",
+        level: isSaveAndPublishedOperation ? 'error' : 'warn',
+        titel: 'Resource',
         message:
-          "Resource " + operationSubString + " but the validation failed.",
+          'Resource ' + operationSubString + ' but the validation failed.'
       };
     } else {
       return {
-        level: "error",
-        titel: "Resource",
+        level: 'error',
+        titel: 'Resource',
         message:
-          "Resource " + operationSubString + " because the validation failed.",
+          'Resource ' + operationSubString + ' because the validation failed.'
       };
     }
   }

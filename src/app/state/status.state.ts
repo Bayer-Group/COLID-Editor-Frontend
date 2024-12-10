@@ -1,11 +1,11 @@
-import { Selector, State, StateContext, Action } from "@ngxs/store";
-import { tap } from "rxjs/operators";
-import { StatusBuildInformationDto } from "../shared/models/status/status-build-information-dto";
-import { StatusApiService } from "../core/http/status.api.service";
-import { Injectable } from "@angular/core";
+import { Selector, State, StateContext, Action } from '@ngxs/store';
+import { tap } from 'rxjs/operators';
+import { StatusBuildInformationDto } from '../shared/models/status/status-build-information-dto';
+import { StatusApiService } from '../core/http/status.api.service';
+import { Injectable } from '@angular/core';
 
 export class FetchBuildInformation {
-  static readonly type = "[BuildInformation] Fetch buildInformation";
+  static readonly type = '[BuildInformation] Fetch buildInformation';
   constructor() {}
 }
 
@@ -13,10 +13,10 @@ export class StatusStateModel {
   buildInformation: StatusBuildInformationDto;
 }
 @State<StatusStateModel>({
-  name: "Status",
+  name: 'Status',
   defaults: {
-    buildInformation: null,
-  },
+    buildInformation: null
+  }
 })
 @Injectable()
 export class StatusState {
@@ -35,7 +35,7 @@ export class StatusState {
     return this.statusApiService.getBuildInformation().pipe(
       tap((res: StatusBuildInformationDto) => {
         patchState({
-          buildInformation: res,
+          buildInformation: res
         });
       })
     );

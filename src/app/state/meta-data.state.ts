@@ -1,43 +1,47 @@
-import { State, Action, StateContext, Selector } from "@ngxs/store";
-import { MetaDataProperty } from "../shared/models/metadata/meta-data-property";
-import { MetaDataApiService } from "../core/http/meta-data.api.service";
-import { Constants } from "../shared/constants";
-import { EntityTypeDto } from "../shared/models/Entities/entity-type-dto";
-import { ResourceApiService } from "../core/http/resource.api.service";
-import { Injectable } from "@angular/core";
+import { State, Action, StateContext, Selector } from '@ngxs/store';
+import { MetaDataProperty } from '../shared/models/metadata/meta-data-property';
+import { MetaDataApiService } from '../core/http/meta-data.api.service';
+import { Constants } from '../shared/constants';
+import { EntityTypeDto } from '../shared/models/Entities/entity-type-dto';
+import { ResourceApiService } from '../core/http/resource.api.service';
+import { Injectable } from '@angular/core';
+import { forkJoin } from 'rxjs';
 
 export class ClearMetaData {
-  static readonly type = "[MetaData] Clear";
+  static readonly type = '[MetaData] Clear';
 }
 
 export class ClearActiveSecondMetaData {
-  static readonly type = "[MetaData] ClearActiveSecond";
+  static readonly type = '[MetaData] ClearActiveSecond';
 }
 
 export class FetchMetadata {
-  static readonly type = "[MetaData] FetchMetadata";
+  static readonly type = '[MetaData] FetchMetadata';
 
   constructor(public entityType: string) {}
 }
 
 export class FetchSecondMetadata {
-  static readonly type = "[MetaData] FetchSecondMetadata";
+  static readonly type = '[MetaData] FetchSecondMetadata';
 
   constructor(public entityType: string) {}
 }
 
 export class FetchMetadataRelease {
-  static readonly type = "[MetaData] FetchHistoricMetadata";
+  static readonly type = '[MetaData] FetchHistoricMetadata';
 
-  constructor(public entityType: string, public metadataRelease: string) {}
+  constructor(
+    public entityType: string,
+    public metadataRelease: string
+  ) {}
 }
 
 export class FetchHierarchy {
-  static readonly type = "[Hierarchy] Fetch";
+  static readonly type = '[Hierarchy] Fetch';
 }
 
 export class FetchLinkResourcesTypesMetadata {
-  static readonly type = "[FetchLinkResourcesTypesMetadata] Fetch";
+  static readonly type = '[FetchLinkResourcesTypesMetadata] Fetch';
   constructor(public resourceType: string[]) {}
 }
 
@@ -46,22 +50,24 @@ export class MetaDataStateModel {
   metadataType: string;
   metadata: Map<string, Array<MetaDataProperty>>;
   hierarchy: EntityTypeDto;
+  collibraEligibleResourceTypes: string[];
   linkResourceTypes: Map<string, string[]>;
   secondMetadataType: string;
   secondMetadata: Map<string, Array<MetaDataProperty>>;
 }
 
 @State<MetaDataStateModel>({
-  name: "metaData",
+  name: 'metaData',
   defaults: {
     hierarchy: null,
     loading: true,
     metadata: new Map<string, Array<MetaDataProperty>>(),
     metadataType: null,
+    collibraEligibleResourceTypes: null,
     linkResourceTypes: new Map<string, string[]>(),
     secondMetadataType: null,
-    secondMetadata: new Map<string, Array<MetaDataProperty>>(),
-  },
+    secondMetadata: new Map<string, Array<MetaDataProperty>>()
+  }
 })
 @Injectable()
 export class MetaDataState {
@@ -126,7 +132,7 @@ export class MetaDataState {
   ) {
     this.metaDataApiService.getResourceTypes().subscribe((res) => {
       patchState({
-        hierarchy: res,
+        hierarchy: res
       });
     });
   }
@@ -138,13 +144,14 @@ export class MetaDataState {
   ) {
     patchState({
       secondMetadataType: null,
-      secondMetadata: new Map<string, Array<MetaDataProperty>>(),
+      secondMetadata: new Map<string, Array<MetaDataProperty>>()
     });
   }
 
   @Action(FetchMetadata)
   fetchMetadata(ctx: StateContext<MetaDataStateModel>, action: FetchMetadata) {
     const state = ctx.getState();
+
     if (
       state.metadataType === action.entityType &&
       state.metadata.has(action.entityType)
@@ -154,13 +161,23 @@ export class MetaDataState {
 
     this.initializeState(ctx);
 
-    this.metaDataApiService.getMetaData(action.entityType).subscribe((res) => {
-      var metadataMap = ctx.getState().metadata;
-      metadataMap.set(action.entityType, res);
+    forkJoin({
+      metadataProps: this.metaDataApiService.getMetaData(action.entityType),
+      collibraEligibleResourceTypes:
+        this.resourceApiService.getEligibleCollibraDataTypes()
+    }).subscribe((res) => {
+      let metadataMap = ctx.getState().metadata;
+      if (!res.collibraEligibleResourceTypes.includes(action.entityType)) {
+        res.metadataProps = res.metadataProps.filter(
+          (prop) => prop.key !== Constants.Metadata.RegisterInCollibra
+        );
+      }
+      metadataMap.set(action.entityType, res.metadataProps);
       ctx.patchState({
         metadata: metadataMap,
+        collibraEligibleResourceTypes: res.collibraEligibleResourceTypes,
         loading: false,
-        metadataType: action.entityType,
+        metadataType: action.entityType
       });
     });
   }
@@ -186,7 +203,7 @@ export class MetaDataState {
       ctx.patchState({
         secondMetadata: metadataMap,
         loading: false,
-        secondMetadataType: action.entityType,
+        secondMetadataType: action.entityType
       });
     });
   }
@@ -205,7 +222,7 @@ export class MetaDataState {
       ctx.patchState({
         metadata: new Map([...state.metadata]),
         metadataType: action.entityType,
-        loading: false,
+        loading: false
       });
       return;
     }
@@ -214,7 +231,7 @@ export class MetaDataState {
       this.initializeState(ctx);
     } else {
       ctx.patchState({
-        loading: true,
+        loading: true
       });
     }
 
@@ -228,7 +245,7 @@ export class MetaDataState {
         ctx.patchState({
           metadata: new Map([...metadataMap]),
           metadataType: action.entityType,
-          loading: false,
+          loading: false
         });
       });
   }
@@ -250,7 +267,7 @@ export class MetaDataState {
     ctx.patchState({
       loading: true,
       metadata: new Map<string, Array<MetaDataProperty>>(),
-      metadataType: null,
+      metadataType: null
     });
   }
 }

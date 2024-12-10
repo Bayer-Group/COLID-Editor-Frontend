@@ -1,39 +1,38 @@
-import { ConsumerGroupResultDTO } from "../shared/models/consumerGroups/consumer-group-result-dto";
-import { Selector, State, StateContext, Action, Store } from "@ngxs/store";
-import { tap, catchError } from "rxjs/operators";
-import { ConsumerGroupApiService } from "../core/http/consumer-group.api.service";
-import { UserDto } from "../shared/models/user/user-dto";
-import { UserInfoApiService } from "../core/http/user-info.api.service";
-import { of } from "rxjs";
-import { ColidEntrySubscriptionDto } from "../shared/models/user/colid-entry-subscription-dto";
-import { ResourceOverviewState } from "./resource-overview.state";
-import { MessageConfigDto } from "../shared/models/user/message-config-dto";
-import { FetchColidEntrySubscriptionNumbers } from "./colid-entry-subcriber-count.state";
-import { Injectable } from "@angular/core";
-import { Constants } from "../shared/constants";
+import { ConsumerGroupResultDTO } from '../shared/models/consumerGroups/consumer-group-result-dto';
+import { Selector, State, StateContext, Action, Store } from '@ngxs/store';
+import { tap, catchError } from 'rxjs/operators';
+import { ConsumerGroupApiService } from '../core/http/consumer-group.api.service';
+import { UserDto } from '../shared/models/user/user-dto';
+import { UserInfoApiService } from '../core/http/user-info.api.service';
+import { of } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Constants } from '../shared/constants';
 
 export class FetchUser {
-  static readonly type = "[User] Fetch User";
-  constructor(public id: string, public emailAddress: string) {}
+  static readonly type = '[User] Fetch User';
+  constructor(
+    public id: string,
+    public emailAddress: string
+  ) {}
 }
 
 export class ReloadUser {
-  static readonly type = "[User] Reload User";
+  static readonly type = '[User] Reload User';
   constructor() {}
 }
 
 export class SetLastLoginEditor {
-  static readonly type = "[User] Select Last Login Editor";
+  static readonly type = '[User] Select Last Login Editor';
   constructor() {}
 }
 
 export class FetchConsumerGroupsByUser {
-  static readonly type = "[User] Fetch consumerGroups by user";
+  static readonly type = '[User] Fetch consumerGroups by user';
   constructor() {}
 }
 
 export class SelectConsumerGroup {
-  static readonly type = "[User] Select consumerGroup";
+  static readonly type = '[User] Select consumerGroup';
   constructor(
     public consumerGroupId: string,
     public consumerGroupDefaulReviewCyclePolicy?: string
@@ -41,28 +40,8 @@ export class SelectConsumerGroup {
 }
 
 export class SetDefaultConsumerGroupForUser {
-  static readonly type = "[UserI] Set default ConsumerGroup";
+  static readonly type = '[UserI] Set default ConsumerGroup';
   constructor(public selectedConsumerGroupId: string) {}
-}
-
-export class SetMessageConfig {
-  static readonly type = "[User] Set MessageConfig";
-  constructor(public messageConfig: MessageConfigDto) {}
-}
-
-export class SetSearchFilterEditor {
-  static readonly type = "[User] Set search filter editor";
-  constructor() {}
-}
-
-export class AddColidEntrySubscription {
-  static readonly type = "[User] Add Colid Entry Subscription";
-  constructor(public colidEntrySubscriptionDto: ColidEntrySubscriptionDto) {}
-}
-
-export class RemoveColidEntrySubscription {
-  static readonly type = "[User] Remove Colid Entry Subscription";
-  constructor(public colidEntrySubscriptionDto: ColidEntrySubscriptionDto) {}
 }
 
 export class UserInfoStateModel {
@@ -70,18 +49,20 @@ export class UserInfoStateModel {
   consumerGroups: ConsumerGroupResultDTO[];
   selectedConsumerGroupId: string;
   selectedConsumerGroupDefaultReviewCyclePolicy: string;
+  selectedConsumerGroupResourceTemplates: string[];
   fetched: boolean;
 }
 
 @State<UserInfoStateModel>({
-  name: "UserInfo",
+  name: 'UserInfo',
   defaults: {
     user: null,
     consumerGroups: null,
     selectedConsumerGroupId: null,
     selectedConsumerGroupDefaultReviewCyclePolicy: null,
-    fetched: false,
-  },
+    selectedConsumerGroupResourceTemplates: null,
+    fetched: false
+  }
 })
 @Injectable()
 export class UserInfoState {
@@ -114,6 +95,11 @@ export class UserInfoState {
   }
 
   @Selector()
+  public static getSelectedConsumerGroupTemplateIds(state: UserInfoStateModel) {
+    return state.selectedConsumerGroupResourceTemplates;
+  }
+
+  @Selector()
   public static getDefaultConsumerGroup(state: UserInfoStateModel) {
     return state.user.defaultConsumerGroup;
   }
@@ -121,11 +107,6 @@ export class UserInfoState {
   @Selector()
   public static getSearchFilterEditor(state: UserInfoStateModel) {
     return state.user.searchFilterEditor;
-  }
-
-  @Selector()
-  public static getMessageConfig(state: UserInfoStateModel) {
-    return state.user.messageConfig;
   }
 
   @Selector()
@@ -154,12 +135,12 @@ export class UserInfoState {
 
         if (defaultConsumerGroup != null) {
           patchState({
-            selectedConsumerGroupId: defaultConsumerGroup.uri,
+            selectedConsumerGroupId: defaultConsumerGroup.uri
           });
         }
 
         patchState({
-          user: res,
+          user: res
         });
         if (res.searchFilterEditor != null) {
           if (
@@ -178,7 +159,7 @@ export class UserInfoState {
           return this.userInfoApiService.createUser(id, emailAddress).pipe(
             tap((res: UserDto) => {
               patchState({
-                user: res,
+                user: res
               });
             })
           );
@@ -208,7 +189,7 @@ export class UserInfoState {
           tap((_) => {
             user.lastLoginEditor = loginDate;
             patchState({
-              user: user,
+              user: user
             });
           })
         );
@@ -225,6 +206,7 @@ export class UserInfoState {
         let selectedConsumerGroupId = getState().selectedConsumerGroupId;
         let selectedConsumerGroupDefaultReviewCyclePolicy =
           getState().selectedConsumerGroupDefaultReviewCyclePolicy;
+        let resourceTemplateMappingsOfActiveConsumerGroup: string[] = [];
 
         if (activeConsumerGroups.length > 0) {
           // Use the first consumer group as the selected one, if it has not been set yet (e.g. through from the default consumer group)
@@ -264,6 +246,18 @@ export class UserInfoState {
                 : null;
             }
           }
+
+          // set the available resource templates to the selected consumer group
+          resourceTemplateMappingsOfActiveConsumerGroup =
+            activeConsumerGroups.find((cg) => cg.id === selectedConsumerGroupId)
+              .properties[Constants.ResourceTemplates.HasResourceTemplates];
+
+          // for testing purposes filter out Open For Everyone
+          // activeConsumerGroups = activeConsumerGroups.filter(
+          //   (x) =>
+          //     x.properties["https://pid.bayer.com/kos/19050#hasAdRole"][0] !=
+          //     "PID.Group10Data.ReadWrite"
+          // );
         }
 
         patchState({
@@ -272,6 +266,8 @@ export class UserInfoState {
           selectedConsumerGroupId: selectedConsumerGroupId,
           selectedConsumerGroupDefaultReviewCyclePolicy:
             selectedConsumerGroupDefaultReviewCyclePolicy,
+          selectedConsumerGroupResourceTemplates:
+            resourceTemplateMappingsOfActiveConsumerGroup
         });
       })
     );
@@ -279,16 +275,22 @@ export class UserInfoState {
 
   @Action(SelectConsumerGroup)
   SelectConsumerGroup(
-    { patchState }: StateContext<UserInfoStateModel>,
+    { patchState, getState }: StateContext<UserInfoStateModel>,
     {
       consumerGroupId,
-      consumerGroupDefaulReviewCyclePolicy,
+      consumerGroupDefaulReviewCyclePolicy
     }: SelectConsumerGroup
   ) {
+    const resourceTemplateMappingsOfActiveConsumerGroup =
+      getState().consumerGroups.find((cg) => cg.id === consumerGroupId)
+        .properties[Constants.ResourceTemplates.HasResourceTemplates];
+
     patchState({
       selectedConsumerGroupId: consumerGroupId,
       selectedConsumerGroupDefaultReviewCyclePolicy:
         consumerGroupDefaulReviewCyclePolicy,
+      selectedConsumerGroupResourceTemplates:
+        resourceTemplateMappingsOfActiveConsumerGroup
     });
   }
 
@@ -304,95 +306,8 @@ export class UserInfoState {
         tap((res: UserDto) => {
           user.defaultConsumerGroup = res.defaultConsumerGroup;
           patchState({
-            user: user,
+            user: user
           });
-        })
-      );
-  }
-
-  @Action(SetMessageConfig)
-  SetMessageConfig(
-    { patchState, getState }: StateContext<UserInfoStateModel>,
-    { messageConfig }: SetMessageConfig
-  ) {
-    const user = getState().user;
-    return this.userInfoApiService
-      .setMessageConfig(user.id, messageConfig)
-      .pipe(
-        tap((res: UserDto) => {
-          user.messageConfig = res.messageConfig;
-          patchState({
-            user: user,
-          });
-        })
-      );
-  }
-
-  @Action(SetSearchFilterEditor)
-  SetSearchFilterEditorForUser(
-    { patchState, getState }: StateContext<UserInfoStateModel>,
-    {}: SetSearchFilterEditor
-  ) {
-    const user = getState().user;
-    const searchFilter = this.store.selectSnapshot(
-      ResourceOverviewState.resourceOverviewSearch
-    );
-    searchFilter.searchText = null;
-
-    return this.userInfoApiService
-      .setSearchFilterEditor(user.id, searchFilter)
-      .pipe(
-        tap((res: UserDto) => {
-          user.searchFilterEditor = res.searchFilterEditor;
-          patchState({
-            user: user,
-          });
-        })
-      );
-  }
-
-  @Action(AddColidEntrySubscription)
-  AddColidEntrySubscription(
-    { patchState, getState }: StateContext<UserInfoStateModel>,
-    { colidEntrySubscriptionDto }: AddColidEntrySubscription
-  ) {
-    const user = getState().user;
-    return this.userInfoApiService
-      .addColidEntrySubscription(user.id, colidEntrySubscriptionDto)
-      .pipe(
-        tap((res: UserDto) => {
-          user.colidEntrySubscriptions = res.colidEntrySubscriptions;
-          patchState({
-            user: user,
-          });
-          this.store.dispatch(
-            new FetchColidEntrySubscriptionNumbers(
-              colidEntrySubscriptionDto.colidPidUri
-            )
-          );
-        })
-      );
-  }
-
-  @Action(RemoveColidEntrySubscription)
-  RemoveColidEntrySubscription(
-    { patchState, getState }: StateContext<UserInfoStateModel>,
-    { colidEntrySubscriptionDto }: RemoveColidEntrySubscription
-  ) {
-    const user = getState().user;
-    return this.userInfoApiService
-      .removeColidEntrySubscription(user.id, colidEntrySubscriptionDto)
-      .pipe(
-        tap((res: UserDto) => {
-          user.colidEntrySubscriptions = res.colidEntrySubscriptions;
-          patchState({
-            user: user,
-          });
-          this.store.dispatch(
-            new FetchColidEntrySubscriptionNumbers(
-              colidEntrySubscriptionDto.colidPidUri
-            )
-          );
         })
       );
   }

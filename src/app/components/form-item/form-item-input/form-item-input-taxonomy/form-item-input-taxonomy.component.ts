@@ -3,34 +3,34 @@ import {
   Component,
   forwardRef,
   Input,
-  OnInit,
-} from "@angular/core";
-import { NG_VALUE_ACCESSOR } from "@angular/forms";
-import { TaxonomyState, FetchTaxonomyList } from "src/app/state/taxonomy.state";
-import { BehaviorSubject, combineLatest, Observable } from "rxjs";
-import { Select, Store } from "@ngxs/store";
-import { TaxonomyResultDTO } from "src/app/shared/models/taxonomy/taxonomy-result-dto";
-import { FormItemInputBaseComponent } from "../form-item-input-base/form-item-input-base.component";
-import { MetaDataProperty } from "src/app/shared/models/metadata/meta-data-property";
-import { Constants } from "src/app/shared/constants";
-import { TreeViewSelectionChangeEvent } from "src/app/shared/models/tree-view-selection-change-event";
-import { MatDialog } from "@angular/material/dialog";
+  OnInit
+} from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { TaxonomyState, FetchTaxonomyList } from 'src/app/state/taxonomy.state';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { Select, Store } from '@ngxs/store';
+import { TaxonomyResultDTO } from 'src/app/shared/models/taxonomy/taxonomy-result-dto';
+import { FormItemInputBaseComponent } from '../form-item-input-base/form-item-input-base.component';
+import { MetaDataProperty } from 'src/app/shared/models/metadata/meta-data-property';
+import { Constants } from 'src/app/shared/constants';
+import { TreeViewSelectionChangeEvent } from 'src/app/shared/models/tree-view-selection-change-event';
+import { MatDialog } from '@angular/material/dialog';
 import {
   TaxonomyDetailsDialogComponent,
-  TaxonomyDialogData,
-} from "../../taxonomy-details-dialog/taxonomy-details-dialog.component";
+  TaxonomyDialogData
+} from '../../taxonomy-details-dialog/taxonomy-details-dialog.component';
 
 @Component({
-  selector: "app-form-item-input-taxonomy",
-  templateUrl: "./form-item-input-taxonomy.component.html",
-  styleUrls: ["./form-item-input-taxonomy.component.scss"],
+  selector: 'app-form-item-input-taxonomy',
+  templateUrl: './form-item-input-taxonomy.component.html',
+  styleUrls: ['./form-item-input-taxonomy.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => FormItemInputTaxonomyComponent),
-      multi: true,
-    },
-  ],
+      multi: true
+    }
+  ]
 })
 export class FormItemInputTaxonomyComponent
   extends FormItemInputBaseComponent
@@ -54,7 +54,7 @@ export class FormItemInputTaxonomyComponent
   );
 
   get taxonomyType(): string {
-    return this.metadata.properties[Constants.Metadata.Range];
+    return this.metadata?.properties[Constants.Metadata.Range];
   }
 
   closeTaxonomyMenu() {
@@ -107,7 +107,7 @@ export class FormItemInputTaxonomyComponent
           });
           that.handleSelectionChanged({
             initialChange: true,
-            values: initialTaxonomies,
+            values: initialTaxonomies
           });
           initialValuesSet = true;
         }
@@ -137,20 +137,19 @@ export class FormItemInputTaxonomyComponent
 
   openTaxonomyDetailsDialog() {
     const dialogRef = this.dialog.open(TaxonomyDetailsDialogComponent, {
-      width: "80vw",
-      minHeight: "80vh",
+      width: '80vw',
       data: {
         taxonomyList: this.getTaxonomyList,
         taxonomyType: this.taxonomyType,
         singleSelection: this.singleSelection,
-        selectedNodeIds: this.internalValue,
-      } as TaxonomyDialogData,
+        selectedNodeIds: this.internalValue
+      } as TaxonomyDialogData
     });
     dialogRef.afterClosed().subscribe((result) => {
       if (result && result.selectedNodes) {
         this.handleSelectionChanged({
           initialChange: false,
-          values: result.selectedNodes,
+          values: result.selectedNodes
         });
       }
     });
@@ -177,7 +176,7 @@ export class FormItemInputTaxonomyComponent
     event: TaxonomyResultDTO[]
   ): TaxonomyResultDTO[] {
     let resultList: TaxonomyResultDTO[] = [
-      ...new Map(event.map((item) => [item.id, item])).values(),
+      ...new Map(event.map((item) => [item.id, item])).values()
     ];
 
     resultList.forEach((r) => {
@@ -215,7 +214,7 @@ export class FormItemInputTaxonomyComponent
     }
     this.handleSelectionChanged({
       initialChange: false,
-      values: selectedValues,
+      values: selectedValues
     });
   }
 

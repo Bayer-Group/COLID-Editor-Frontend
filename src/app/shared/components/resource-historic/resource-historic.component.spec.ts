@@ -1,14 +1,26 @@
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ResourceHistoricComponent } from "./resource-historic.component";
+import { ResourceHistoricComponent } from './resource-historic.component';
+import { Component, Input } from '@angular/core';
+import { MatAccordion, MatExpansionPanel } from '@angular/material/expansion';
 
-describe("ResourceHistoricComponent", () => {
+describe('ResourceHistoricComponent', () => {
   let component: ResourceHistoricComponent;
   let fixture: ComponentFixture<ResourceHistoricComponent>;
 
+  @Component({
+    selector: 'app-colid-spinner',
+    template: ''
+  })
+  class MockColidSpinnerComponent {
+    @Input() diameter: number = 100;
+    @Input() strokeWidth: number = 5;
+  }
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ResourceHistoricComponent],
+      declarations: [ResourceHistoricComponent, MockColidSpinnerComponent],
+      imports: [MatAccordion, MatExpansionPanel]
     }).compileComponents();
   });
 
@@ -18,7 +30,7 @@ describe("ResourceHistoricComponent", () => {
     fixture.detectChanges();
   });
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

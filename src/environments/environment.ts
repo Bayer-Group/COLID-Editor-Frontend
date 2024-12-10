@@ -4,10 +4,10 @@ export const environment = {
   allowAnonymous: true,
   enableIndexSearch: true,
   baseUrl: "bayer.com",
-  colidApiUrl: "http://localhost:51771/api/v3",
-  appDataApiUrl: "http://localhost:51811/api",
+  colidApiUrl: "http://localhost:51770/api/v3",
+  appDataApiUrl: "http://localhost:51810/api",
   reportingApiUrl: "http://localhost:51910/api",
-  searchApiUrl: "http://localhost:51801/api",
+  searchApiUrl: "http://localhost:51800/api",
   loggingUrl: "http://localhost:51770/api/v3/log",
   releaseNotesUrl: "https://placeholder.org/",
   adalConfig: {

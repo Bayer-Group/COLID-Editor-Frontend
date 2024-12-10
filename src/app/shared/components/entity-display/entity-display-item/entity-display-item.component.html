@@ -18,12 +18,12 @@
             class="me-1"
             iconType="S3"
             [tooltipDisabled]="false"
-            [icon]="value.properties[constants.Metadata.EntityType][0]"
+            [icon]="value?.properties[constants.Metadata.EntityType][0]"
           >
           </ds-icon>
           <app-entity-display-item-taxonomy
             [range]="constants.OWL.Class"
-            [values]="value.properties[constants.Metadata.EntityType]"
+            [values]="value?.properties[constants.Metadata.EntityType]"
           >
           </app-entity-display-item-taxonomy
           >:
@@ -68,7 +68,7 @@
             >
 
             {{
-              metadataProperty.properties[constants.Metadata.Name] | titlecase
+              metadataProperty?.properties[constants.Metadata.Name] | titlecase
             }}:
             <span
               class="ms-1"
@@ -109,7 +109,7 @@
     <span *ngFor="let value of entityProperty; let i = index">
       <ng-container [ngSwitch]="displayType">
         <ng-container *ngSwitchCase="'datetime'">
-          <span>{{ value | date : "yyyy-MM-dd HH:mm" }}</span>
+          <span>{{ value | date: 'yyyy-MM-dd HH:mm' }}</span>
         </ng-container>
         <ng-container *ngSwitchCase="'url'">
           <a

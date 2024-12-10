@@ -1,25 +1,23 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { Constants } from "src/app/shared/constants";
-import { StringExtension } from "src/app/shared/extensions/string.extension";
-import { SearchHit } from "src/app/shared/models/search/search-hit";
-import { environment } from "src/environments/environment";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Constants } from 'src/app/shared/constants';
+import { StringExtension } from 'src/app/shared/extensions/string.extension';
+import { SearchHit } from 'src/app/shared/models/search/search-hit';
+import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: "app-sidebar-content-item",
-  templateUrl: "./sidebar-content-item.component.html",
-  styleUrls: ["./sidebar-content-item.component.scss"],
+  selector: 'app-sidebar-content-item',
+  templateUrl: './sidebar-content-item.component.html',
+  styleUrls: ['./sidebar-content-item.component.scss']
 })
 export class SidebarContentItemComponent {
   constants = Constants;
 
   @Input() hit: SearchHit;
-  @Input() selectedResourcePidUri = "";
+  @Input() selectedResourcePidUri = '';
   @Input() currentPageStatus: string;
   @Input() index: number;
 
   @Output() selectHandler: EventEmitter<string> = new EventEmitter<string>();
-
-  constructor() {}
 
   get resourceType(): string {
     if (environment.enableIndexSearch) {
@@ -30,7 +28,7 @@ export class SidebarContentItemComponent {
   }
 
   get label(): string {
-    let text = "";
+    let text = '';
     if (environment.enableIndexSearch) {
       text = this.hit.source[Constants.Metadata.HasLabel].outbound[0].value;
     } else {
@@ -45,7 +43,7 @@ export class SidebarContentItemComponent {
       this.hit.source[Constants.Metadata.HasResourceDefinition];
 
     if (definition == null) {
-      return "";
+      return '';
     }
 
     if (environment.enableIndexSearch) {
@@ -99,12 +97,12 @@ export class SidebarContentItemComponent {
 
   get hasLinkedPublishedVersion(): boolean {
     const resourceLinkedLifecycleStatus =
-      this.hit.source["resourceLinkedLifecycleStatus"];
+      this.hit.source['resourceLinkedLifecycleStatus'];
     if (resourceLinkedLifecycleStatus == null) {
       return false;
     }
 
-    let lifeCycleStatus = "";
+    let lifeCycleStatus = '';
     if (environment.enableIndexSearch) {
       lifeCycleStatus = resourceLinkedLifecycleStatus.outbound[0].uri;
     } else {
@@ -118,7 +116,7 @@ export class SidebarContentItemComponent {
   }
 
   getTooltipContent(tooltipContent: string) {
-    const dom = new DOMParser().parseFromString(tooltipContent, "text/html");
+    const dom = new DOMParser().parseFromString(tooltipContent, 'text/html');
     const decodedString = dom.body.textContent;
     return decodedString;
   }

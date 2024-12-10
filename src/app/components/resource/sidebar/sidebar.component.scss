@@ -1,11 +1,9 @@
 @use '@angular/material' as mat;
-@import "../../../../styles.scss";
 
 .sidenav-title {
     padding-left: 56px;
-    height: #{$mat-toolbar-height};
-    line-height: #{$mat-toolbar-height};
-    color: mat.get-color-from-palette(map-get($colid-editor-frontend-theme, primary));
+    height: var(--mat-toolbar-height);
+    line-height: var(--mat-toolbar-height);
 }
 
 .sidebar-content {

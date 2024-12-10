@@ -1,16 +1,12 @@
 <mat-toolbar class="align-items-center" color="primary">
   <mat-toolbar-row>
-    <button
-      type="button"
-      mat-icon-button
-      (click)="toggleNavbar()"
-      color="white"
-    >
-      <mat-icon>menu</mat-icon>
+    <button type="button" mat-icon-button (click)="toggleNavbar()">
+      <mat-icon style="color: white">menu</mat-icon>
     </button>
 
     <app-title [iconColor]="'white'"></app-title>
-    <span class="gap"></span>
+
+    <span class="filler"></span>
 
     <button
       *ngIf="hasCreatePrivilege$ | async"
@@ -22,35 +18,17 @@
       Register Resource
     </button>
 
-    <span class="gap d-none d-xl-block"></span>
-
-    <button
-      mat-flat-button
-      class="d-none d-xl-block"
-      id="button-sidebar-datamarketplace-link"
-      (click)="goToDataMarketplace()"
-    >
-      Want to search data? Go to Data Marketplace
-    </button>
-    <button
-      mat-flat-button
-      class="ms-4 d-none d-md-block"
-      id="button-sidebar-rrm-link"
-      (click)="goToRRM()"
-    >
-      Want to link resources? Go to Resource Relationship Manager
-    </button>
     <span class="filler"></span>
 
     <ng-container *ngIf="consumerGroups$ | async as consumerGroups">
-      <mat-form-field *ngIf="consumerGroups.length !== 0">
+      <mat-form-field *ngIf="consumerGroups.length !== 0" appearance="fill">
         <mat-select
           matTooltip="Select your consumer group"
           style="font-size: 14px !important"
           [(ngModel)]="selectedConsumerGroup"
           (selectionChange)="selectConsumerGroup($event)"
         >
-          <mat-select-trigger>
+          <mat-select-trigger *ngIf="selectedConsumerGroup">
             <span id="selectConsumerGroup">{{
               selectedConsumerGroup.name
             }}</span>
@@ -58,112 +36,22 @@
           <mat-option
             *ngFor="let consumerGroup of consumerGroups"
             [value]="consumerGroup"
-            matTooltip="This consumer group is set as default."
-            [matTooltipDisabled]="consumerGroup.id !== defaultConsumerGroup.uri"
           >
-            <mat-icon>{{
-              consumerGroup.id === defaultConsumerGroup.uri ? "check" : ""
-            }}</mat-icon>
             <span id="{{ consumerGroup.name | removeWhiteSpaces }}">{{
               consumerGroup.name
             }}</span>
           </mat-option>
         </mat-select>
       </mat-form-field>
-    </ng-container>
-
-    <span class="gap"></span>
-
-    <div *ngIf="isLoggedIn$ | async">
       <button
+        class="ms-2"
         *ngIf="hasCreatePrivilege$ | async"
         mat-icon-button
-        matTooltip="Statistics"
-        [routerLink]="'/systemanalytics'"
+        (click)="setDefaultConsumerGroup()"
+        matTooltip="Sets the currently selected consumer group as default. The consumer group currently selected as default is marked with a tick."
       >
-        <mat-icon>insert_chart_outlined</mat-icon>
+        <mat-icon fontSet="material-icons-outlined">people</mat-icon>
       </button>
-
-      <button
-        mat-icon-button
-        (click)="toggleNotification.emit()"
-        matTooltip="Notifications"
-      >
-        <mat-icon *ngIf="newNotifications === 0">notifications_none</mat-icon>
-        <mat-icon
-          *ngIf="newNotifications !== 0"
-          [matBadge]="newNotifications"
-          matBadgeColor="warn"
-          >notifications_active</mat-icon
-        >
-      </button>
-
-      <button mat-icon-button [matMenuTriggerFor]="appMenu">
-        <mat-icon>person</mat-icon>
-      </button>
-
-      <mat-menu #appMenu="matMenu">
-        <div class="mat-menu-header" mat-menu-item disabled>
-          <mat-icon
-            class="mat-menu-header-icon"
-            fontSet="material-icons-outlined"
-            >face</mat-icon
-          >
-          <span>{{ currentName$ | async }}</span>
-        </div>
-        <button mat-menu-item [matMenuTriggerFor]="usersettings">
-          <mat-icon fontSet="material-icons-outlined">settings</mat-icon>
-          <span>User Settings</span>
-        </button>
-        <button
-          *ngIf="hasAdminPrivilege$ | async"
-          mat-menu-item
-          [routerLink]="'admin'"
-        >
-          <mat-icon fontSet="material-icons-outlined">security</mat-icon>
-          <span>Administration</span>
-        </button>
-        <button mat-menu-item (click)="createSupportTicket()">
-          <mat-icon fontSet="material-icons-outlined">contact_support</mat-icon>
-          <span>Contact Support</span>
-        </button>
-      </mat-menu>
-
-      <mat-menu #usersettings="matMenu">
-        <button
-          *ngIf="hasCreatePrivilege$ | async"
-          mat-menu-item
-          (click)="setDefaultConsumerGroup()"
-          matTooltip="Sets the currently selected consumer group as default. The consumer group currently selected as default is marked with a tick."
-        >
-          <mat-icon fontSet="material-icons-outlined">people</mat-icon>
-          <span>Set default consumer group</span>
-        </button>
-        <button
-          mat-menu-item
-          (click)="setDefaultSidebarFilters()"
-          matTooltip="Sets the currently selected search filters as default (except search text)."
-        >
-          <mat-icon fontSet="material-icons-outlined">filter_alt</mat-icon>
-          <span>Set default search filters</span>
-        </button>
-        <button mat-menu-item routerLink="/user" matTooltip="">
-          <mat-icon fontSet="material-icons-outlined">settings</mat-icon>
-          <span>Notification settings</span>
-        </button>
-        <button
-          mat-menu-item
-          [routerLink]="'user/resourceSubscriptions'"
-          matTooltip=""
-        >
-          <mat-icon fontSet="material-icons-outlined">notifications</mat-icon>
-          <span>Resource Subscriptions</span>
-        </button>
-      </mat-menu>
-    </div>
-
-    <button mat-icon-button matTooltip="Help" [routerLink]="'/help'">
-      <mat-icon>help_outline</mat-icon>
-    </button>
+    </ng-container>
   </mat-toolbar-row>
 </mat-toolbar>

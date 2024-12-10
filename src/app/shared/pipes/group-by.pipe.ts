@@ -1,9 +1,9 @@
-import { Pipe, PipeTransform } from "@angular/core";
-import { Constants } from "src/app/shared/constants";
-import { Entity } from "../models/Entities/entity";
+import { Pipe, PipeTransform } from '@angular/core';
+import { Constants } from 'src/app/shared/constants';
+import { Entity } from '../models/Entities/entity';
 
 @Pipe({
-  name: "groupBy",
+  name: 'groupBy'
 })
 export class GroupByPipe implements PipeTransform {
   transform(collect: Array<any>): Array<any> {
@@ -33,7 +33,7 @@ export class GroupByPipe implements PipeTransform {
     // this will return an array of objects, each object containing a group of objects
     return Object.keys(groupedCollection).map((key) => ({
       key,
-      value: groupedCollection[key],
+      value: groupedCollection[key]
     }));
   }
 }

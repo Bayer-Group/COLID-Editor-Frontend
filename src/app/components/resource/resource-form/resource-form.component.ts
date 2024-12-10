@@ -1,71 +1,72 @@
-import { Select, Store } from "@ngxs/store";
+import { Select, Store } from '@ngxs/store';
 import {
   ResourceState,
   SetActiveResource,
   ClearActiveResource,
   SetMainDistribution,
-  FetchPublishedResourceWithMetaData,
-} from "../../../state/resource.state";
-import { OnInit, Input, Component, OnDestroy, ElementRef } from "@angular/core";
-import { Observable, Subscription, BehaviorSubject, combineLatest } from "rxjs";
-import { MetaDataProperty } from "../../../shared/models/metadata/meta-data-property";
+  FetchPublishedResourceWithMetaData
+} from '../../../state/resource.state';
+import { OnInit, Input, Component, OnDestroy, ElementRef } from '@angular/core';
+import { Observable, Subscription, BehaviorSubject, combineLatest } from 'rxjs';
+import { MetaDataProperty } from '../../../shared/models/metadata/meta-data-property';
 import {
   MetaDataState,
   ClearMetaData,
-  ClearActiveSecondMetaData,
-} from "../../../state/meta-data.state";
-import { LogService } from "../../../core/logging/log.service";
-import { ResourceApiService } from "../../../core/http/resource.api.service";
-import { Router } from "@angular/router";
-import { ResourceFormService, OPERATION } from "./resource-form.service";
-import { MetaDataPropertyIdentifier } from "./resource-form.constants";
-import { HttpErrorResponse } from "@angular/common/http";
-import { ResourceWriteResultCTO } from "src/app/shared/models/resources/resource-write-result-cto";
-import { ResourceRequestDTO } from "src/app/shared/models/resources/requests/resource-request-dto";
-import { Constants } from "src/app/shared/constants";
-import { ConsumerGroupPidUriTemplateMetaSelector } from "src/app/state/consumer-group.state";
-import { PidUriTemplateState } from "src/app/state/pid-uri-template.state";
-import { UserInfoState } from "src/app/state/user-info.state";
-import { Entity } from "src/app/shared/models/Entities/entity";
+  ClearActiveSecondMetaData
+} from '../../../state/meta-data.state';
+import { LogService } from '../../../core/logging/log.service';
+import { ResourceApiService } from '../../../core/http/resource.api.service';
+import { Router } from '@angular/router';
+import { ResourceFormService, OPERATION } from './resource-form.service';
+import { MetaDataPropertyIdentifier } from './resource-form.constants';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ResourceWriteResultCTO } from 'src/app/shared/models/resources/resource-write-result-cto';
+import { ResourceRequestDTO } from 'src/app/shared/models/resources/requests/resource-request-dto';
+import { Constants } from 'src/app/shared/constants';
+import { ConsumerGroupPidUriTemplateMetaSelector } from 'src/app/state/consumer-group.state';
+import { PidUriTemplateState } from 'src/app/state/pid-uri-template.state';
+import { UserInfoState } from 'src/app/state/user-info.state';
+import { Entity } from 'src/app/shared/models/Entities/entity';
 import {
   ValidationResultProperty,
-  ValidationResultPropertyType,
-} from "src/app/shared/models/validation/validation-result-property";
-import { FormChangedDTO } from "src/app/shared/models/form/form-changed-dto";
-import { Guid } from "guid-typescript";
-import { Resource } from "../../../shared/models/resources/resource";
-import { PidUriTemplateResultDTO } from "src/app/shared/models/pidUriTemplates/pid-uri-template-result-dto";
+  ValidationResultPropertyType
+} from 'src/app/shared/models/validation/validation-result-property';
+import { FormChangedDTO } from 'src/app/shared/models/form/form-changed-dto';
+import { Guid } from 'guid-typescript';
+import { Resource } from '../../../shared/models/resources/resource';
+import { PidUriTemplateResultDTO } from 'src/app/shared/models/pidUriTemplates/pid-uri-template-result-dto';
 import {
   MatDialog,
   MatDialogRef,
-  MatDialogState,
-} from "@angular/material/dialog";
-import { ResourceFormSecretDialogComponent } from "./resource-form-secret-dialog/resource-form-secret-dialog.component";
-import { SetResourceFormTouched } from "src/app/state/resource-form.state";
-import { MetaDataPropertyGroup } from "src/app/shared/models/metadata/meta-data-property-group";
-import { ResourceExtension } from "src/app/shared/extensions/resource.extension";
-import { ColidMatSnackBarService } from "src/app/modules/colid-mat-snack-bar/colid-mat-snack-bar.service";
-import { FetchSidebarResourceOverview } from "src/app/state/resource-overview.state";
-import { OverlayRef } from "@angular/cdk/overlay";
-import { DynamicOverlay } from "src/app/shared/services/overlay/dynamic-overlay";
-import { FetchTaxonomyList } from "src/app/state/taxonomy.state";
-import { ResourceLockedDialogComponent } from "../resource-dialogs/resource-locked-dialog/resource-locked-dialog.component";
-import { ComponentCanDeactivate } from "src/app/core/guards/can-deactivate/can-deactivate.component";
-import { AuthService } from "src/app/modules/authentication/services/auth.service";
-import { ValidationResultSeverity } from "src/app/shared/models/validation/validation-result-severity";
-import { ResourceCreationType } from "src/app/shared/models/resources/resource-creation-type";
-import { Location } from "@angular/common";
-import { EntityFormStatus } from "src/app/shared/components/entity-form/entity-form-status";
-import { StringExtension } from "src/app/shared/extensions/string.extension";
+  MatDialogState
+} from '@angular/material/dialog';
+import { ResourceFormSecretDialogComponent } from './resource-form-secret-dialog/resource-form-secret-dialog.component';
+import { SetResourceFormTouched } from 'src/app/state/resource-form.state';
+import { MetaDataPropertyGroup } from 'src/app/shared/models/metadata/meta-data-property-group';
+import { ResourceExtension } from 'src/app/shared/extensions/resource.extension';
+import { ColidMatSnackBarService } from 'src/app/modules/colid-mat-snack-bar/colid-mat-snack-bar.service';
+import { FetchSidebarResourceOverview } from 'src/app/state/resource-overview.state';
+import { OverlayRef } from '@angular/cdk/overlay';
+import { DynamicOverlay } from 'src/app/shared/services/overlay/dynamic-overlay';
+import { FetchTaxonomyList } from 'src/app/state/taxonomy.state';
+import { ResourceLockedDialogComponent } from '../resource-dialogs/resource-locked-dialog/resource-locked-dialog.component';
+import { ComponentCanDeactivate } from 'src/app/core/guards/can-deactivate/can-deactivate.component';
+import { AuthService } from 'src/app/modules/authentication/services/auth.service';
+import { ValidationResultSeverity } from 'src/app/shared/models/validation/validation-result-severity';
+import { ResourceCreationType } from 'src/app/shared/models/resources/resource-creation-type';
+import { Location } from '@angular/common';
+import { EntityFormStatus } from 'src/app/shared/components/entity-form/entity-form-status';
+import { StringExtension } from 'src/app/shared/extensions/string.extension';
 import {
   ResourceFormIncompatibleLinksDialogComponent,
-  LinkData,
-} from "./resource-form-incompatible-links-dialog/resource-form-incompatible-links-dialog.component";
-import { ResourceSearchDTO } from "src/app/shared/models/search/resource-search-dto";
+  LinkData
+} from './resource-form-incompatible-links-dialog/resource-form-incompatible-links-dialog.component';
+import { ResourceSearchDTO } from 'src/app/shared/models/search/resource-search-dto';
+
 @Component({
-  selector: "app-resource-form",
-  templateUrl: "./resource-form.component.html",
-  styleUrls: ["./resource-form.component.css"],
+  selector: 'app-resource-form',
+  templateUrl: './resource-form.component.html',
+  styleUrls: ['./resource-form.component.css']
 })
 export class ResourceFormComponent
   extends ComponentCanDeactivate
@@ -92,6 +93,7 @@ export class ResourceFormComponent
   @Input() resourceType: string;
   @Input() basedResourceUri: string;
   @Input() creationType: ResourceCreationType = ResourceCreationType.NEW;
+  @Input() useTemplate: boolean = false;
 
   @Input() isNew: boolean;
 
@@ -142,55 +144,55 @@ export class ResourceFormComponent
   currentOperation: OPERATION;
   operation = OPERATION;
   badCharacters = [
-    "À",
-    "Á",
-    "Â",
-    "Ã",
-    "Ä",
-    "Å",
-    "È",
-    "É",
-    "Ê",
-    "Ë",
-    "Ì",
-    "Í",
-    "Î",
-    "Ò",
-    "Ó",
-    "Ô",
-    "Õ",
-    "Ù",
-    "Ú",
-    "Û",
-    "å",
-    "à",
-    "á",
-    "â",
-    "ã",
-    "å",
-    "å",
-    "è",
-    "é",
-    "ë",
-    "ê",
-    "ì",
-    "í",
-    "î",
-    "ò",
-    "ó",
-    "ô",
-    "õ",
-    "ø",
-    "ù",
-    "ú",
-    "û",
-    "Ç",
-    "Ð",
-    "Ñ",
-    "Ý",
-    "ç",
-    "ñ",
-    "ý",
+    'À',
+    'Á',
+    'Â',
+    'Ã',
+    'Ä',
+    'Å',
+    'È',
+    'É',
+    'Ê',
+    'Ë',
+    'Ì',
+    'Í',
+    'Î',
+    'Ò',
+    'Ó',
+    'Ô',
+    'Õ',
+    'Ù',
+    'Ú',
+    'Û',
+    'å',
+    'à',
+    'á',
+    'â',
+    'ã',
+    'å',
+    'å',
+    'è',
+    'é',
+    'ë',
+    'ê',
+    'ì',
+    'í',
+    'î',
+    'ò',
+    'ó',
+    'ô',
+    'õ',
+    'ø',
+    'ù',
+    'ú',
+    'û',
+    'Ç',
+    'Ð',
+    'Ñ',
+    'Ý',
+    'ç',
+    'ñ',
+    'ý'
   ];
 
   get isLoading(): boolean {
@@ -410,7 +412,7 @@ export class ResourceFormComponent
           entry[1].map((link) => ({
             sourceURI: resource.pidUri,
             targetURI: link.pidUri,
-            type: entry[0],
+            type: entry[0]
           }))
         )
         .reduce((prev, cur) => prev.concat(cur), []);
@@ -426,7 +428,7 @@ export class ResourceFormComponent
       const prettyLinkTypeNames: Map<string, string> = new Map(
         linkingMetadata.map((met) => [
           met.key,
-          met.properties[this.constants.Metadata.Name],
+          met.properties[this.constants.Metadata.Name]
         ])
       );
       const targetLinkData = linkData
@@ -435,8 +437,8 @@ export class ResourceFormComponent
           sourceURI: ldata.sourceURI,
           targetURI: ldata.targetURI,
           type: prettyLinkTypeNames.get(ldata.type),
-          targetLabel: "",
-          targetDefinition: "",
+          targetLabel: '',
+          targetDefinition: ''
         }));
 
       if (targetLinkData.length > 0) {
@@ -478,10 +480,10 @@ export class ResourceFormComponent
       this.dialogRef = this.dialog.open(
         ResourceFormIncompatibleLinksDialogComponent,
         {
-          width: "750px",
-          height: "520px",
+          width: '750px',
+          height: '520px',
           disableClose: true,
-          data: { linkData: linkDataArray },
+          data: { linkData: linkDataArray }
         }
       );
     }
@@ -553,21 +555,24 @@ export class ResourceFormComponent
       this.resourceResult.properties[Constants.Metadata.HasVersion];
 
     if (hasVersionProperty) {
-      const versionNumbers = hasVersionProperty[0].split(".");
+      const versionNumbers = hasVersionProperty[0].split('.');
       versionNumbers.push(+versionNumbers.pop() + 1);
-      hasVersionProperty = versionNumbers.join(".");
+      hasVersionProperty = versionNumbers.join('.');
       this.resourceResult.properties[Constants.Metadata.HasVersion] = [
-        hasVersionProperty,
+        hasVersionProperty
       ];
     }
   }
 
   modifyResourceToCopying() {
     this.clearIdentiferByKey(Constants.Metadata.HasBaseUri);
+    if (this.useTemplate) {
+      this.resourceResult.properties[Constants.Metadata.HasLabel] = [];
+    }
   }
 
   modifyResourceForBasedCreation() {
-    this.resourceResult.id = "";
+    this.resourceResult.id = '';
 
     this.clearIdentiferByKey(Constants.Metadata.HasPidUri);
 
@@ -624,25 +629,27 @@ export class ResourceFormComponent
   }
 
   clearIdentiferByKey(identifierKey: string) {
-    this.resourceResult.properties[identifierKey] =
-      this.resourceResult.properties[identifierKey].map(
-        (identifier: Entity) => {
-          const pidUriTemplate =
-            identifier.properties[Constants.Metadata.HasUriTemplate];
-          const pidUriTemplatePreSelect = pidUriTemplate
-            ? pidUriTemplate[0]
-            : this.resourceFormService.DefaultPidUriTemplateKey;
+    if (identifierKey in this.resourceResult.properties) {
+      this.resourceResult.properties[identifierKey] =
+        this.resourceResult.properties[identifierKey].map(
+          (identifier: Entity) => {
+            const pidUriTemplate =
+              identifier.properties[Constants.Metadata.HasUriTemplate];
+            const pidUriTemplatePreSelect = pidUriTemplate
+              ? pidUriTemplate[0]
+              : this.resourceFormService.DefaultPidUriTemplateKey;
 
-          identifier.id = null;
-          identifier.properties[Constants.Metadata.HasUriTemplate] = [
-            pidUriTemplatePreSelect,
-          ];
+            identifier.id = null;
+            identifier.properties[Constants.Metadata.HasUriTemplate] = [
+              pidUriTemplatePreSelect
+            ];
 
-          this.setSelectedPidUriTemplateByTemplate(pidUriTemplatePreSelect);
+            this.setSelectedPidUriTemplateByTemplate(pidUriTemplatePreSelect);
 
-          return identifier;
-        }
-      );
+            return identifier;
+          }
+        );
+    }
   }
 
   setPlaceholder() {
@@ -654,7 +661,7 @@ export class ResourceFormComponent
     this.placeholder[Constants.Metadata.HasResourceReviewCyclePolicy] =
       this.resourceFormService.SelectedConsumerGroupDefaultReviewCyclePolicy;
     this.placeholder[Constants.Metadata.EntityType] = null;
-    this.placeholder[Constants.Metadata.HasVersion] = "1";
+    this.placeholder[Constants.Metadata.HasVersion] = '1';
     this.placeholder[Constants.Metadata.LifeCycleStatus] =
       Constants.Resource.LifeCycleStatus.Draft;
     this.placeholder[Constants.Metadata.HasLastChangeUser] = this.email;
@@ -666,7 +673,7 @@ export class ResourceFormComponent
     operation: OPERATION,
     success: boolean
   ) {
-    if (error.error.type === "ResourceValidationException") {
+    if (error.error.type === 'ResourceValidationException') {
       this.handleValidationResult(error.error, operation, success);
       return;
     }
@@ -698,8 +705,8 @@ export class ResourceFormComponent
     ) {
       this.status = EntityFormStatus.SUCCESS;
       const url = this.router
-        .createUrlTree(["resource", "edit"], {
-          queryParams: { pidUri: resourceWriteResult.resource.pidUri },
+        .createUrlTree(['resource', 'edit'], {
+          queryParams: { pidUri: resourceWriteResult.resource.pidUri }
         })
         .toString();
       this.location.go(url);
@@ -734,8 +741,8 @@ export class ResourceFormComponent
 
       if (operation === OPERATION.PUBLISH) {
         this.showAndLogMessage(message);
-        this.router.navigate(["resource"], {
-          queryParams: { pidUri: resourceWriteResult.resource.pidUri },
+        this.router.navigate(['resource'], {
+          queryParams: { pidUri: resourceWriteResult.resource.pidUri }
         });
         return;
       }
@@ -745,8 +752,8 @@ export class ResourceFormComponent
         resourceWriteResult.validationResult.conforms
       ) {
         this.showAndLogMessage(message);
-        this.router.navigate(["resource"], {
-          queryParams: { pidUri: resourceWriteResult.resource.pidUri },
+        this.router.navigate(['resource'], {
+          queryParams: { pidUri: resourceWriteResult.resource.pidUri }
         });
         return;
       }
@@ -783,22 +790,22 @@ export class ResourceFormComponent
     this.status = EntityFormStatus.ERROR;
 
     this.dialog.open(ResourceLockedDialogComponent, {
-      width: "auto",
-      disableClose: true,
+      width: 'auto',
+      disableClose: true
     });
   }
 
   showAndLogMessage(message: any) {
     switch (message.level) {
-      case "error":
+      case 'error':
         this.snackBar.error(message.title, message.message);
         this.logger.error(message.message);
         break;
-      case "warn":
+      case 'warn':
         this.snackBar.warning(message.title, message.message);
         this.logger.warn(message.message);
         break;
-      case "success":
+      case 'success':
         this.snackBar.success(message.title, message.message);
         this.logger.info(message.message);
     }
@@ -851,8 +858,8 @@ export class ResourceFormComponent
         Constants.ControlledVocabulary.HasInformationClassification.Secret
       ) {
         this.dialog.open(ResourceFormSecretDialogComponent, {
-          width: "auto",
-          disableClose: true,
+          width: 'auto',
+          disableClose: true
         });
       }
     }
@@ -863,8 +870,8 @@ export class ResourceFormComponent
     ) {
       if (this.badCaharcterInLable() || this.badCaharcterInDef()) {
         this.snackBar.warning(
-          "Found unallowed characters in label or definition!",
-          "The following characters are not allowed and will be deleted while creating the resource: À,Á,Â,Ã,Ä,Å,È,É,Ê,Ë,Ì,Í,Î,Ò,Ó,Ô,Õ,Ù,Ú,Û,å,à,á,â,ã,å,å,è,é,ë,ê,ì,í,î,ò,ó,ô,õ,ø,ù,ú,û,Ç,Ð,Ñ,Ý,ç,ñ,ý"
+          'Found unallowed characters in label or definition!',
+          'The following characters are not allowed and will be deleted while creating the resource: À,Á,Â,Ã,Ä,Å,È,É,Ê,Ë,Ì,Í,Î,Ò,Ó,Ô,Õ,Ù,Ú,Û,å,à,á,â,ã,å,å,è,é,ë,ê,ì,í,î,ò,ó,ô,õ,ø,ù,ú,û,Ç,Ð,Ñ,Ý,ç,ñ,ý'
         );
       }
     }
@@ -893,7 +900,7 @@ export class ResourceFormComponent
             duplicateRequest,
             previousVersion
           ),
-          this.secondMetaData$,
+          this.secondMetaData$
         ]).subscribe((val) => {
           const duplicateResult: ValidationResultProperty[] = val[0];
           if (val[1] == null) this.formErrors = duplicateResult;
@@ -942,7 +949,7 @@ export class ResourceFormComponent
       return true;
     }
 
-    this.snackBar.error("Error", "No ConsumerGroup selected");
+    this.snackBar.error('Error', 'No ConsumerGroup selected');
     return false;
   }
 
@@ -953,7 +960,7 @@ export class ResourceFormComponent
 
     if (
       this.ontologyFormValues[Constants.Metadata.HasLabel] != null &&
-      this.ontologyFormValues[Constants.Metadata.HasLabel] != "" &&
+      this.ontologyFormValues[Constants.Metadata.HasLabel] != '' &&
       this.badCaharcterInLable()
     ) {
       var label = StringExtension.ReplaceHtmlToText(
@@ -966,7 +973,7 @@ export class ResourceFormComponent
       this.ontologyFormValues[Constants.Metadata.HasResourceDefinition] !=
         null &&
       this.ontologyFormValues[Constants.Metadata.HasResourceDefinition][0] !=
-        "" &&
+        '' &&
       this.badCaharcterInDef()
     ) {
       var def = StringExtension.ReplaceHtmlToText(
@@ -1045,8 +1052,8 @@ export class ResourceFormComponent
 
     if (this.isNew) {
       this.snackBar.error(
-        "Entry is new.",
-        "Before you can publish an entry, the entry must be saved and have no validation errors."
+        'Entry is new.',
+        'Before you can publish an entry, the entry must be saved and have no validation errors.'
       );
       return;
     } else {

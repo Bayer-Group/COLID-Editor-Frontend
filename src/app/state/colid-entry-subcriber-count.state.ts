@@ -1,13 +1,13 @@
-import { Selector, State, StateContext, Action, Store } from "@ngxs/store";
-import { ColidEntrySubscriptionDto } from "../shared/models/user/colid-entry-subscription-dto";
-import { LogService } from "../core/logging/log.service";
-import { ColidEntryApiService } from "../core/http/colid-entries.api.service";
-import { Router } from "@angular/router";
-import { Injectable } from "@angular/core";
+import { Selector, State, StateContext, Action, Store } from '@ngxs/store';
+import { ColidEntrySubscriptionDto } from '../shared/models/user/colid-entry-subscription-dto';
+import { LogService } from '../core/logging/log.service';
+import { ColidEntryApiService } from '../core/http/colid-entries.api.service';
+import { Router } from '@angular/router';
+import { Injectable } from '@angular/core';
 
 export class FetchColidEntrySubscriptionNumbers {
   static readonly type =
-    "[ColidEntrySubscriptionNumbers] Fetch FetchColidEntrySubscriptionNumbers";
+    '[ColidEntrySubscriptionNumbers] Fetch FetchColidEntrySubscriptionNumbers';
   constructor(public pidUri: string) {}
 }
 
@@ -17,11 +17,11 @@ export class ColidEntrySubscriberCountStateModel {
 }
 
 @State<ColidEntrySubscriberCountStateModel>({
-  name: "ColidEntrySubscriptionNumbers",
+  name: 'ColidEntrySubscriptionNumbers',
   defaults: {
     loading: false,
-    colidEntrySubscriptions: null,
-  },
+    colidEntrySubscriptions: null
+  }
 })
 @Injectable()
 export class ColidEntrySubscriberCountState {
@@ -48,7 +48,7 @@ export class ColidEntrySubscriberCountState {
       .getColidEntrySubscriptionCount(pidUri)
       .subscribe((cs) => {
         patchState({
-          colidEntrySubscriptions: cs.pop(),
+          colidEntrySubscriptions: cs.pop()
         });
       });
   }

@@ -4,21 +4,21 @@ import {
   ElementRef,
   Inject,
   ViewChild,
-  OnDestroy,
-} from "@angular/core";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { Subscription, fromEvent, of } from "rxjs";
+  OnDestroy
+} from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Subscription, fromEvent, of } from 'rxjs';
 import {
   catchError,
   debounceTime,
   distinctUntilChanged,
-  switchMap,
-} from "rxjs/operators";
-import { AppMaterialModule } from "src/app/app-material.module";
-import { TaxonomyService } from "src/app/core/http/taxonomy.api.service";
-import { TaxonomyResultDTO } from "src/app/shared/models/taxonomy/taxonomy-result-dto";
-import { TreeViewSelectionChangeEvent } from "src/app/shared/models/tree-view-selection-change-event";
-import { SharedModule } from "src/app/shared/shared.module";
+  switchMap
+} from 'rxjs/operators';
+import { AppMaterialModule } from 'src/app/app-material.module';
+import { TaxonomyService } from 'src/app/core/http/taxonomy.api.service';
+import { TaxonomyResultDTO } from 'src/app/shared/models/taxonomy/taxonomy-result-dto';
+import { TreeViewSelectionChangeEvent } from 'src/app/shared/models/tree-view-selection-change-event';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 export interface TaxonomyDialogData {
   taxonomyList: TaxonomyResultDTO[];
@@ -29,15 +29,15 @@ export interface TaxonomyDialogData {
 
 @Component({
   standalone: true,
-  selector: "app-taxonomy-details-dialog",
-  templateUrl: "./taxonomy-details-dialog.component.html",
-  styleUrls: ["./taxonomy-details-dialog.component.css"],
-  imports: [AppMaterialModule, SharedModule],
+  selector: 'app-taxonomy-details-dialog',
+  templateUrl: './taxonomy-details-dialog.component.html',
+  styleUrls: ['./taxonomy-details-dialog.component.css'],
+  imports: [AppMaterialModule, SharedModule]
 })
 export class TaxonomyDetailsDialogComponent
   implements AfterViewInit, OnDestroy
 {
-  @ViewChild("searchbar") input: ElementRef;
+  @ViewChild('searchbar') input: ElementRef;
   singleSelection = false;
   selectedNodeIds: string[] = [];
   selectedNodes: TaxonomyResultDTO[] = [];
@@ -58,19 +58,19 @@ export class TaxonomyDetailsDialogComponent
     private taxonomyApiService: TaxonomyService
   ) {
     this.originalTaxonomyList = data.taxonomyList;
-    this.displayedTaxonomyList = this.originalTaxonomyList.slice();
+    this.displayedTaxonomyList = this.originalTaxonomyList?.slice();
     this.singleSelection = data.singleSelection;
     this.selectedNodeIds = data.selectedNodeIds;
   }
 
   ngAfterViewInit() {
     this.sub.add(
-      fromEvent(this.input.nativeElement, "keyup")
+      fromEvent(this.input.nativeElement, 'keyup')
         .pipe(
           debounceTime(500),
           distinctUntilChanged(),
           switchMap((_) => {
-            if (this.input.nativeElement.value != "") {
+            if (this.input.nativeElement.value != '') {
               this.loading = true;
               return this.taxonomyApiService.searchTaxonomy(
                 this.data.taxonomyType,
@@ -91,7 +91,7 @@ export class TaxonomyDetailsDialogComponent
             this.currentSearchItem = 0;
             this.searchedTaxonomies = [];
             this.highlightedTaxonomyDetail = null;
-            res.forEach((taxonomy) => {
+            res?.forEach((taxonomy) => {
               this.expandNodesForSearch(taxonomy);
               this.getSearchedTaxonomiesDetails(taxonomy);
             });
@@ -114,30 +114,30 @@ export class TaxonomyDetailsDialogComponent
   }
 
   showNextSearchResult() {
-    let nodeElements = document.getElementsByClassName("searchhit");
+    let nodeElements = document.getElementsByClassName('searchhit');
     if (this.currentSearchItem === this.totalSearchItems - 1) {
       this.currentSearchItem = 0;
     } else {
       this.currentSearchItem++;
     }
     nodeElements[this.currentSearchItem].scrollIntoView({
-      behavior: "smooth",
-      block: "center",
+      behavior: 'smooth',
+      block: 'center'
     });
     this.highlightedTaxonomyDetail =
       this.searchedTaxonomies[this.currentSearchItem];
   }
 
   showPreviousSearchResult() {
-    let nodeElements = document.getElementsByClassName("searchhit");
+    let nodeElements = document.getElementsByClassName('searchhit');
     if (this.currentSearchItem === 0) {
       this.currentSearchItem = this.totalSearchItems - 1;
     } else {
       this.currentSearchItem--;
     }
     nodeElements[this.currentSearchItem].scrollIntoView({
-      behavior: "smooth",
-      block: "center",
+      behavior: 'smooth',
+      block: 'center'
     });
     this.highlightedTaxonomyDetail =
       this.searchedTaxonomies[this.currentSearchItem];
@@ -176,7 +176,7 @@ export class TaxonomyDetailsDialogComponent
 
   applySelectedValues() {
     this.dialogRef.close({
-      selectedNodes: this.selectedNodes,
+      selectedNodes: this.selectedNodes
     });
   }
 

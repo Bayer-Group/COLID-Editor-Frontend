@@ -4,27 +4,27 @@ import {
   StateContext,
   Selector,
   Store,
-  Actions,
-} from "@ngxs/store";
-import { ResourceSearchDTO } from "../shared/models/search/resource-search-dto";
-import { SearchService } from "../core/http/search.service";
-import { SearchResult } from "../shared/models/search/search-result";
-import { tap } from "rxjs/operators";
-import { Injectable } from "@angular/core";
+  Actions
+} from '@ngxs/store';
+import { ResourceSearchDTO } from '../shared/models/search/resource-search-dto';
+import { SearchService } from '../core/http/search.service';
+import { SearchResult } from '../shared/models/search/search-result';
+import { tap } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
 
 export class FetchSidebarResourceOverview {
-  static readonly type = "[ResourcesOverview] Fetch";
+  static readonly type = '[ResourcesOverview] Fetch';
   constructor(public payload: boolean = false) {}
 }
 
 export class SetSidebarSearch {
-  static readonly type = "[ResourcesOverview] SetSidebarSearch";
+  static readonly type = '[ResourcesOverview] SetSidebarSearch';
 
   constructor(public payload: ResourceSearchDTO) {}
 }
 
 export class FetchNextResourceBatch {
-  static readonly type = "[ResourcesOverview] Fetch Next Resource Batch";
+  static readonly type = '[ResourcesOverview] Fetch Next Resource Batch';
 
   constructor(public payload: number) {}
 }
@@ -37,13 +37,13 @@ export class ResourceOverviewStateModel {
 }
 
 @State<ResourceOverviewStateModel>({
-  name: "resourceOverview",
+  name: 'resourceOverview',
   defaults: {
     loading: true,
     resourceOverviewSearch: null,
     searchResult: new SearchResult(),
-    initialLoad: false,
-  },
+    initialLoad: false
+  }
 })
 @Injectable()
 export class ResourceOverviewState {
@@ -83,9 +83,9 @@ export class ResourceOverviewState {
       loading: true,
       resourceOverviewSearch: {
         ...state.resourceOverviewSearch,
-        offset: 0,
+        offset: 0
       },
-      initialLoad: true,
+      initialLoad: true
     });
     if (state.resourceOverviewSearch !== null) {
       return this.searchService
@@ -94,7 +94,7 @@ export class ResourceOverviewState {
           tap((res) => {
             patchState({
               searchResult: res,
-              loading: false,
+              loading: false
             });
           })
         );
@@ -118,7 +118,7 @@ export class ResourceOverviewState {
 
     patchState({
       loading: true,
-      initialLoad: false,
+      initialLoad: false
     });
 
     this.searchService
@@ -130,13 +130,13 @@ export class ResourceOverviewState {
         ) {
           searchResult.hits.hits = [
             ...state.searchResult.hits.hits,
-            ...searchResult.hits.hits,
+            ...searchResult.hits.hits
           ];
 
           patchState({
             loading: false,
             resourceOverviewSearch: searchFilters,
-            searchResult: searchResult,
+            searchResult: searchResult
           });
         }
       });
@@ -148,8 +148,8 @@ export class ResourceOverviewState {
     { payload }: SetSidebarSearch
   ) {
     patchState({
-      resourceOverviewSearch: payload,
+      resourceOverviewSearch: payload
     });
-    this.store.dispatch(new FetchSidebarResourceOverview()).subscribe();
+    this.store.dispatch(new FetchSidebarResourceOverview());
   }
 }

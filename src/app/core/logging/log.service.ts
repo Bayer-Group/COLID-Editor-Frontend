@@ -1,13 +1,13 @@
-import { Injectable } from "@angular/core";
-import { environment } from "../../../environments/environment";
-import { LogPublishersService } from "./log-publishers.service";
-import { LogPublisher } from "./publishers/log-publisher";
-import { LogLevel } from "../../shared/models/logging/log-level";
-import { EdmLogEntry } from "../../shared/models/logging/edm-log-entry";
-import { LogType } from "src/app/shared/models/logging/log-type";
+import { Injectable } from '@angular/core';
+import { environment } from '../../../environments/environment';
+import { LogPublishersService } from './log-publishers.service';
+import { LogPublisher } from './publishers/log-publisher';
+import { LogLevel } from '../../shared/models/logging/log-level';
+import { EdmLogEntry } from '../../shared/models/logging/edm-log-entry';
+import { LogType } from 'src/app/shared/models/logging/log-type';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root'
 })
 export class LogService {
   constructor(private publishersService: LogPublishersService) {
@@ -26,13 +26,13 @@ export class LogService {
       message: msg,
       logType: logType,
       product: environment.adalConfig.clientId,
-      layer: "angular_client",
+      layer: 'angular_client',
       location: window.location.toString(),
-      hostname: "",
-      userId: "",
-      department: "",
+      hostname: '',
+      userId: '',
+      department: '',
       elapsedMilliseconds: null,
-      additionalInfo: {},
+      additionalInfo: {}
     };
 
     logEntry.additionalInfo = {};
@@ -40,27 +40,27 @@ export class LogService {
       for (const property in additionalInfo) {
         if (
           additionalInfo.hasOwnProperty(property) &&
-          property !== "ngDebugContext" &&
+          property !== 'ngDebugContext' &&
           !(additionalInfo[property] instanceof Function)
         ) {
           logEntry.additionalInfo[property] = additionalInfo[property];
         }
         if (
           additionalInfo[property][0] != undefined &&
-          additionalInfo[property][0].hasOwnProperty("department")
+          additionalInfo[property][0].hasOwnProperty('department')
         ) {
-          logEntry.department = additionalInfo[property][0]["department"];
+          logEntry.department = additionalInfo[property][0]['department'];
         }
         if (
           additionalInfo[property][0] != undefined &&
-          additionalInfo[property][0].hasOwnProperty("department")
+          additionalInfo[property][0].hasOwnProperty('department')
         ) {
-          logEntry.department = additionalInfo[property][0]["department"];
+          logEntry.department = additionalInfo[property][0]['department'];
         }
       }
     }
 
-    logEntry.additionalInfo["user-agent"] = window.navigator.userAgent;
+    logEntry.additionalInfo['user-agent'] = window.navigator.userAgent;
 
     return logEntry;
   }

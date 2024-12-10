@@ -1,4 +1,4 @@
-import { BaseEntityResultDTO } from "../Entities/base-entity-result-dto";
+import { BaseEntityResultDTO } from '../Entities/base-entity-result-dto';
 
 export class TaxonomyResultDTO extends BaseEntityResultDTO {
   hasParent: boolean;

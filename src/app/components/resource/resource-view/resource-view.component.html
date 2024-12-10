@@ -40,42 +40,6 @@
             >
             </action-button>
 
-            <action-button
-              type="mat-icon-button"
-              color="primary"
-              matTooltip="Add Linked Resources"
-              icon="new_label"
-              *ngIf="isPublished && (isAuthorizedToEdit$ | async)"
-              (click)="openInResourceRelationshipManager()"
-            ></action-button>
-
-            <action-button
-              type="mat-icon-button"
-              id="btnSubscribeResource"
-              *ngIf="!isResourceSubscribed"
-              color="primary"
-              (click)="subscribeToResource()"
-              matTooltip="Subscribe to this resource"
-              icon="notifications_none"
-              [disabled]="isLoading"
-              [loading]="isActionLoading('subscribe')"
-            >
-            </action-button>
-
-            <action-button
-              type="mat-icon-button"
-              id="btnUnsubscribeResource"
-              *ngIf="isResourceSubscribed"
-              color="primary"
-              (click)="unsubscribeFromResource()"
-              matTooltip="Unsubscribe from this resource"
-              icon="notifications_active"
-              [fontSet]="'material-icons'"
-              [disabled]="isLoading"
-              [loading]="isActionLoading('unsubscribe')"
-            >
-            </action-button>
-
             <ng-container *ngIf="isAuthorizedToEdit$ | async">
               <action-button
                 type="mat-icon-button"

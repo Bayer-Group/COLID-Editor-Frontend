@@ -1,15 +1,15 @@
-import { Component, OnInit, Input, EventEmitter, Output } from "@angular/core";
-import { MetaDataProperty } from "src/app/shared/models/metadata/meta-data-property";
-import { Entity } from "src/app/shared/models/Entities/entity";
-import { Constants } from "src/app/shared/constants";
-import { VersionProperty } from "src/app/shared/models/resources/version-property";
-import { MetadataExtension } from "src/app/shared/extensions/metadata.extension";
-import { MetaDataPropertyGroup } from "src/app/shared/models/metadata/meta-data-property-group";
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { MetaDataProperty } from 'src/app/shared/models/metadata/meta-data-property';
+import { Entity } from 'src/app/shared/models/Entities/entity';
+import { Constants } from 'src/app/shared/constants';
+import { VersionProperty } from 'src/app/shared/models/resources/version-property';
+import { MetadataExtension } from 'src/app/shared/extensions/metadata.extension';
+import { MetaDataPropertyGroup } from 'src/app/shared/models/metadata/meta-data-property-group';
 
 @Component({
-  selector: "app-entity-display-group",
-  templateUrl: "./entity-display-group.component.html",
-  styleUrls: ["./entity-display-group.component.scss"],
+  selector: 'app-entity-display-group',
+  templateUrl: './entity-display-group.component.html',
+  styleUrls: ['./entity-display-group.component.scss']
 })
 export class EntityDisplayGroupComponent implements OnInit {
   @Input() group: string;
@@ -22,8 +22,6 @@ export class EntityDisplayGroupComponent implements OnInit {
   @Output() versionClick = new EventEmitter<VersionProperty>();
 
   constants = Constants;
-
-  constructor() {}
 
   ngOnInit() {
     if (this.invisbleProperties) {
@@ -40,7 +38,7 @@ export class EntityDisplayGroupComponent implements OnInit {
       this.groupedMetadata.length != 0
     ) {
       let linkMetadata = this.groupedMetadata.map((x) => x.key);
-      let allResourceLinks = Object.keys(this.entity["links"]);
+      let allResourceLinks = Object.keys(this.entity['links']);
       let inboundLinkMetadata = allResourceLinks.filter(
         (x) => !linkMetadata.some((y) => y == x)
       );
@@ -52,16 +50,16 @@ export class EntityDisplayGroupComponent implements OnInit {
         propertylist[Constants.Metadata.Group.toString()] =
           new MetaDataPropertyGroup(
             Constants.Resource.Groups.LinkTypes.toString(),
-            "Linked Resources",
+            'Linked Resources',
             900,
-            "A group for all link types between resources",
-            "Grouping all link types"
+            'A group for all link types between resources',
+            'Grouping all link types'
           );
         propertylist[Constants.Metadata.HasPidUri] = x;
         propertylist[Constants.Metadata.Comment] =
-          this.entity["links"][x][0]["inboundLinkComment"];
+          this.entity['links'][x][0]['inboundLinkComment'];
         propertylist[Constants.Metadata.Name] =
-          this.entity["links"][x][0]["inboundLinkLabel"];
+          this.entity['links'][x][0]['inboundLinkLabel'];
         metadataproperty.properties = propertylist;
         metadataproperty.nestedMetadata = [];
         var metadataproperty_object = JSON.parse(
@@ -74,7 +72,7 @@ export class EntityDisplayGroupComponent implements OnInit {
 
   label(metadataProperty: MetaDataProperty): string {
     if (this.isLinking) {
-      return "Linked Resources";
+      return 'Linked Resources';
     }
 
     return metadataProperty.properties[Constants.Metadata.Name];
@@ -85,7 +83,7 @@ export class EntityDisplayGroupComponent implements OnInit {
     const group: MetaDataPropertyGroup =
       metadataProperty.properties[Constants.Metadata.Group];
 
-    return group == null ? "" : group.label;
+    return group == null ? '' : group.label;
   }
 
   get isLinking(): boolean {
@@ -128,7 +126,7 @@ export class EntityDisplayGroupComponent implements OnInit {
 
     return (
       filledProperties.reduce((a, b) => {
-        return a + this.entity["links"][b.key].length;
+        return a + this.entity['links'][b.key].length;
       }, 0) > 1
     );
   }
@@ -141,8 +139,8 @@ export class EntityDisplayGroupComponent implements OnInit {
 
   linkIsFilled(key: string) {
     return (
-      this.entity["links"][key] != null &&
-      this.entity["links"][key].length !== 0
+      this.entity['links'][key] != null &&
+      this.entity['links'][key].length !== 0
     );
   }
   nextGroupItemHasValue(index: number) {

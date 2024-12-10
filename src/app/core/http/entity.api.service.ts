@@ -1,14 +1,14 @@
-import { Injectable } from "@angular/core";
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { EntitySearch } from "../../shared/models/Entities/entity-search";
-import { environment } from "src/environments/environment";
-import { BaseEntityResultDTO } from "../../shared/models/Entities/base-entity-result-dto";
-import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
-import { EntityLabelMapping } from "src/app/shared/models/Entities/entity-label-mapping-dto";
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { EntitySearch } from '../../shared/models/Entities/entity-search';
+import { environment } from 'src/environments/environment';
+import { BaseEntityResultDTO } from '../../shared/models/Entities/base-entity-result-dto';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { EntityLabelMapping } from 'src/app/shared/models/Entities/entity-label-mapping-dto';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root'
 })
 export class EntityApiService {
   constructor(protected httpClient: HttpClient) {}
@@ -22,7 +22,7 @@ export class EntityApiService {
   getEntityById(id: string): Observable<BaseEntityResultDTO> {
     const url = `${environment.colidApiUrl}/entity`;
     let params = new HttpParams();
-    params = params.append("id", id);
+    params = params.append('id', id);
     return this.httpClient.get<BaseEntityResultDTO>(url, { params });
   }
 
@@ -33,7 +33,7 @@ export class EntityApiService {
         return res.map((entity) => {
           return {
             id: entity.id,
-            labelName: entity.name,
+            labelName: entity.name
           } as EntityLabelMapping;
         });
       })

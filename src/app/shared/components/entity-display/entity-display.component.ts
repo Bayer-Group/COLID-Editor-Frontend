@@ -1,14 +1,14 @@
-import { Component, Output, Input, EventEmitter } from "@angular/core";
-import { Entity } from "src/app/shared/models/Entities/entity";
-import { MetaDataProperty } from "src/app/shared/models/metadata/meta-data-property";
-import { VersionProperty } from "src/app/shared/models/resources/version-property";
-import { Constants } from "../../constants";
-import { MetadataExtension } from "../../extensions/metadata.extension";
+import { Component, Output, Input, EventEmitter } from '@angular/core';
+import { Entity } from 'src/app/shared/models/Entities/entity';
+import { MetaDataProperty } from 'src/app/shared/models/metadata/meta-data-property';
+import { VersionProperty } from 'src/app/shared/models/resources/version-property';
+import { Constants } from '../../constants';
+import { MetadataExtension } from '../../extensions/metadata.extension';
 
 @Component({
-  selector: "app-entity-display",
-  templateUrl: "./entity-display.component.html",
-  styleUrls: ["./entity-display.component.css"],
+  selector: 'app-entity-display',
+  templateUrl: './entity-display.component.html',
+  styleUrls: ['./entity-display.component.css']
 })
 export class EntityDisplayComponent {
   @Input() editable: boolean = false;
@@ -22,8 +22,6 @@ export class EntityDisplayComponent {
   @Output() editEntity: EventEmitter<any> = new EventEmitter<any>();
   @Output() versionClick: EventEmitter<VersionProperty> =
     new EventEmitter<VersionProperty>();
-
-  constructor() {}
 
   edit() {
     this.editEntity.emit(this.entity);

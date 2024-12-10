@@ -1,5 +1,5 @@
 export enum AggregationType {
-  Switch = "switch",
-  Checkbox = "checkbox",
-  DateRange = "dateRange",
+  Switch = 'switch',
+  Checkbox = 'checkbox',
+  DateRange = 'dateRange'
 }

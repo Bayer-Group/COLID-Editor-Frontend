@@ -1,23 +1,26 @@
-import { Selector, State, StateContext, Action } from "@ngxs/store";
-import { tap } from "rxjs/operators";
-import { TaxonomyService } from "../core/http/taxonomy.api.service";
-import { TaxonomyResultDTO } from "../shared/models/taxonomy/taxonomy-result-dto";
-import { Injectable } from "@angular/core";
+import { Selector, State, StateContext, Action } from '@ngxs/store';
+import { tap } from 'rxjs/operators';
+import { TaxonomyService } from '../core/http/taxonomy.api.service';
+import { TaxonomyResultDTO } from '../shared/models/taxonomy/taxonomy-result-dto';
+import { Injectable } from '@angular/core';
 
 export class TaxonomyStateModel {
   taxonomyResults: Map<string, TaxonomyResultDTO[]>;
 }
 
 export class FetchTaxonomyList {
-  static readonly type = "[Taxonomy] Fetch taxonomy list";
-  constructor(public type: string, public refresh: boolean = false) {}
+  static readonly type = '[Taxonomy] Fetch taxonomy list';
+  constructor(
+    public type: string,
+    public refresh: boolean = false
+  ) {}
 }
 
 @State<TaxonomyStateModel>({
-  name: "Taxonomy",
+  name: 'Taxonomy',
   defaults: {
-    taxonomyResults: new Map<string, TaxonomyResultDTO[]>(),
-  },
+    taxonomyResults: new Map<string, TaxonomyResultDTO[]>()
+  }
 })
 @Injectable()
 export class TaxonomyState {
@@ -41,7 +44,7 @@ export class TaxonomyState {
 
           taxonomy.set(action.type, res);
           state.patchState({
-            taxonomyResults: new Map<string, TaxonomyResultDTO[]>(taxonomy),
+            taxonomyResults: new Map<string, TaxonomyResultDTO[]>(taxonomy)
           });
         })
       );

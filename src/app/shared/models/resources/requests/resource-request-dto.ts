@@ -1,4 +1,4 @@
-import { EntityBase } from "../../Entities/entity-base";
+import { EntityBase } from '../../Entities/entity-base';
 
 export class ResourceRequestDTO extends EntityBase {
   hasPreviousVersion: string;

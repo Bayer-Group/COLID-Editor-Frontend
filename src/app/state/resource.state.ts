@@ -1,33 +1,33 @@
-import { State, Action, StateContext, Selector, Store } from "@ngxs/store";
-import { ResourceApiService } from "../core/http/resource.api.service";
-import { HttpErrorResponse } from "@angular/common/http";
-import { Router } from "@angular/router";
-import { tap, catchError } from "rxjs/operators";
-import { LogService } from "../core/logging/log.service";
-import { Resource } from "../shared/models/resources/resource";
-import { Entity } from "../shared/models/Entities/entity";
-import { ResourceOverviewCTO } from "../shared/models/resources/resource-overview-cto";
-import { ResourceSearchDTO } from "../shared/models/search/resource-search-dto";
+import { State, Action, StateContext, Selector, Store } from '@ngxs/store';
+import { ResourceApiService } from '../core/http/resource.api.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { tap, catchError } from 'rxjs/operators';
+import { LogService } from '../core/logging/log.service';
+import { Resource } from '../shared/models/resources/resource';
+import { Entity } from '../shared/models/Entities/entity';
+import { ResourceOverviewCTO } from '../shared/models/resources/resource-overview-cto';
+import { ResourceSearchDTO } from '../shared/models/search/resource-search-dto';
 import {
   HistoricResourceOverviewDTO,
-  ResourcRevisionHistory,
-} from "../shared/models/resources/historic-resource-overview-dto";
-import { Constants } from "../shared/constants";
-import { FetchSidebarResourceOverview } from "./resource-overview.state";
+  ResourcRevisionHistory
+} from '../shared/models/resources/historic-resource-overview-dto';
+import { Constants } from '../shared/constants';
+import { FetchSidebarResourceOverview } from './resource-overview.state';
 import {
   ClearActiveSecondMetaData,
   FetchMetadata,
   FetchMetadataRelease,
-  FetchSecondMetadata,
-} from "./meta-data.state";
-import { forkJoin, of } from "rxjs";
-import { ResourceExtension } from "../shared/extensions/resource.extension";
-import { FetchColidEntrySubscriptionNumbers } from "./colid-entry-subcriber-count.state";
+  FetchSecondMetadata
+} from './meta-data.state';
+import { forkJoin, of } from 'rxjs';
+import { ResourceExtension } from '../shared/extensions/resource.extension';
+import { FetchColidEntrySubscriptionNumbers } from './colid-entry-subcriber-count.state';
 
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
 export class FetchResource {
-  static readonly type = "[Resource] Fetch";
+  static readonly type = '[Resource] Fetch';
 
   constructor(
     public pidUri: string,
@@ -38,70 +38,82 @@ export class FetchResource {
 }
 
 export class FetchPublishedResourceWithMetaData {
-  static readonly type = "[PublishedResourceWithMetaData] Fetch";
+  static readonly type = '[PublishedResourceWithMetaData] Fetch';
 
   constructor(public payload: string) {}
 }
 
 export class CreateResource {
-  static readonly type = "[Resource] Create";
+  static readonly type = '[Resource] Create';
 }
 
 export class ClearActiveResource {
-  static readonly type = "[Resource] Clear";
+  static readonly type = '[Resource] Clear';
 }
 
 export class FetchResourceMarkedAsDeleted {
-  static readonly type = "[Resource] FetchMarkedDeleted";
+  static readonly type = '[Resource] FetchMarkedDeleted';
 }
 
 export class FetchResourceHistory {
-  static readonly type = "[Resource] FetchResourceHistory";
+  static readonly type = '[Resource] FetchResourceHistory';
   constructor(public pidUri: string) {}
 }
 
 export class FetchResourceRevisionHistory {
-  static readonly type = "[Resource] FetchResourceRevisionHistory";
+  static readonly type = '[Resource] FetchResourceRevisionHistory';
   constructor(public pidUri: string) {}
 }
 
 export class FetchHistoricResource {
-  static readonly type = "[Resource] FetchHistoricResource";
+  static readonly type = '[Resource] FetchHistoricResource';
   constructor(public historicResource: HistoricResourceOverviewDTO) {}
 }
 
 export class DeleteResource {
-  static readonly type = "[Resource] Delete";
-  constructor(public payload: string, public requester: string) {}
+  static readonly type = '[Resource] Delete';
+  constructor(
+    public payload: string,
+    public requester: string
+  ) {}
 }
 
 export class DeleteResources {
-  static readonly type = "[Resources] Delete";
-  constructor(public payload: string[], public requester: string) {}
+  static readonly type = '[Resources] Delete';
+  constructor(
+    public payload: string[],
+    public requester: string
+  ) {}
 }
 
 export class MarkResourceAsDeleted {
-  static readonly type = "[Resource] MarkAsDeleted";
-  constructor(public pidUri: string, public requester: string) {}
+  static readonly type = '[Resource] MarkAsDeleted';
+  constructor(
+    public pidUri: string,
+    public requester: string
+  ) {}
 }
 
 export class RejectResourceMarkedAsDeleted {
-  static readonly type = "[Resource] RejectMarkedAsDeleted";
+  static readonly type = '[Resource] RejectMarkedAsDeleted';
   constructor(public payload: string[]) {}
 }
 
 export class LinkResource {
-  static readonly type = "[Resource] Link";
-  constructor(public pidUri: string, public pidUriToLink) {}
+  static readonly type = '[Resource] Link';
+  constructor(
+    public pidUri: string,
+    public pidUriToLink
+  ) {}
 }
 
 export class UnlinkResource {
-  static readonly type = "[Resource] Unlink";
+  static readonly type = '[Resource] Unlink';
   constructor(public pidUri: string) {}
 }
 
 export class RemoveLink {
-  static readonly type = "[ResourceLink] Removed";
+  static readonly type = '[ResourceLink] Removed';
   constructor(
     public linkKey: string,
     public pidUri: string,
@@ -111,7 +123,7 @@ export class RemoveLink {
 }
 
 export class AddLink {
-  static readonly type = "[ResourceLink] Added";
+  static readonly type = '[ResourceLink] Added';
   constructor(
     public linkType: string,
     public pidUri: string,
@@ -120,13 +132,13 @@ export class AddLink {
 }
 
 export class SetMainDistribution {
-  static readonly type = "[Resource] SetMainDistribution";
+  static readonly type = '[Resource] SetMainDistribution';
 
   constructor(public mainDistributionId: string) {}
 }
 
 export class SetActiveResource {
-  static readonly type = "[Resource] SetActiveResource";
+  static readonly type = '[Resource] SetActiveResource';
   constructor(public resource: Resource) {}
 }
 
@@ -143,7 +155,7 @@ export class ResourceStateModel {
 }
 
 @State<ResourceStateModel>({
-  name: "resource",
+  name: 'resource',
   defaults: {
     fetched: false,
     activeResource: null,
@@ -153,8 +165,8 @@ export class ResourceStateModel {
     history: null,
     revisionHistory: null,
     selectedHistoricResource: null,
-    historicResources: new Map<string, Resource>(),
-  },
+    historicResources: new Map<string, Resource>()
+  }
 })
 @Injectable()
 export class ResourceState {
@@ -221,7 +233,7 @@ export class ResourceState {
       activeResource: null,
       history: null,
       selectedHistoricResource: null,
-      historicResources: new Map<string, Resource>(),
+      historicResources: new Map<string, Resource>()
     });
   }
 
@@ -263,8 +275,8 @@ export class ResourceState {
       },
       (error: HttpErrorResponse) => {
         if (error.status === 404) {
-          this.logger.log("Resource not found: " + action.pidUri);
-          this.router.navigate(["resource", "welcome"]);
+          this.logger.log('Resource not found: ' + action.pidUri);
+          this.router.navigate(['resource', 'welcome']);
         }
       }
     );
@@ -292,8 +304,8 @@ export class ResourceState {
       },
       (error: HttpErrorResponse) => {
         if (error.status === 404) {
-          this.logger.log("Resource not found: " + payload);
-          this.router.navigate(["resource", "welcome"]);
+          this.logger.log('Resource not found: ' + payload);
+          this.router.navigate(['resource', 'welcome']);
         }
       }
     );
@@ -307,7 +319,7 @@ export class ResourceState {
     ctx.patchState({
       fetched: true,
       activeResource: result.resource,
-      activeMainDistribution: result.mainDistribution,
+      activeMainDistribution: result.mainDistribution
     });
   }
 
@@ -345,7 +357,7 @@ export class ResourceState {
   ) {
     patchState({
       fetched: true,
-      activeResource: new Resource(),
+      activeResource: new Resource()
     });
   }
 
@@ -354,7 +366,7 @@ export class ResourceState {
     const state = ctx.getState();
     ctx.patchState({
       revisionHistory: null,
-      selectedHistoricResource: null,
+      selectedHistoricResource: null
     });
 
     const activeResource = state.activeResource;
@@ -367,7 +379,7 @@ export class ResourceState {
           selectedHistoricResource:
             history.length === 0
               ? null
-              : ctx.getState().selectedHistoricResource,
+              : ctx.getState().selectedHistoricResource
         });
       });
   }
@@ -390,20 +402,20 @@ export class ResourceState {
       !activeResource ||
       (activeResource && activeResource.publishedVersion)
     ) {
-      forkJoinObject["publishedResource"] = this.resourceService
+      forkJoinObject['publishedResource'] = this.resourceService
         .getPublishedResourcesByPidUri(action.pidUri)
         .pipe(catchError((_) => of(null)));
     }
 
-    forkJoinObject["history"] = this.resourceService
+    forkJoinObject['history'] = this.resourceService
       .getResourceHistory(action.pidUri)
       .pipe(catchError((_) => of(null)));
 
     forkJoin(forkJoinObject).subscribe({
       next: (observables) => {
         let history: Array<HistoricResourceOverviewDTO> =
-          observables["history"] == null ? [] : observables["history"];
-        const publishedResource: Resource = observables["publishedResource"];
+          observables['history'] == null ? [] : observables['history'];
+        const publishedResource: Resource = observables['publishedResource'];
 
         if (
           publishedResource != null &&
@@ -411,7 +423,7 @@ export class ResourceState {
         ) {
           const overviewPublished =
             ResourceExtension.createHistoricOverviewByResource(
-              observables["publishedResource"]
+              observables['publishedResource']
             );
           history.unshift(overviewPublished);
         }
@@ -421,9 +433,9 @@ export class ResourceState {
           selectedHistoricResource:
             history.length === 0
               ? null
-              : ctx.getState().selectedHistoricResource,
+              : ctx.getState().selectedHistoricResource
         });
-      },
+      }
     });
   }
 
@@ -434,7 +446,7 @@ export class ResourceState {
   ) {
     let historicResources = getState().historicResources;
     patchState({
-      selectedHistoricResource: action.historicResource.id,
+      selectedHistoricResource: action.historicResource.id
     });
 
     if (historicResources.has(action.historicResource.id)) {
@@ -468,7 +480,7 @@ export class ResourceState {
           let historicResources = getState().historicResources;
           historicResources.set(action.historicResource.id, res);
           patchState({
-            historicResources: historicResources,
+            historicResources: historicResources
           });
         });
     });
@@ -483,7 +495,7 @@ export class ResourceState {
     patchState({
       fetched: true,
       activeResource: result.resource,
-      activeMainDistribution: result.mainDistribution,
+      activeMainDistribution: result.mainDistribution
     });
   }
 
@@ -493,7 +505,7 @@ export class ResourceState {
     {}: FetchResourceMarkedAsDeleted
   ) {
     patchState({
-      loadingMarked: true,
+      loadingMarked: true
     });
 
     const searchObject = new ResourceSearchDTO();
@@ -503,7 +515,7 @@ export class ResourceState {
     this.resourceService.getFilteredResources(searchObject).subscribe((res) => {
       patchState({
         markedResource: res,
-        loadingMarked: false,
+        loadingMarked: false
       });
     });
   }
@@ -514,14 +526,14 @@ export class ResourceState {
     { payload }: RejectResourceMarkedAsDeleted
   ) {
     patchState({
-      loadingMarked: true,
+      loadingMarked: true
     });
     return this.resourceService.rejectResourcesMarkedDeleted(payload).pipe(
       tap(
         () => dispatch(new FetchResourceMarkedAsDeleted()),
         (_) => {
           patchState({
-            loadingMarked: false,
+            loadingMarked: false
           });
         }
       )
@@ -534,18 +546,18 @@ export class ResourceState {
     { payload, requester }: DeleteResource
   ) {
     patchState({
-      loadingMarked: true,
+      loadingMarked: true
     });
     return this.resourceService.deleteResource(payload, requester).pipe(
       tap(
         () =>
           dispatch([
             new FetchResourceMarkedAsDeleted(),
-            new FetchSidebarResourceOverview(),
+            new FetchSidebarResourceOverview()
           ]),
         (_) => {
           patchState({
-            loadingMarked: false,
+            loadingMarked: false
           });
         }
       )
@@ -558,7 +570,7 @@ export class ResourceState {
     { payload, requester }: DeleteResources
   ) {
     patchState({
-      loadingMarked: true,
+      loadingMarked: true
     });
     return this.resourceService
       .deleteResources(payload, requester)
@@ -566,7 +578,7 @@ export class ResourceState {
         tap(() =>
           dispatch([
             new FetchResourceMarkedAsDeleted(),
-            new FetchSidebarResourceOverview(),
+            new FetchSidebarResourceOverview()
           ])
         )
       );
@@ -583,7 +595,7 @@ export class ResourceState {
         tap(() =>
           dispatch([
             new FetchResource(action.pidUri, false),
-            new FetchSidebarResourceOverview(),
+            new FetchSidebarResourceOverview()
           ])
         )
       );
@@ -620,7 +632,7 @@ export class ResourceState {
         .removeLink(pidUri, linkKey, activeResource.pidUri, true, requester)
         .subscribe((aR) => {
           patchState({
-            activeResource: aR,
+            activeResource: aR
           });
         });
     } else {
@@ -628,7 +640,7 @@ export class ResourceState {
         .removeLink(activeResource.pidUri, linkKey, pidUri, false, requester)
         .subscribe((aR) => {
           patchState({
-            activeResource: aR,
+            activeResource: aR
           });
         });
     }
@@ -644,7 +656,7 @@ export class ResourceState {
       .createLink(activeResource.pidUri, linkType, pidUri, requester)
       .subscribe((aR) => {
         patchState({
-          activeResource: aR,
+          activeResource: aR
         });
       });
   }
@@ -659,7 +671,7 @@ export class ResourceState {
       activeMainDistribution:
         activeMainDistribution === mainDistributionId
           ? null
-          : mainDistributionId,
+          : mainDistributionId
     });
   }
 }

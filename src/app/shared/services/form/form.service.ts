@@ -1,10 +1,10 @@
-import { Injectable } from "@angular/core";
-import { Entity } from "src/app/shared/models/Entities/entity";
-import { FormExtension } from "src/app/shared/extensions/form.extension";
-import { Store } from "@ngxs/store";
+import { Injectable } from '@angular/core';
+import { Entity } from 'src/app/shared/models/Entities/entity';
+import { FormExtension } from 'src/app/shared/extensions/form.extension';
+import { Store } from '@ngxs/store';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root'
 })
 export class FormService {
   constructor(private store: Store) {}
@@ -20,7 +20,7 @@ export class FormService {
   }
 
   get SelectedConsumerGroup() {
-    const propValue = { key: "", value: "" };
+    const propValue = { key: '', value: '' };
     const userInfoState = this.store.selectSnapshot((state) => state).UserInfo;
     const consumerGroupState = this.store.selectSnapshot(
       (state) => state

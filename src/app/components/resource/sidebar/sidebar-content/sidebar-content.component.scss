@@ -1,13 +1,9 @@
-@import "../../../../../styles.scss";
-
 mat-progress-bar {
     margin-top: -4px;
 }
 
-$sidebar-filter-height: 171px;
-
 .search-results {
-    height: calc(100vh - #{$sidebar-filter-height} - #{$mat-toolbar-height}) !important;
+    height: calc(100vh - 78px - var(--mat-toolbar-height)) !important;
     overflow-y:scroll;
     overflow-x:hidden;
 }

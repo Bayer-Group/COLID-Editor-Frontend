@@ -1,53 +1,39 @@
-import { Selector, State, Action, StateContext } from "@ngxs/store";
-import { ConsumerGroupApiService } from "../core/http/consumer-group.api.service";
-import { MetaDataApiService } from "../core/http/meta-data.api.service";
-import { ConsumerGroupResultDTO } from "../shared/models/consumerGroups/consumer-group-result-dto";
-import { MetaDataProperty } from "../shared/models/metadata/meta-data-property";
-import { mergeMap, tap } from "rxjs/operators";
-import { Constants } from "../shared/constants";
+import { Selector, State, Action, StateContext } from '@ngxs/store';
+import { ConsumerGroupApiService } from '../core/http/consumer-group.api.service';
+import { MetaDataApiService } from '../core/http/meta-data.api.service';
+import { ConsumerGroupResultDTO } from '../shared/models/consumerGroups/consumer-group-result-dto';
+import { MetaDataProperty } from '../shared/models/metadata/meta-data-property';
+import { tap } from 'rxjs/operators';
+import { Constants } from '../shared/constants';
 import {
   PidUriTemplateState,
-  PidUriTemplateStateModel,
-} from "./pid-uri-template.state";
-import {
-  UserInfoState,
-  UserInfoStateModel,
-  FetchConsumerGroupsByUser,
-} from "./user-info.state";
-import { Injectable } from "@angular/core";
+  PidUriTemplateStateModel
+} from './pid-uri-template.state';
+import { UserInfoState, UserInfoStateModel } from './user-info.state';
+import { Injectable } from '@angular/core';
 
 export class FetchConsumerGroups {
-  static readonly type = "[ConsumerGroup] Fetch consumerGroups";
+  static readonly type = '[ConsumerGroup] Fetch consumerGroups';
   constructor() {}
 }
 
 export class FetchConsumerGroupDetails {
-  static readonly type = "[ConsumerGroup] Fetch consumerGroup";
+  static readonly type = '[ConsumerGroup] Fetch consumerGroup';
   constructor(public payload: string) {}
 }
 
 export class FetchConsumerGroupMetadata {
-  static readonly type = "[ConsumerGroup] Fetch consumerGroupMetadata";
+  static readonly type = '[ConsumerGroup] Fetch consumerGroupMetadata';
   constructor() {}
 }
 
-export class DeleteConsumerGroup {
-  static readonly type = "[ConsumerGroup] Delete consumerGroup";
-  constructor(public payload: string) {}
-}
-
-export class ReactivateConsumerGroup {
-  static readonly type = "[ConsumerGroup] Reactivate consumerGroup";
-  constructor(public payload: string) {}
-}
-
 export class SetConsumerGroup {
-  static readonly type = "[ConsumerGroup] Set consumerGroup";
+  static readonly type = '[ConsumerGroup] Set consumerGroup';
   constructor(public payload: ConsumerGroupResultDTO) {}
 }
 
 export class ClearConsumerGroup {
-  static readonly type = "[ConsumerGroup] Clear consumerGroup";
+  static readonly type = '[ConsumerGroup] Clear consumerGroup';
 }
 
 export class ConsumerGroupStateModel {
@@ -57,12 +43,12 @@ export class ConsumerGroupStateModel {
 }
 
 @State<ConsumerGroupStateModel>({
-  name: "consumerGroups",
+  name: 'consumerGroups',
   defaults: {
     consumerGroups: null,
     consumerGroup: null,
-    metadata: null,
-  },
+    metadata: null
+  }
 })
 @Injectable()
 export class ConsumerGroupState {
@@ -94,7 +80,7 @@ export class ConsumerGroupState {
     return this.consumerGroupApiService.getAllEntities().pipe(
       tap((res) => {
         patchState({
-          consumerGroups: res,
+          consumerGroups: res
         });
       })
     );
@@ -114,37 +100,9 @@ export class ConsumerGroupState {
       .pipe(
         tap((res) => {
           patchState({
-            metadata: res,
+            metadata: res
           });
         })
-      );
-  }
-
-  @Action(DeleteConsumerGroup)
-  deleteConsumerGroup(
-    { dispatch }: StateContext<ConsumerGroupStateModel>,
-    { payload }: DeleteConsumerGroup
-  ) {
-    return this.consumerGroupApiService
-      .deleteEntity(payload)
-      .pipe(
-        mergeMap(() =>
-          dispatch([new FetchConsumerGroups(), new FetchConsumerGroupsByUser()])
-        )
-      );
-  }
-
-  @Action(ReactivateConsumerGroup)
-  reactivateConsumerGroup(
-    { dispatch }: StateContext<ConsumerGroupStateModel>,
-    { payload }: ReactivateConsumerGroup
-  ) {
-    return this.consumerGroupApiService
-      .reactivateConsumerGroup(payload)
-      .pipe(
-        mergeMap(() =>
-          dispatch([new FetchConsumerGroups(), new FetchConsumerGroupsByUser()])
-        )
       );
   }
 
@@ -156,7 +114,7 @@ export class ConsumerGroupState {
     return this.consumerGroupApiService.getEntityById(payload).pipe(
       tap((res) => {
         patchState({
-          consumerGroup: res,
+          consumerGroup: res
         });
       })
     );
@@ -168,7 +126,7 @@ export class ConsumerGroupState {
     action: SetConsumerGroup
   ) {
     patchState({
-      consumerGroup: action.payload,
+      consumerGroup: action.payload
     });
   }
 
@@ -178,7 +136,7 @@ export class ConsumerGroupState {
     {}: ClearConsumerGroup
   ) {
     patchState({
-      consumerGroup: null,
+      consumerGroup: null
     });
   }
 }
@@ -193,7 +151,7 @@ export class ConsumerGroupPidUriTemplateMetaSelector {
     return {
       PidUriTemplates: pidUriTemplateState.pidUriTemplates,
       ConsumerGroups: userInfoState.consumerGroups,
-      SelectedConsumerGroup: userInfoState.selectedConsumerGroupId,
+      SelectedConsumerGroup: userInfoState.selectedConsumerGroupId
     };
   }
 }

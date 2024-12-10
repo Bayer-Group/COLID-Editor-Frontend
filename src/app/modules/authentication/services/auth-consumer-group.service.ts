@@ -1,20 +1,20 @@
-import { Injectable } from "@angular/core";
-import { Observable, combineLatest } from "rxjs";
-import { Select } from "@ngxs/store";
-import { map } from "rxjs/operators";
-import { Constants } from "src/app/shared/constants";
+import { Injectable } from '@angular/core';
+import { Observable, combineLatest } from 'rxjs';
+import { Select } from '@ngxs/store';
+import { map } from 'rxjs/operators';
+import { Constants } from 'src/app/shared/constants';
 import {
   ResourceStateModel,
-  ResourceState,
-} from "src/app/state/resource.state";
+  ResourceState
+} from 'src/app/state/resource.state';
 import {
   UserInfoStateModel,
-  UserInfoState,
-} from "src/app/state/user-info.state";
-import { AuthService } from "./auth.service";
+  UserInfoState
+} from 'src/app/state/user-info.state';
+import { AuthService } from './auth.service';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root'
 })
 export class AuthConsumerGroupService {
   @Select(ResourceState) resourceState$: Observable<ResourceStateModel>;
@@ -26,7 +26,7 @@ export class AuthConsumerGroupService {
     return combineLatest([
       this.resourceState$,
       this.userInfoState$,
-      this.authService.hasAdminPrivilege$,
+      this.authService.hasAdminPrivilege$
     ]).pipe(
       map(([resourceState, userInfoState, hasAdminPrivilege]) => {
         let authorized: boolean = false;

@@ -1,5 +1,5 @@
 <ng-container *ngIf="!singleSelection">
-  <div style="padding-left: 40px; padding-top: 0.2rem">
+  <div style="padding-left: 32px; padding-top: 0.2rem">
     <mat-checkbox
       color="primary"
       [checked]="allSelected"
@@ -42,7 +42,7 @@
   >
     <button mat-icon-button matTreeNodeToggle>
       <mat-icon>
-        {{ treeControl.isExpanded(node) ? "expand_more" : "chevron_right" }}
+        {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
       </mat-icon>
     </button>
     <mat-checkbox

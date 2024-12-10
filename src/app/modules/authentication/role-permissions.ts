@@ -1,4 +1,4 @@
-import { Constants } from "src/app/shared/constants";
+import { Constants } from 'src/app/shared/constants';
 
 export class RolePermissions {
   static SuperAdmin = new Array<string>(

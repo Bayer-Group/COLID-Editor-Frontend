@@ -1,29 +1,65 @@
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { RouterTestingModule } from "@angular/router/testing";
-import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
-import { SidebarComponent } from "./sidebar.component";
-import { FormsModule } from "@angular/forms";
-import { NgxsModule } from "@ngxs/store";
-import { ResourceOverviewState } from "../../../state/resource-overview.state";
-import { ResourceState } from "../../../state/resource.state";
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { SidebarComponent } from './sidebar.component';
+import { NgxsModule } from '@ngxs/store';
+import { LogService } from 'src/app/core/logging/log.service';
+import { RouterModule } from '@angular/router';
+import { Component, Input } from '@angular/core';
+import { Observable } from 'rxjs';
+import { SearchResult } from 'src/app/shared/models/search/search-result';
 
-describe("SidebarComponent", () => {
+describe('SidebarComponent', () => {
   let component: SidebarComponent;
   let fixture: ComponentFixture<SidebarComponent>;
 
-  beforeEach(waitForAsync(() => {
+  class MockLogService {
+    info() {}
+  }
+
+  @Component({
+    selector: 'app-title',
+    template: ''
+  })
+  class MockTitleComponent {
+    @Input() iconColor: string;
+  }
+
+  @Component({
+    selector: 'app-sidebar-filter',
+    template: './sidebar-filter.component.html'
+  })
+  class MockSidebarFilterComponent {
+    @Input() searchResultState: Observable<SearchResult>;
+  }
+
+  @Component({
+    selector: 'app-sidebar-content',
+    template: ''
+  })
+  class MockSidebarContentComponent {
+    @Input() selectedResourcePidUri = '';
+    @Input() searchResultState: Observable<SearchResult>;
+    @Input() loadingState: Observable<boolean>;
+    @Input() currentPageStatus: string;
+    @Input() resetScrolling: Observable<boolean>;
+  }
+
+  beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [SidebarComponent],
-      imports: [
-        HttpClientTestingModule,
-        RouterTestingModule.withRoutes([]),
-        FontAwesomeModule,
-        FormsModule,
-        NgxsModule.forRoot([ResourceState, ResourceOverviewState]),
+      declarations: [
+        SidebarComponent,
+        MockTitleComponent,
+        MockSidebarFilterComponent,
+        MockSidebarContentComponent
       ],
+      imports: [RouterModule, NgxsModule.forRoot()],
+      providers: [
+        {
+          provide: LogService,
+          useClass: MockLogService
+        }
+      ]
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SidebarComponent);
@@ -31,7 +67,7 @@ describe("SidebarComponent", () => {
     fixture.detectChanges();
   });
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

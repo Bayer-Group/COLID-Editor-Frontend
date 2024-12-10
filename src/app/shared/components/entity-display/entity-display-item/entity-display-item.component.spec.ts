@@ -1,24 +1,37 @@
-import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EntityDisplayItemComponent } from "./entity-display-item.component";
+import { EntityDisplayItemComponent } from './entity-display-item.component';
+import { NgxsModule } from '@ngxs/store';
+import { ResourceApiService } from 'src/app/core/http/resource.api.service';
 
-describe("EntityDisplayViewItemComponent", () => {
+describe('EntityDisplayItemComponent', () => {
   let component: EntityDisplayItemComponent;
   let fixture: ComponentFixture<EntityDisplayItemComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [EntityDisplayItemComponent],
-    }).compileComponents();
-  }));
+  class MockResourceApiService {
+    fetchTaxonomy() {}
+
+    fetchLinkedEntries() {}
+  }
 
   beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [EntityDisplayItemComponent],
+      imports: [NgxsModule.forRoot([])],
+      providers: [
+        {
+          provide: ResourceApiService,
+          useClass: MockResourceApiService
+        }
+      ]
+    }).compileComponents();
+
     fixture = TestBed.createComponent(EntityDisplayItemComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

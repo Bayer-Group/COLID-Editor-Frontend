@@ -1,27 +1,27 @@
-import { Component, OnInit, Input, EventEmitter, Output } from "@angular/core";
-import { MetaDataProperty } from "src/app/shared/models/metadata/meta-data-property";
-import { Constants } from "src/app/shared/constants";
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { MetaDataProperty } from 'src/app/shared/models/metadata/meta-data-property';
+import { Constants } from 'src/app/shared/constants';
 import {
   MetaDataPropertyIdentifier,
-  FieldTypeMapping,
-} from "src/app/components/resource/resource-form/resource-form.constants";
-import { ResourceSearchDTO } from "src/app/shared/models/search/resource-search-dto";
-import { ResourceApiService } from "src/app/core/http/resource.api.service";
-import { ResourceOverviewDTO } from "src/app/shared/models/resources/resource-overview-dto";
-import { Entity } from "src/app/shared/models/Entities/entity";
-import { VersionProperty } from "src/app/shared/models/resources/version-property";
-import { Store } from "@ngxs/store";
-import { FetchTaxonomyList } from "src/app/state/taxonomy.state";
-import { StringExtension } from "src/app/shared/extensions/string.extension";
+  FieldTypeMapping
+} from 'src/app/components/resource/resource-form/resource-form.constants';
+import { ResourceSearchDTO } from 'src/app/shared/models/search/resource-search-dto';
+import { ResourceApiService } from 'src/app/core/http/resource.api.service';
+import { ResourceOverviewDTO } from 'src/app/shared/models/resources/resource-overview-dto';
+import { Entity } from 'src/app/shared/models/Entities/entity';
+import { VersionProperty } from 'src/app/shared/models/resources/version-property';
+import { Store } from '@ngxs/store';
+import { FetchTaxonomyList } from 'src/app/state/taxonomy.state';
+import { StringExtension } from 'src/app/shared/extensions/string.extension';
 import {
   LinkingMapping,
-  LinkType,
-} from "src/app/shared/models/resources/linking-mapping";
+  LinkType
+} from 'src/app/shared/models/resources/linking-mapping';
 
 @Component({
-  selector: "app-entity-display-item",
-  templateUrl: "./entity-display-item.component.html",
-  styleUrls: ["./entity-display-item.component.scss"],
+  selector: 'app-entity-display-item',
+  templateUrl: './entity-display-item.component.html',
+  styleUrls: ['./entity-display-item.component.scss']
 })
 export class EntityDisplayItemComponent implements OnInit {
   @Input() metadataProperty: MetaDataProperty;
@@ -46,9 +46,9 @@ export class EntityDisplayItemComponent implements OnInit {
 
   ngOnInit() {
     if (this.entityProperty) {
-      if (this.displayType === "taxonomy") {
+      if (this.displayType === 'taxonomy') {
         const range =
-          this.metadataProperty.properties[Constants.Metadata.Range];
+          this.metadataProperty?.properties[Constants.Metadata.Range];
         this.fetchTaxonomy(range);
       } else if (this.isLinking) {
         this.fetchLinkedEntries();
@@ -111,20 +111,20 @@ export class EntityDisplayItemComponent implements OnInit {
   }
 
   get isLinking(): boolean {
-    const group = this.metadataProperty.properties[Constants.Metadata.Group];
+    const group = this.metadataProperty?.properties[Constants.Metadata.Group];
 
-    return group != null && group.key === Constants.Resource.Groups.LinkTypes;
+    return group != null && group?.key === Constants.Resource.Groups.LinkTypes;
   }
 
   get isDistribution(): boolean {
-    return this.metadataProperty.nestedMetadata.length !== 0;
+    return this.metadataProperty?.nestedMetadata.length !== 0;
   }
 
   nestedMetdata(endpoint: Entity): Array<MetaDataProperty> {
-    if (endpoint != null && endpoint.properties) {
+    if (endpoint != null && endpoint?.properties) {
       const endpointType =
         endpoint.properties[Constants.Metadata.EntityType][0];
-      const nestedMetdata = this.metadataProperty.nestedMetadata.filter(
+      const nestedMetdata = this.metadataProperty?.nestedMetadata.filter(
         (m) => m.key === endpointType
       )[0];
       return nestedMetdata.properties;
@@ -133,63 +133,63 @@ export class EntityDisplayItemComponent implements OnInit {
   }
 
   get displayType(): string {
-    const group = this.metadataProperty.properties[Constants.Metadata.Group];
+    const group = this.metadataProperty?.properties[Constants.Metadata.Group];
     if (
-      this.metadataProperty.key === Constants.Metadata.HasPidUri ||
-      this.metadataProperty.key === MetaDataPropertyIdentifier.baseUri
+      this.metadataProperty?.key === Constants.Metadata.HasPidUri ||
+      this.metadataProperty?.key === MetaDataPropertyIdentifier.baseUri
     ) {
-      return "identifier";
+      return 'identifier';
     }
 
-    if (this.metadataProperty.key === Constants.Metadata.HasVersion) {
-      return "version";
+    if (this.metadataProperty?.key === Constants.Metadata.HasVersion) {
+      return 'version';
     }
 
     if (this.isDistribution) {
-      return "distribution";
+      return 'distribution';
     }
 
-    if (group != null && group.key === Constants.Resource.Groups.LinkTypes) {
-      return "linking";
+    if (group != null && group?.key === Constants.Resource.Groups.LinkTypes) {
+      return 'linking';
     }
 
     if (
-      this.metadataProperty.properties[Constants.Metadata.Range] &&
-      this.metadataProperty.properties[Constants.Metadata.NodeKind] ===
+      this.metadataProperty?.properties[Constants.Metadata.Range] &&
+      this.metadataProperty?.properties[Constants.Metadata.NodeKind] ===
         Constants.Metadata.NodeType.IRI &&
-      !(group != null && group.key === Constants.Resource.Groups.LinkTypes)
+      !(group != null && group?.key === Constants.Resource.Groups.LinkTypes)
     ) {
-      return "taxonomy";
+      return 'taxonomy';
     }
 
     if (this.checkEmail) {
-      return "email";
+      return 'email';
     }
 
     if (
       FieldTypeMapping[
-        this.metadataProperty.properties[Constants.Metadata.Datatype]
-      ] === "html"
+        this.metadataProperty?.properties[Constants.Metadata.Datatype]
+      ] === 'html'
     ) {
-      return "html";
+      return 'html';
     }
 
     if (
       FieldTypeMapping[
-        this.metadataProperty.properties[Constants.Metadata.Datatype]
-      ] === "datetime"
+        this.metadataProperty?.properties[Constants.Metadata.Datatype]
+      ] === 'datetime'
     ) {
-      return "datetime";
+      return 'datetime';
     }
 
     if (
       this.checkUrl &&
-      this.metadataProperty.key === Constants.Metadata.HasTargetUri
+      this.metadataProperty?.key === Constants.Metadata.HasTargetUri
     ) {
-      return this.checkProtocol ? "url" : "externalUrl";
+      return this.checkProtocol ? 'url' : 'externalUrl';
     }
 
-    return "default";
+    return 'default';
   }
 
   versionClicked(event: VersionProperty) {
@@ -219,7 +219,7 @@ export class EntityDisplayItemComponent implements OnInit {
 
   getEndpointLabel(entity: Entity): string {
     const entityLabel =
-      entity.properties[Constants.Metadata.NetworkedResourceLabel];
+      entity?.properties[Constants.Metadata.NetworkedResourceLabel];
     return StringExtension.ReplaceHtmlToText(entityLabel[0]);
   }
 }
@@ -229,45 +229,45 @@ export const re_email = new RegExp(
 );
 
 export const re_protocol = new RegExp(
-  "^" +
+  '^' +
     // protocol identifier
-    "(?:(?:https?|http?|ftp)://)"
+    '(?:(?:https?|http?|ftp)://)'
 );
 
 export const re_weburl = new RegExp(
-  "^" +
+  '^' +
     // protocol identifier
-    "(?:(?:https?|http?|ftp)://)*" +
+    '(?:(?:https?|http?|ftp)://)*' +
     // user:pass authentication
-    "(?:\\S+(?::\\S*)?@)?" +
-    "(?:" +
+    '(?:\\S+(?::\\S*)?@)?' +
+    '(?:' +
     // IP address exclusion
     // private & local networks
-    "(?!(?:10|127)(?:\\.\\d{1,3}){3})" +
-    "(?!(?:169\\.254|192\\.168)(?:\\.\\d{1,3}){2})" +
-    "(?!172\\.(?:1[6-9]|2\\d|3[0-1])(?:\\.\\d{1,3}){2})" +
+    '(?!(?:10|127)(?:\\.\\d{1,3}){3})' +
+    '(?!(?:169\\.254|192\\.168)(?:\\.\\d{1,3}){2})' +
+    '(?!172\\.(?:1[6-9]|2\\d|3[0-1])(?:\\.\\d{1,3}){2})' +
     // IP address dotted notation octets
     // excludes loopback network 0.0.0.0
     // excludes reserved space >= 224.0.0.0
     // excludes network & broacast addresses
     // (first & last IP address of each class)
-    "(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])" +
-    "(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}" +
-    "(?:\\.(?:[1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))" +
-    "|" +
+    '(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])' +
+    '(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}' +
+    '(?:\\.(?:[1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))' +
+    '|' +
     // host name
-    "(?:(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)" +
+    '(?:(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)' +
     // domain name
-    "(?:\\.(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)*" +
+    '(?:\\.(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)*' +
     // TLD identifier
-    "(?:\\.(?:[a-z\\u00a1-\\uffff]{2,}))" +
+    '(?:\\.(?:[a-z\\u00a1-\\uffff]{2,}))' +
     // TLD may end with dot
-    "\\.?" +
-    ")" +
+    '\\.?' +
+    ')' +
     // port number
-    "(?::\\d{2,5})?" +
+    '(?::\\d{2,5})?' +
     // resource path
-    "(?:[/?#]\\S*)?" +
-    "$",
-  "i"
+    '(?:[/?#]\\S*)?' +
+    '$',
+  'i'
 );

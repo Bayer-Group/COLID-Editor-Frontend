@@ -1,17 +1,17 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
-import { Constants } from "src/app/shared/constants";
-import { ResourceOverviewCTO } from "src/app/shared/models/resources/resource-overview-cto";
-import { ResourceSearchDTO } from "src/app/shared/models/search/resource-search-dto";
-import { SearchHit } from "src/app/shared/models/search/search-hit";
-import { SearchResult } from "src/app/shared/models/search/search-result";
-import { environment } from "src/environments/environment";
-import { ResourceApiService } from "./resource.api.service";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Constants } from 'src/app/shared/constants';
+import { ResourceOverviewCTO } from 'src/app/shared/models/resources/resource-overview-cto';
+import { ResourceSearchDTO } from 'src/app/shared/models/search/resource-search-dto';
+import { SearchHit } from 'src/app/shared/models/search/search-hit';
+import { SearchResult } from 'src/app/shared/models/search/search-result';
+import { environment } from 'src/environments/environment';
+import { ResourceApiService } from './resource.api.service';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root'
 })
 export class SearchService {
   constructor(
@@ -49,42 +49,33 @@ export class SearchService {
     links: boolean,
     resourceLinkTypes: Array<string> = []
   ): Observable<SearchResult> {
-    const url = environment.searchApiUrl + "/search";
+    const url = environment.searchApiUrl + '/search';
 
     const aggregationFilters = {};
-    let searchIndices = "all";
+    let searchIndices = 'all';
     if (resourceLinkTypes.length > 0 && resourceLinkTypes != null && links) {
       aggregationFilters[Constants.Metadata.EntityType] = resourceLinkTypes;
     }
 
     if (resourceSearchObject.consumerGroup) {
       aggregationFilters[Constants.Metadata.HasConsumerGroup] = [
-        resourceSearchObject.consumerGroup,
+        resourceSearchObject.consumerGroup
       ];
     }
 
     if (resourceSearchObject.lastChangeUser) {
       aggregationFilters[Constants.Metadata.HasLastChangeUser] = [
-        resourceSearchObject.lastChangeUser,
-      ];
-    }
-
-    if (resourceSearchObject.author) {
-      aggregationFilters[Constants.Metadata.Author] = [
-        resourceSearchObject.author,
+        resourceSearchObject.lastChangeUser
       ];
     }
 
     const status = [];
     if (resourceSearchObject.draft) {
-      status.push("Draft");
+      status.push('Draft');
     }
     if (resourceSearchObject.published) {
-      status.push("Published");
-      searchIndices = "published";
-    }
-    if (resourceSearchObject.markedForDeletion) {
-      status.push("Marked for deletion");
+      status.push('Published');
+      searchIndices = 'published';
     }
     if (status.length !== 0) {
       aggregationFilters[Constants.Metadata.LifeCycleStatus] = status;
@@ -94,7 +85,7 @@ export class SearchService {
       size: resourceSearchObject.limit,
       searchTerm:
         resourceSearchObject.searchText == null
-          ? ""
+          ? ''
           : resourceSearchObject.searchText,
       aggregationFilters: aggregationFilters,
       rangeFilters: undefined,
@@ -107,13 +98,13 @@ export class SearchService {
         Constants.Metadata.EntityType,
         Constants.Metadata.LifeCycleStatus,
         Constants.Metadata.HasPidUri,
-        "resourceLinkedLifecycleStatus",
+        'resourceLinkedLifecycleStatus'
       ],
       searchIndex: searchIndices, //'all',
       order: resourceSearchObject.sequence,
       orderField: resourceSearchObject.orderPredicate,
       apiCallTime: new Date().toUTCString(),
-      delay: delay,
+      delay: delay
     };
 
     return this.httpClient.post<SearchResult>(url, searchRequestObject);
@@ -133,16 +124,16 @@ export class SearchService {
       source[Constants.Metadata.EntityType] = item.resourceType;
       source[Constants.Metadata.LifeCycleStatus] = item.lifeCycleStatus;
       source[Constants.Metadata.HasPidUri] = item.pidUri;
-      source["resourceLinkedLifecycleStatus"] =
+      source['resourceLinkedLifecycleStatus'] =
         item.publishedVersion != null
           ? Constants.Resource.LifeCycleStatus.Published
-          : "";
+          : '';
 
       const searchHit: SearchHit = {
         source,
         id: item.pidUri,
         highlight: {},
-        score: 1.0,
+        score: 1.0
       };
 
       return searchHit;

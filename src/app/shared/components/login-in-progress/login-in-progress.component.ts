@@ -1,12 +1,12 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
-import { Subscription } from "rxjs";
-import { AuthService } from "src/app/modules/authentication/services/auth.service";
-import { EnsureBrowserSupportService } from "src/app/modules/browser-support/services/ensure-browser-support.service";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/modules/authentication/services/auth.service';
+import { EnsureBrowserSupportService } from 'src/app/modules/browser-support/services/ensure-browser-support.service';
 
 @Component({
-  selector: "app-login-in-progress",
-  templateUrl: "./login-in-progress.component.html",
-  styleUrls: ["./login-in-progress.component.css"],
+  selector: 'app-login-in-progress',
+  templateUrl: './login-in-progress.component.html',
+  styleUrls: ['./login-in-progress.component.css']
 })
 export class LoginInProgressComponent implements OnInit, OnDestroy {
   isBrowserSupported = false;
@@ -23,6 +23,6 @@ export class LoginInProgressComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.checkAccountSubscribtion.unsubscribe();
+    this.checkAccountSubscribtion?.unsubscribe();
   }
 }

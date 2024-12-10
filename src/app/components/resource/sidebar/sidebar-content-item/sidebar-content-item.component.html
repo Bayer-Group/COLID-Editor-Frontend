@@ -1,10 +1,11 @@
 <mat-list-item
   class="mat-list-item-focus click-cursor"
   [ngClass]="isActive ? 'active' : ''"
+  style="padding-right: 0px"
   (click)="selectResource()"
 >
   <ds-icon
-    mat-list-icon
+    matListItemIcon
     class="me-2"
     iconType="S3"
     [tooltipDisabled]="false"

@@ -1,11 +1,11 @@
-import { Injectable } from "@angular/core";
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { environment } from "src/environments/environment";
-import { TaxonomyResultDTO } from "../../shared/models/taxonomy/taxonomy-result-dto";
-import { Observable } from "rxjs";
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { TaxonomyResultDTO } from '../../shared/models/taxonomy/taxonomy-result-dto';
+import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root'
 })
 export class TaxonomyService {
   constructor(protected httpClient: HttpClient) {}
@@ -13,14 +13,14 @@ export class TaxonomyService {
   getTaxonomyList(taxonomyType: string): Observable<TaxonomyResultDTO[]> {
     const url = `${environment.colidApiUrl}/taxonomyList`;
     let params = new HttpParams();
-    params = params.append("taxonomyType", taxonomyType);
+    params = params.append('taxonomyType', taxonomyType);
     return this.httpClient.get<TaxonomyResultDTO[]>(url, { params: params });
   }
 
   getTaxonomyById(id: string): Observable<TaxonomyResultDTO> {
     const url = `${environment.colidApiUrl}/taxonomy`;
     let params = new HttpParams();
-    params = params.append("id", id);
+    params = params.append('id', id);
     return this.httpClient.get<TaxonomyResultDTO>(url, { params });
   }
 
@@ -32,7 +32,7 @@ export class TaxonomyService {
       taxonomyType
     )}`;
     let params = new HttpParams();
-    params = params.append("searchTerm", searchTerm);
+    params = params.append('searchTerm', searchTerm);
     return this.httpClient.get<TaxonomyResultDTO[]>(url, { params: params });
   }
 
