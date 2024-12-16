@@ -14,6 +14,10 @@ import { Observable, combineLatest, of } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { ColidMatSnackBarService } from 'src/app/modules/colid-mat-snack-bar/colid-mat-snack-bar.service';
 import { Constants } from '../../constants';
+import { HelpComponent } from './help/help.component';
+import { MatDialog } from '@angular/material/dialog';
+import { StatusBuildInformationDto } from '../../models/status/status-build-information-dto';
+import { StatusApiService } from 'src/app/core/http/status.api.service';
 
 @Component({
   selector: 'app-navbar',
@@ -31,13 +35,16 @@ export class NavbarComponent implements OnInit {
   selectedConsumerGroup: ConsumerGroupResultDTO;
   selectedConsumerGroupId: string;
   environmentLabel = environment.Label;
+  buildInformation$: Observable<StatusBuildInformationDto>;
 
   constructor(
     private authService: AuthService,
     private titleService: Title,
     private snackbar: ColidMatSnackBarService,
     private router: Router,
-    private store: Store
+    private store: Store,
+    private statusApiService: StatusApiService,
+    private dialog: MatDialog
   ) {
     this.titleService.setTitle('COLID Editor ' + this.environmentLabel);
   }
@@ -60,6 +67,8 @@ export class NavbarComponent implements OnInit {
         }
       }
     });
+
+    this.buildInformation$ = this.statusApiService.getBuildInformation();
   }
 
   get isLoggedIn$(): Observable<boolean> {
@@ -131,7 +140,15 @@ export class NavbarComponent implements OnInit {
       );
   }
 
-  toggleNavbar() {
+  toggleSidebar() {
     this.store.dispatch(new ToggleSidebar()).subscribe();
+  }
+
+  openHelpDialog() {
+    this.dialog.open(HelpComponent, {
+      data: {
+        buildInformation$: this.buildInformation$
+      }
+    });
   }
 }

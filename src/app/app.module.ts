@@ -129,6 +129,7 @@ import {
   loggerCallback
 } from './modules/authentication/azure-authentication.module';
 import { ResourceTemplateState } from './state/resource-template.state';
+import { HelpComponent } from './shared/components/navbar/help/help.component';
 
 // Global quill config for form items
 const globalQuillConfig: QuillConfig = {
@@ -151,6 +152,7 @@ const protectedResourceMap = new Map(
   declarations: [
     AppComponent,
     NavbarComponent,
+    HelpComponent,
     TitleComponent,
     SidebarComponent,
     SidebarContentComponent,

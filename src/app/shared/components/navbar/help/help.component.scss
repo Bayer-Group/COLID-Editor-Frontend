@@ -1,0 +1,22 @@
+.help {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+
+  &__email-buttons {
+    display: flex;
+    gap: 1rem;
+  }
+
+  &__build-metadata {
+    padding-top: 3rem;
+  }
+}

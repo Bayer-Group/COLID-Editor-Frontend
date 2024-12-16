@@ -1,6 +1,6 @@
 <mat-toolbar class="align-items-center" color="primary">
   <mat-toolbar-row>
-    <button type="button" mat-icon-button (click)="toggleNavbar()">
+    <button type="button" mat-icon-button (click)="toggleSidebar()">
       <mat-icon style="color: white">menu</mat-icon>
     </button>
 
@@ -53,5 +53,8 @@
         <mat-icon fontSet="material-icons-outlined">people</mat-icon>
       </button>
     </ng-container>
+    <button mat-icon-button class="text-white mr-2" (click)="openHelpDialog()">
+      <mat-icon>help_outline</mat-icon>
+    </button>
   </mat-toolbar-row>
 </mat-toolbar>

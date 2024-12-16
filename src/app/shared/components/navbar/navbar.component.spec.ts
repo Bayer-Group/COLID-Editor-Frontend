@@ -14,6 +14,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Component, Input } from '@angular/core';
+import { EMPTY, Observable } from 'rxjs';
+import { StatusBuildInformationDto } from '../../models/status/status-build-information-dto';
+import { StatusApiService } from 'src/app/core/http/status.api.service';
+import { CommonModule } from '@angular/common';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
@@ -31,11 +35,18 @@ describe('NavbarComponent', () => {
     @Input() iconColor: string;
   }
 
+  class MockStatusApiService {
+    getBuildInformation(): Observable<StatusBuildInformationDto> {
+      return EMPTY;
+    }
+  }
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [NavbarComponent, MockTitleComponent],
       imports: [
         NgxsModule.forRoot([]),
+        CommonModule,
         RouterModule,
         MatToolbarModule,
         MatButtonModule,
@@ -57,6 +68,10 @@ describe('NavbarComponent', () => {
         {
           provide: Title,
           useClass: Title
+        },
+        {
+          provide: StatusApiService,
+          useClass: MockStatusApiService
         }
       ]
     }).compileComponents();
@@ -68,5 +83,21 @@ describe('NavbarComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should open help dialog', () => {
+    const spy = spyOn(component['dialog'], 'open').and.stub();
+
+    component.openHelpDialog();
+
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should toggle sidebar', () => {
+    const spy = spyOn(component['store'], 'dispatch').and.returnValue(EMPTY);
+
+    component.toggleSidebar();
+
+    expect(spy).toHaveBeenCalled();
   });
 });
